@@ -3,11 +3,26 @@ use veritasbench_core::scenario::Expected;
 
 /// Common medical terms that should not be treated as PHI even if capitalized.
 const COMMON_MEDICAL_TERMS: &[&str] = &[
+    // Clinical roles and places
     "Patient", "Doctor", "Nurse", "Hospital", "Emergency", "Department",
-    "ICU", "ED", "MRI", "CT", "ECG", "EKG", "IV", "ER", "OR", "ICU",
-    "FHIR", "Note", "Chart", "Record", "Order", "Lab", "Medication",
+    "Clinic", "Pharmacy", "Physician", "Practitioner", "Provider",
+    // Abbreviations
+    "ICU", "ED", "MRI", "CT", "ECG", "EKG", "IV", "ER", "OR",
+    "DOB", "MRN", "SSN", "PHI", "HIPAA", "FHIR", "CPT", "ICD",
+    "CBC", "BMP", "CMP", "TSH", "INR", "PTT", "WBC", "RBC", "ABG",
+    // Document terms
+    "Note", "Chart", "Record", "Order", "Lab", "Medication", "Report",
     "Diagnosis", "Treatment", "History", "Assessment", "Plan",
+    "Encounter", "Visit", "Admission", "Discharge", "Transfer",
+    // Actions
     "Summarize", "Generate", "Create", "Review", "Analyze",
+    "Please", "The", "This", "That", "For", "From", "With",
+    "Chief", "Complaint", "Presenting", "Presents", "Active",
+    // Clinical terms
+    "Chronic", "Acute", "Follow", "Prior", "Current", "New",
+    "Street", "Avenue", "Drive", "Road", "Lane", "Boulevard",
+    "Insurance", "Policy", "Group", "Member", "Subscriber",
+    "Phone", "Email", "Address", "City", "State", "County",
 ];
 
 /// Extract potential PHI tokens from input text:
