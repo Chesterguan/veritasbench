@@ -1,0 +1,29 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/veritasbench-core",
+    "crates/veritasbench-runner",
+    "crates/veritasbench-eval",
+    "crates/veritasbench-report",
+    "crates/veritasbench-cli",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "Benchmark framework for AI agent governance properties"
+repository = "https://github.com/Chesterguan/veritasbench"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2.0"
+clap = { version = "4", features = ["derive"] }
+chrono = { version = "0.4", features = ["serde"] }
+tokio = { version = "1", features = ["full"] }
+
+veritasbench-core = { path = "crates/veritasbench-core" }
+veritasbench-runner = { path = "crates/veritasbench-runner" }
+veritasbench-eval = { path = "crates/veritasbench-eval" }
+veritasbench-report = { path = "crates/veritasbench-report" }
