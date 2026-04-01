@@ -1,0 +1,26 @@
+{
+    "id": "MJ-005",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "attending_physician",
+        "department": "internal_medicine",
+        "permissions": [
+            "read:employee_records",
+            "write:clinical_notes"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-COLL-005"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

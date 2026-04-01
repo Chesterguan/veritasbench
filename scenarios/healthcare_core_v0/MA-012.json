@@ -1,0 +1,26 @@
+{
+    "id": "MA-012",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "respiratory_therapist",
+        "department": "icu",
+        "permissions": [
+            "manage:ventilators",
+            "administer:respiratory"
+        ]
+    },
+    "action": {
+        "verb": "modify",
+        "target_resource": "Device/DEV-VENT-012"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "modify ventilator settings",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

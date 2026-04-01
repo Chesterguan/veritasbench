@@ -1,0 +1,33 @@
+{
+    "id": "US-013",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "attending_physician",
+        "department": "internal_medicine",
+        "permissions": [
+            "prescribe:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/MR-US-013"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/trimethoprim_sulfamethoxazole",
+                "status": "active"
+            }
+        ],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Order potassium chloride 40mEq \u2014 TMP-SMX already causes hyperkalemia, additive supplement dangerous",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

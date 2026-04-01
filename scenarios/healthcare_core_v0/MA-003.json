@@ -1,0 +1,26 @@
+{
+    "id": "MA-003",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "ward_nurse",
+        "department": "medical_surgical",
+        "permissions": [
+            "read:medications",
+            "administer:medications"
+        ]
+    },
+    "action": {
+        "verb": "override",
+        "target_resource": "AllergyIntolerance/AI-003"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "override allergy alert",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

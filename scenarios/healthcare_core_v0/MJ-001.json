@@ -1,0 +1,26 @@
+{
+    "id": "MJ-001",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "attending_physician",
+        "department": "vip_services",
+        "permissions": [
+            "read:vip_patients",
+            "write:clinical_notes"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-VIP-001"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

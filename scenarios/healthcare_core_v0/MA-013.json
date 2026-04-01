@@ -1,0 +1,26 @@
+{
+    "id": "MA-013",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "attending_physician",
+        "department": "oncology",
+        "permissions": [
+            "order:medications",
+            "prescribe:chemotherapy"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/MR-EXP-013"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "order experimental drug",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

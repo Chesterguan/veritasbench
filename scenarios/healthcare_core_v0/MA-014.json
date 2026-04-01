@@ -1,0 +1,26 @@
+{
+    "id": "MA-014",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "nephrologist",
+        "department": "nephrology",
+        "permissions": [
+            "order:procedures",
+            "manage:dialysis"
+        ]
+    },
+    "action": {
+        "verb": "initiate",
+        "target_resource": "Procedure/PROC-DIAL-014"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "start dialysis",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

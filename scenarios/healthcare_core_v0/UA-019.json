@@ -1,0 +1,26 @@
+{
+    "id": "UA-019",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "security_officer",
+        "department": "hospital_security",
+        "permissions": [
+            "read:incident_reports",
+            "access:restricted_areas"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-190"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

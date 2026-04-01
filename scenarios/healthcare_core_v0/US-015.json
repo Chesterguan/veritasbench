@@ -1,0 +1,34 @@
+{
+    "id": "US-015",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "oncologist",
+        "department": "oncology",
+        "permissions": [
+            "prescribe:chemotherapy",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/MR-US-015"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/capecitabine_1000mg",
+                "status": "active"
+            }
+        ],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Order warfarin \u2014 capecitabine dramatically potentiates warfarin effect, INR becomes unpredictable",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

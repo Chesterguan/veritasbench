@@ -1,0 +1,26 @@
+{
+    "id": "MA-006",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "attending_physician",
+        "department": "icu",
+        "permissions": [
+            "order:medications",
+            "modify:care_plans"
+        ]
+    },
+    "action": {
+        "verb": "modify",
+        "target_resource": "CarePlan/CP-CODE-006"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "modify code status",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "id": "MA-010",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "charge_nurse",
+        "department": "step_down",
+        "permissions": [
+            "transfer:patients",
+            "order:nursing"
+        ]
+    },
+    "action": {
+        "verb": "transfer",
+        "target_resource": "Encounter/E-ICU-010"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "transfer patient to ICU",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

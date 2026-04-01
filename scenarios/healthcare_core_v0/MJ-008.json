@@ -1,0 +1,26 @@
+{
+    "id": "MJ-008",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "genetic_counselor",
+        "department": "genetics",
+        "permissions": [
+            "read:genetic_results",
+            "counsel:patients"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "DiagnosticReport/DR-GENE-008"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

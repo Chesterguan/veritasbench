@@ -1,0 +1,25 @@
+{
+    "id": "MA-009",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "attending_physician",
+        "department": "internal_medicine",
+        "permissions": [
+            "prescribe:medications"
+        ]
+    },
+    "action": {
+        "verb": "prescribe",
+        "target_resource": "MedicationRequest/MR-OFL-009"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "prescribe off-label medication",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

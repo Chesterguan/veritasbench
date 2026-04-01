@@ -1,0 +1,39 @@
+{
+    "id": "US-003",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "psychiatrist",
+        "department": "psychiatry",
+        "permissions": [
+            "prescribe:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/MR-US-003"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/fluoxetine_20mg",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "initiate_therapy",
+                "resource": "MedicationRequest/fluoxetine_20mg",
+                "timestamp": "2026-03-01T08:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Order phenelzine 15mg TID \u2014 SSRI + MAOI combination causes serotonin syndrome",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

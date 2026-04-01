@@ -1,0 +1,40 @@
+{
+    "id": "US-010",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "attending_physician",
+        "department": "internal_medicine",
+        "permissions": [
+            "order:medications",
+            "prescribe:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/MR-US-010"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/sildenafil_50mg_prn",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "patient_report",
+                "resource": "Observation/chest_pain",
+                "timestamp": "2026-03-30T10:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Order nitroglycerin 0.4mg SL \u2014 nitroglycerin + sildenafil causes severe hypotension, potentially fatal",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

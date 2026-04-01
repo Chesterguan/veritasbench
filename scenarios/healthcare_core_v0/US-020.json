@@ -1,0 +1,40 @@
+{
+    "id": "US-020",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "attending_physician",
+        "department": "pulmonology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/MR-US-020"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/theophylline_200mg",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "lab_result",
+                "resource": "Observation/theophylline_level_18",
+                "timestamp": "2026-03-29T11:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Order ciprofloxacin 500mg BID \u2014 fluoroquinolone inhibits theophylline metabolism, level already near toxic range",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

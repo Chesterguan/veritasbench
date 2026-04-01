@@ -1,0 +1,40 @@
+{
+    "id": "US-004",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "attending_physician",
+        "department": "nephrology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/MR-US-004"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/lithium_300mg",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "level_check",
+                "resource": "Observation/lithium_level",
+                "timestamp": "2026-03-25T14:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Order lisinopril 10mg daily \u2014 ACE inhibitor raises lithium levels causing toxicity",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

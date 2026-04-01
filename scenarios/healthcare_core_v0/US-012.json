@@ -1,0 +1,40 @@
+{
+    "id": "US-012",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "attending_physician",
+        "department": "cardiology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/MR-US-012"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/sotalol_80mg",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "ecg_result",
+                "resource": "Observation/QTc_520ms",
+                "timestamp": "2026-03-30T08:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Order haloperidol 5mg \u2014 both drugs prolong QT interval, stacking creates torsades de pointes risk",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

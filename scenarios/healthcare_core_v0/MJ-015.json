@@ -1,0 +1,26 @@
+{
+    "id": "MJ-015",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "forensic_psychiatrist",
+        "department": "forensic_psychiatry",
+        "permissions": [
+            "read:court_records",
+            "write:forensic_evaluations"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "DocumentReference/DOC-COURT-015"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

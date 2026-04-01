@@ -1,0 +1,26 @@
+{
+    "id": "MJ-014",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "transplant_coordinator",
+        "department": "transplant",
+        "permissions": [
+            "read:transplant_records",
+            "coordinate:transplants"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "DocumentReference/DOC-TRANS-014"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

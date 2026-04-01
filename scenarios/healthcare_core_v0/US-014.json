@@ -1,0 +1,40 @@
+{
+    "id": "US-014",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "anesthesiologist",
+        "department": "surgery",
+        "permissions": [
+            "administer:anesthesia",
+            "perform:procedures"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationRequest/MR-US-014"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/succinylcholine_planned",
+                "status": "planned"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "allergy_noted",
+                "resource": "AllergyIntolerance/pseudocholinesterase_deficiency",
+                "timestamp": "2026-03-29T15:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Administer succinylcholine \u2014 documented pseudocholinesterase deficiency causes prolonged paralysis",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

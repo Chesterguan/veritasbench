@@ -1,0 +1,25 @@
+{
+    "id": "MJ-017",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "immigration_physician",
+        "department": "occupational_health",
+        "permissions": [
+            "read:immigration_physicals"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "DocumentReference/DOC-IMM-017"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

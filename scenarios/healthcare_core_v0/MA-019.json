@@ -1,0 +1,26 @@
+{
+    "id": "MA-019",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "oncologist",
+        "department": "oncology",
+        "permissions": [
+            "prescribe:chemotherapy",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/MR-CHEMO-019"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "order chemotherapy regimen",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

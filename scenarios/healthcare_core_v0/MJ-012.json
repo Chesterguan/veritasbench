@@ -1,0 +1,25 @@
+{
+    "id": "MJ-012",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "occupational_medicine",
+        "department": "employee_health",
+        "permissions": [
+            "read:employee_health_records"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-EMP-012"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

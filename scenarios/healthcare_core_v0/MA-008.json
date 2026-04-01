@@ -1,0 +1,26 @@
+{
+    "id": "MA-008",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "radiation_oncologist",
+        "department": "oncology",
+        "permissions": [
+            "order:radiation",
+            "review:imaging"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "ServiceRequest/SR-RAD-008"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "order radiation therapy course",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

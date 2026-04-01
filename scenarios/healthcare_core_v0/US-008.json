@@ -1,0 +1,40 @@
+{
+    "id": "US-008",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "surgeon",
+        "department": "surgery",
+        "permissions": [
+            "perform:surgery",
+            "order:procedures"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "Procedure/PROC-US-008"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/rivaroxaban_20mg",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "administer",
+                "resource": "MedicationRequest/rivaroxaban_20mg",
+                "timestamp": "2026-03-30T07:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Schedule urgent abdominal surgery \u2014 patient on anticoagulant, requires reversal protocol first",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

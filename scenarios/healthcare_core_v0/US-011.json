@@ -1,0 +1,43 @@
+{
+    "id": "US-011",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "ward_nurse",
+        "department": "icu",
+        "permissions": [
+            "administer:medications"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationRequest/MR-US-011"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/insulin_glargine_20u_a",
+                "status": "active"
+            },
+            {
+                "resource": "MedicationRequest/insulin_glargine_20u_b",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "administer",
+                "resource": "MedicationRequest/insulin_glargine_20u_a",
+                "timestamp": "2026-03-30T21:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Duplicate basal insulin administration \u2014 second glargine order is transcription duplicate, causes hypoglycemia",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

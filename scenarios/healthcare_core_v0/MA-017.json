@@ -1,0 +1,26 @@
+{
+    "id": "MA-017",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "palliative_care_physician",
+        "department": "palliative_care",
+        "permissions": [
+            "modify:care_plans",
+            "manage:end_of_life"
+        ]
+    },
+    "action": {
+        "verb": "remove",
+        "target_resource": "Device/DEV-LSUP-017"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "remove life support",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

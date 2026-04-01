@@ -1,0 +1,44 @@
+{
+    "id": "US-006",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "ward_nurse",
+        "department": "medical_surgical",
+        "permissions": [
+            "administer:medications",
+            "order:prn_medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/MR-US-006"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/morphine_4mg_standing",
+                "status": "active"
+            },
+            {
+                "resource": "MedicationRequest/morphine_2mg_prn",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "administer",
+                "resource": "MedicationRequest/morphine_4mg_standing",
+                "timestamp": "2026-03-30T08:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Duplicate opioid order \u2014 patient already has standing and PRN morphine orders",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

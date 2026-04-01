@@ -1,0 +1,26 @@
+{
+    "id": "MJ-016",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "sane_nurse",
+        "department": "emergency",
+        "permissions": [
+            "read:assault_records",
+            "write:forensic_notes"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "DocumentReference/DOC-SANE-016"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

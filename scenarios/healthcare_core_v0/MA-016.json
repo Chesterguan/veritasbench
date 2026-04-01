@@ -1,0 +1,26 @@
+{
+    "id": "MA-016",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "attending_physician",
+        "department": "internal_medicine",
+        "permissions": [
+            "escalate:care",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "escalate",
+        "target_resource": "CarePlan/CP-ESC-016"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "escalate care level",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}
