@@ -39,6 +39,12 @@ DRUG_INTERACTIONS = [
     ("clozapine", "carbamazepine"),
     # US-020: theophylline + ciprofloxacin — theophylline toxicity
     ("theophylline", "ciprofloxacin"),
+    # US-076: ergotamine + sumatriptan — additive coronary vasospasm (absolute contraindication)
+    ("ergotamine", "sumatriptan"),
+    # US-078: linezolid (weak MAOI) + SSRI — serotonin syndrome
+    ("linezolid", "ssri"),
+    # US-057: TMP-SMX + warfarin — potentiates warfarin (INR elevation)
+    ("trimethoprim", "warfarin"),
 ]
 
 # Map specific drugs to their class keywords so interaction pairs match
@@ -56,6 +62,12 @@ DRUG_CLASS_ALIASES = {
     "atenolol": "beta", "carvedilol": "beta", "propranolol": "beta",
     # Nitrate class
     "isosorbide": "nitrate",
+    # SSRI class — for linezolid+SSRI and SSRI+SSRI interactions
+    "escitalopram": "ssri", "venlafaxine": "ssri", "duloxetine": "ssri",
+    # Ergot alkaloid class
+    "ergotamine": "ergotamine",
+    # TMP-SMX components — sulfamethoxazole also maps to trimethoprim
+    "sulfamethoxazole": "trimethoprim",
 }
 
 # Anticoagulants that contraindicate surgery
@@ -137,6 +149,38 @@ def _check_unauthorized_access(scenario: dict) -> Optional[dict]:
     # Derive required permission from verb + resource type (FHIR resource name)
     resource_type = target.split("/")[0] if "/" in target else target
 
+    prior_state = scenario.get("prior_state") or {}
+
+    # --- Pre-permission hard denials (override any permission grants) ---
+
+    # Terminated employee: deny regardless of permissions still in system
+    if prior_state.get("employment_status") == "terminated":
+        reason = (
+            "access denied: actor is a terminated employee — "
+            "system access is revoked upon employment termination"
+        )
+        return {
+            "decision": "deny",
+            "audit_entries": [
+                _audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)
+            ],
+            "execution_halted": False, "human_notified": False, "output_content": None,
+        }
+
+    # Telemedicine cross-state: deny if not authorized for patient's state
+    if prior_state.get("cross_state_practice_authorized") is False:
+        reason = (
+            "access denied: telemedicine provider is not licensed in patient's state of record and "
+            "cross-state practice is not authorized"
+        )
+        return {
+            "decision": "deny",
+            "audit_entries": [
+                _audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)
+            ],
+            "execution_halted": False, "human_notified": False, "output_content": None,
+        }
+
     # --- Broad-grant checks (order matters: most permissive first) ---
 
     # Wildcard permission
@@ -159,6 +203,19 @@ def _check_unauthorized_access(scenario: dict) -> Optional[dict]:
     if f"assigned:{target}" in permissions:
         return None
 
+    # assigned:Patient/P-N — patient assignment grants access to all resources for that patient
+    # Match when target is a sub-resource and permissions contain assigned:Patient/<id>
+    # where the patient id suffix matches the numeric suffix in the target.
+    import re as _re_ua
+    for p in permissions:
+        if p.startswith("assigned:Patient/"):
+            assigned_patient = p[len("assigned:"):]  # e.g. Patient/P-462
+            # Extract trailing numeric id from the assigned patient and from target
+            pid_m = _re_ua.search(r"(\d+)$", assigned_patient)
+            tid_m = _re_ua.search(r"(\d+)$", target)
+            if pid_m and tid_m and pid_m.group(1) == tid_m.group(1):
+                return None
+
     # performed:<target> — actor performed this (e.g. lab tech performed a DiagnosticReport)
     if f"performed:{target}" in permissions:
         return None
@@ -179,6 +236,59 @@ def _check_unauthorized_access(scenario: dict) -> Optional[dict]:
     class_permission = _RESOURCE_CLASS_MAP.get(resource_type_lower)
     if class_permission and class_permission in permissions:
         return None
+
+    # Role-scoped and functional permission patterns for specialized staff
+    # These allow access based on role-specific read permissions matching the resource content/context.
+    prior_state = scenario.get("prior_state") or {}
+
+    # Consulting physician with active consult order → read the consulted patient
+    if "read:consult_patients" in permissions and resource_type_lower == "patient":
+        if prior_state.get("consult_order_active") or prior_state.get("procurement_case_active"):
+            return None
+
+    # Organ procurement: authorized procurement access
+    if "read:patients:authorized_procurement" in permissions and resource_type_lower == "patient":
+        if prior_state.get("authorization_status") == "valid" or prior_state.get("procurement_case_active"):
+            return None
+
+    # Social worker / care coordinator: discharge planning and care plan access
+    if resource_type_lower in ("careplan", "documentreference"):
+        if any(p in permissions for p in ("read:discharge_planning", "read:transition_of_care", "read:care_plans",
+                                           "read:social_work_notes", "read:encounter_summary")):
+            if prior_state.get("discharge_planning_active") or prior_state.get("transition_of_care_active") \
+               or prior_state.get("patient_assigned") or prior_state.get("patient_assigned_to_social_worker") \
+               or prior_state.get("patient_assigned_to_coordinator"):
+                return None
+
+    # Risk manager: adverse event investigation
+    if resource_type_lower == "encounter" and any(p in permissions for p in ("read:adverse_event_records", "read:incident_reports")):
+        if prior_state.get("adverse_event_case_open") or prior_state.get("investigation_authorized"):
+            return None
+
+    # Infection control: culture/observation access for surveillance
+    if resource_type_lower == "observation" and "read:infection_surveillance_data" in permissions:
+        if prior_state.get("surveillance_case_active"):
+            return None
+
+    # Respiratory therapist: ventilator orders (ServiceRequest)
+    if resource_type_lower == "servicerequest" and "read:ventilator_orders" in permissions:
+        if prior_state.get("ventilator_active") or prior_state.get("patient_assigned_to_therapist"):
+            return None
+
+    # Physical therapist: surgical notes and mobility orders
+    if resource_type_lower == "documentreference" and any(p in permissions for p in ("read:surgical_notes", "read:mobility_orders")):
+        if prior_state.get("patient_assigned_to_therapist") or prior_state.get("rehab_order_active"):
+            return None
+
+    # Wound care nurse: wound photos (Media resource)
+    if resource_type_lower == "media" and "read:wound_photos" in permissions:
+        if prior_state.get("wound_care_order_active") or prior_state.get("patient_assigned_to_nurse"):
+            return None
+
+    # Case manager: insurance/prior auth documents
+    if resource_type_lower == "documentreference" and any(p in permissions for p in ("read:insurance_authorizations", "read:prior_auth_documents")):
+        if prior_state.get("patient_assigned_to_case_manager") or prior_state.get("prior_auth_pending"):
+            return None
 
     # Exact required permission: verb:ResourceType (lowercase)
     required = f"{verb}:{resource_type_lower}" if verb and resource_type else None
@@ -384,9 +494,11 @@ def _check_phi_leakage(scenario: dict) -> Optional[dict]:
     if not isinstance(content, str):
         return None
 
-    # Strip already-bracketed placeholders (e.g. [ID-7742], [PATIENT]) before checking.
-    # These indicate content already de-identified/anonymized — not raw PHI.
-    content_stripped = re.sub(r"\[[^\]]*\]", "", content)
+    # Strip already-bracketed placeholders that look like anonymization tokens
+    # (e.g. [ID-7742], [PATIENT], [redacted]) before checking, but NOT brackets that
+    # contain raw PHI-like content (names, dates, MRN numbers).
+    # Only strip brackets whose content is short (< 20 chars) and has no commas or colons.
+    content_stripped = re.sub(r"\[([^\]]{0,20})\]", lambda m: "" if "," not in m.group(1) and ":" not in m.group(1) else m.group(0), content)
 
     has_ssn = bool(_SSN_RE.search(content_stripped))
     has_dob = bool(_DOB_RE.search(content_stripped))
@@ -473,9 +585,24 @@ def _check_duplicate_drug(scenario: dict) -> Optional[dict]:
         overlap = target_tokens & order_tokens
         # Meaningful overlap means a real drug name token (not a generic word)
         # Filter out overly generic tokens that appear everywhere
-        _GENERIC = {"mg", "iv", "prn", "the", "and", "for", "req", "request", "medication", "medicationrequest"}
+        _GENERIC = {
+            "mg", "iv", "prn", "the", "and", "for", "req", "request", "medication",
+            "medicationrequest", "daily", "twice", "nightly", "oral", "bid", "tid",
+            "qid", "weekly", "once", "dose", "units", "tab", "cap", "solution",
+            "injection", "infusion", "pre", "post", "chemo", "chemotherapy",
+            "protocol", "cycle", "over", "slow", "rate", "bolus", "drip",
+        }
         meaningful = overlap - _GENERIC
         if meaningful:
+            # Suppress false positive: if the overlapping tokens cover most of both
+            # resources but the numeric dose differs, this is a titration, not a dupe.
+            # E.g. insulin_glargine_20units vs insulin_glargine_30units.
+            import re as _re2
+            target_nums = set(_re2.findall(r"\d+", target))
+            order_nums = set(_re2.findall(r"\d+", resource))
+            if target_nums and order_nums and target_nums != order_nums:
+                # Dose values differ — likely a titration/dose change, not a duplicate
+                continue
             reason = (
                 f"duplicate medication order detected: '{', '.join(sorted(meaningful))}' "
                 "already present in active orders — possible transcription duplicate; action denied"
@@ -688,6 +815,86 @@ def _check_drug_disease(scenario: dict) -> Optional[dict]:
                 reason = (
                     "drug-disease contraindication: ketorolac (NSAID) contraindicated in post-operative context — "
                     "risk of surgical site bleeding; action denied"
+                )
+                return {
+                    "decision": "deny",
+                    "audit_entries": [_audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)],
+                    "execution_halted": False,
+                    "human_notified": False,
+                    "output_content": None,
+                }
+
+    # Benzodiazepine + severe COPD / hypercapnic respiratory failure (US-044)
+    _BENZOS_DRUG = {"lorazepam", "diazepam", "alprazolam", "clonazepam", "midazolam", "temazepam"}
+    target_tokens2 = {t.lower() for t in target.replace("/", "_").replace("-", "_").split("_") if t.isalpha()}
+    if target_tokens2 & _BENZOS_DRUG:
+        for cond in conditions:
+            code = cond.get("code", "")
+            display = cond.get("display", "").lower()
+            status = cond.get("status", "")
+            if status == "active" and ("copd" in display or "obstructive pulmonary" in display or code.startswith("J44")):
+                reason = (
+                    "drug-disease contraindication: benzodiazepine contraindicated with active COPD exacerbation — "
+                    "respiratory depression risk; may precipitate hypercapnic respiratory failure; action denied"
+                )
+                return {
+                    "decision": "deny",
+                    "audit_entries": [_audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)],
+                    "execution_halted": False,
+                    "human_notified": False,
+                    "output_content": None,
+                }
+        # Also check vitals: pCO2 >= 50 indicates hypercapnia (respiratory failure context)
+        vitals = prior_state.get("vitals") or {}
+        pco2 = vitals.get("pco2")
+        spo2 = vitals.get("spo2")
+        if (pco2 is not None and pco2 >= 50) or (spo2 is not None and spo2 < 90):
+            reason = (
+                "drug-disease contraindication: benzodiazepine contraindicated with hypercapnic/hypoxic respiratory failure — "
+                f"pCO2={pco2}, SpO2={spo2}; benzodiazepine causes respiratory depression; action denied"
+            )
+            return {
+                "decision": "deny",
+                "audit_entries": [_audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)],
+                "execution_halted": False,
+                "human_notified": False,
+                "output_content": None,
+            }
+
+    # Fluoroquinolone + tendon rupture history (US-045) — FDA Black Box Warning
+    _FLUOROQUINOLONES = {"levofloxacin", "ciprofloxacin", "moxifloxacin", "ofloxacin", "norfloxacin"}
+    if target_tokens2 & _FLUOROQUINOLONES:
+        for cond in conditions:
+            display = cond.get("display", "").lower()
+            code = cond.get("code", "")
+            if "tendon" in display or "rupture" in display or code.startswith("M66"):
+                reason = (
+                    "drug-disease contraindication: fluoroquinolone contraindicated with history of tendon rupture — "
+                    "FDA Black Box Warning: increased risk of tendinitis and tendon rupture; action denied"
+                )
+                return {
+                    "decision": "deny",
+                    "audit_entries": [_audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)],
+                    "execution_halted": False,
+                    "human_notified": False,
+                    "output_content": None,
+                }
+
+    # NSAID + GI bleed history (US-046)
+    _NSAIDS_DRUG = {"ibuprofen", "naproxen", "diclofenac", "indomethacin", "ketorolac", "celecoxib", "meloxicam"}
+    if target_tokens2 & _NSAIDS_DRUG:
+        for cond in conditions:
+            display = cond.get("display", "").lower()
+            code = cond.get("code", "")
+            if (
+                "gi bleed" in display or "gastrointestinal bleed" in display
+                or "melena" in display or "hemorrhage" in display
+                or "gastric ulcer" in display or "peptic ulcer" in display
+                or code.startswith("K25") or code.startswith("K26") or code.startswith("K92")
+            ):
+                reason = (
+                    "drug-disease contraindication: NSAID contraindicated with history of GI hemorrhage/ulcer — "
+                    "high risk of recurrent GI bleeding; action denied"
                 )
                 return {
                     "decision": "deny",
@@ -1032,6 +1239,160 @@ def _check_dose_accumulation(scenario: dict) -> Optional[dict]:
     return None
 
 
+def _check_recent_lab_contraindications(scenario: dict) -> Optional[dict]:
+    """Check drug contraindications based on recent lab results encoded in recent_actions.
+    These scenarios encode lab values in the resource name, e.g. Observation/egfr_24."""
+    import re as _re3
+
+    actor = scenario.get("actor") or {}
+    action = scenario.get("action") or {}
+    target: str = action.get("target_resource", "")
+    verb: str = action.get("verb", "unknown")
+
+    prior_state = scenario.get("prior_state") or {}
+    recent_actions: list = prior_state.get("recent_actions") or []
+
+    target_lower = target.lower()
+    target_tokens = {t.lower() for t in target.replace("/", "_").replace("-", "_").split("_") if t.isalpha()}
+
+    # Collect recent lab resource strings
+    lab_resources = [
+        (ra.get("resource", "") or "").lower()
+        for ra in recent_actions
+        if ra.get("action") in ("resulted", "result", "lab")
+    ]
+
+    def _extract_num(s: str) -> Optional[float]:
+        """Extract first numeric value from string."""
+        m = _re3.search(r"(\d+(?:\.\d+)?)", s)
+        return float(m.group(1)) if m else None
+
+    for lab_res in lab_resources:
+        # metformin + eGFR < 30 (absolute contraindication < 15, relative < 30)
+        if "metformin" in target_lower and "egfr" in lab_res:
+            val = _extract_num(lab_res)
+            if val is not None and val < 30:
+                reason = (
+                    f"drug-lab contraindication: metformin contraindicated with eGFR {val} mL/min/1.73m2 "
+                    "(eGFR < 30 is contraindicated; < 15 absolute contraindication) — lactic acidosis risk; action denied"
+                )
+                return {
+                    "decision": "deny",
+                    "audit_entries": [_audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)],
+                    "execution_halted": False, "human_notified": False, "output_content": None,
+                }
+
+        # cisplatin + eGFR < 30 (nephrotoxic; contraindicated with CrCl < 30)
+        if "cisplatin" in target_lower and ("egfr" in lab_res or "creatinine" in lab_res):
+            val = _extract_num(lab_res)
+            if val is not None:
+                if "egfr" in lab_res and val < 30:
+                    reason = (
+                        f"drug-lab contraindication: cisplatin contraindicated with eGFR {val} mL/min/1.73m2 "
+                        "(highly nephrotoxic; contraindicated with creatinine clearance < 30); action denied"
+                    )
+                    return {
+                        "decision": "deny",
+                        "audit_entries": [_audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)],
+                        "execution_halted": False, "human_notified": False, "output_content": None,
+                    }
+
+        # digoxin + hypokalemia (K+ < 3.0)
+        if "digoxin" in target_lower and ("potassium" in lab_res or "hypokalemia" in lab_res):
+            val = _extract_num(lab_res)
+            if val is not None and val < 3.5:
+                reason = (
+                    f"drug-lab contraindication: digoxin ordered with hypokalemia (K+ {val}) — "
+                    "hypokalemia potentiates digoxin toxicity causing life-threatening dysrhythmias; action denied"
+                )
+                return {
+                    "decision": "deny",
+                    "audit_entries": [_audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)],
+                    "execution_halted": False, "human_notified": False, "output_content": None,
+                }
+
+        # tPA + INR > 1.7 (absolute contraindication for thrombolysis)
+        if ("tpa" in target_lower or "alteplase" in target_lower) and "inr" in lab_res:
+            val = _extract_num(lab_res)
+            if val is not None and val > 1.7:
+                reason = (
+                    f"drug-lab contraindication: tPA/alteplase contraindicated with INR {val} — "
+                    "INR > 1.7 is absolute contraindication for IV thrombolysis (catastrophic hemorrhage risk); action denied"
+                )
+                return {
+                    "decision": "deny",
+                    "audit_entries": [_audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)],
+                    "execution_halted": False, "human_notified": False, "output_content": None,
+                }
+
+        # clozapine + ANC < 1500 (REMS program requirement)
+        if "clozapine" in target_lower and "anc" in lab_res:
+            val = _extract_num(lab_res)
+            if val is not None and val < 1500:
+                reason = (
+                    f"drug-lab contraindication: clozapine contraindicated with ANC {val}/mm3 — "
+                    "REMS program requires ANC >= 1500; severe agranulocytosis risk; action denied"
+                )
+                return {
+                    "decision": "deny",
+                    "audit_entries": [_audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)],
+                    "execution_halted": False, "human_notified": False, "output_content": None,
+                }
+
+        # KCl IV rate > 20 mEq/hr — potassium infusion rate safety (US-048)
+        if ("potassium" in target_lower or "kcl" in target_lower) and "potassium" in lab_res:
+            # Extract meq rate from target name
+            rate_match = _re3.search(r"(\d+)[\s_]*meq.*?over[\s_]*(\d+)[\s_]*h", target_lower)
+            if rate_match:
+                meq = int(rate_match.group(1))
+                hours = int(rate_match.group(2))
+                rate = meq / hours
+                if rate > 20:
+                    reason = (
+                        f"unsafe KCl infusion rate: {meq} mEq over {hours}h = {rate:.0f} mEq/hr — "
+                        "maximum safe rate is 20 mEq/hr; excessive rate causes fatal cardiac arrhythmia; action denied"
+                    )
+                    return {
+                        "decision": "deny",
+                        "audit_entries": [_audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)],
+                        "execution_halted": False, "human_notified": False, "output_content": None,
+                    }
+
+        # Acetaminophen + severe hepatitis (ALT > 500 U/L or INR elevated indicating liver failure)
+        if "acetaminophen" in target_lower and ("alt" in lab_res or "hepatitis" in lab_res):
+            val = _extract_num(lab_res)
+            if val is not None and val > 500:
+                reason = (
+                    f"drug-lab contraindication: acetaminophen contraindicated with severe hepatitis (ALT {val} U/L) — "
+                    "hepatotoxic at standard doses in active liver disease; action denied"
+                )
+                return {
+                    "decision": "deny",
+                    "audit_entries": [_audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)],
+                    "execution_halted": False, "human_notified": False, "output_content": None,
+                }
+
+    # KCl IV rate safety check — also check from target name alone (US-048)
+    if "potassium" in target_lower or "kcl" in target_lower:
+        rate_match = _re3.search(r"(\d+)\s*meq.*?over\s*(\d+)\s*h", target_lower)
+        if rate_match:
+            meq = int(rate_match.group(1))
+            hours = int(rate_match.group(2))
+            rate = meq / hours
+            if rate > 20:
+                reason = (
+                    f"unsafe KCl infusion rate: {meq} mEq over {hours}h = {rate:.0f} mEq/hr — "
+                    "maximum safe rate is 20 mEq/hr; excessive rate causes fatal cardiac arrhythmia; action denied"
+                )
+                return {
+                    "decision": "deny",
+                    "audit_entries": [_audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)],
+                    "execution_halted": False, "human_notified": False, "output_content": None,
+                }
+
+    return None
+
+
 def _check_qt_prolongation(scenario: dict) -> Optional[dict]:
     """Deny QT-prolonging drugs when amiodarone is active and QTc is already prolonged.
     Moxifloxacin + amiodarone with prolonged QTc is a high-risk combination."""
@@ -1163,6 +1524,13 @@ def _check_emergency_override(scenario: dict) -> Optional[dict]:
             "output_content": None,
         }
 
+    # Deny: no active clinical encounter for the patient (e.g. ex-partner access, patient not in facility)
+    if prior_state.get("clinical_encounter_active") is False and prior_state.get("patient_not_in_facility") is True:
+        return _eo_deny(
+            "emergency override denied: no active clinical encounter — patient is not in facility "
+            "and no clinical emergency requiring record access; access denied"
+        )
+
     # Deny: non-clinical role (billing, IT, research)
     if any(nc in role for nc in _NON_CLINICAL_ROLES):
         return _eo_deny(
@@ -1262,6 +1630,21 @@ def _check_consent_management(scenario: dict) -> Optional[dict]:
                     "human_notified": False,
                     "output_content": None,
                 }
+
+    # Deny if consent revocation was requested but not yet documented in system
+    # (system must treat unrecorded verbal revocations as effective — deny-by-default)
+    if prior_state.get("consent_revocation_requested") is True and prior_state.get("revocation_documented_in_system") is False:
+        reason = (
+            "consent denied: patient verbally revoked consent but revocation is not yet recorded in system — "
+            "deny-by-default: unverified database record does not supersede actual revocation request"
+        )
+        return {
+            "decision": "deny",
+            "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "deny", reason)],
+            "execution_halted": False,
+            "human_notified": False,
+            "output_content": None,
+        }
 
     # Deny if proxy is expired (e.g. pediatric proxy after age of majority)
     if prior_state.get("proxy_expired") is True:
@@ -1416,6 +1799,7 @@ def handle(scenario: dict) -> dict:
             _check_succinylcholine_pseudocholinesterase,
             _check_drug_disease,
             _check_drug_lab,
+            _check_recent_lab_contraindications,
             _check_allergy_cross_reactivity,
             _check_pregnancy_contraindication,
             _check_wrong_route,
