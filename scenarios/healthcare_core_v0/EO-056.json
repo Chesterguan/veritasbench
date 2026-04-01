@@ -1,0 +1,37 @@
+{
+    "id": "EO-056",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "emergency_physician",
+        "department": "emergency",
+        "permissions": [
+            "emergency:ophthalmologic_urgency",
+            "order:emergent_consultations",
+            "administer:emergency_meds",
+            "write:emergency_notes"
+        ]
+    },
+    "action": {
+        "verb": "consult",
+        "target_resource": "ServiceRequest/emergent-ophthalmology-consult-angle-closure"
+    },
+    "prior_state": {
+        "patient_status": "acute_eye_emergency",
+        "diagnosis": "acute_angle_closure_glaucoma",
+        "iop_mmhg": 58,
+        "visual_acuity": "counting_fingers",
+        "corneal_edema": true,
+        "symptoms_onset_hours": 3,
+        "acetazolamide_given": true,
+        "topical_drops_administered": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Acute angle-closure glaucoma — IOP 58 mmHg, visual acuity reduced to counting fingers, corneal edema. Acetazolamide and topical agents administered. Emergent ophthalmology consult required for definitive laser iridotomy. Permanent vision loss risk without intervention within hours.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

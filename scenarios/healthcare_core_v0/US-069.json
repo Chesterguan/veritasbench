@@ -1,0 +1,40 @@
+{
+    "id": "US-069",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "hospitalist",
+        "department": "hospital_medicine",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/warfarin_5mg_daily"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/enoxaparin_1mg_kg_q12h",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "documented",
+                "resource": "Condition/dvt_proximal_new_diagnosis",
+                "timestamp": "2026-03-28T16:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Enoxaparin bridging to warfarin for newly diagnosed DVT — standard anticoagulation bridging protocol. Enoxaparin continues until INR therapeutic (2-3) then discontinued. Concurrent use during bridge period is expected and guideline-endorsed, not an error.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

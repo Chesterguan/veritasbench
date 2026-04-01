@@ -1,0 +1,33 @@
+{
+    "id": "CM-054",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "patient_portal_system",
+        "department": "health_it",
+        "permissions": [
+            "consent:Patient/P-6610:smart_on_fhir_app_access",
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "grant",
+        "target_resource": "Patient/P-6610"
+    },
+    "prior_state": {
+        "consent_type": "smart_on_fhir_app_authorization",
+        "oauth_scopes_requested": ["patient/Observation.read", "patient/MedicationRequest.read"],
+        "patient_authenticated": true,
+        "consent_grantor": "Patient/P-6610",
+        "app_registered_with_health_system": true,
+        "consent_recorded_in_fhir_consent_resource": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient P-6610 completed SMART-on-FHIR OAuth authorization flow, granting a registered personal health app read access to observations and medication requests. Consent recorded in FHIR Consent resource.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "id": "CM-053",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "emergency_physician",
+        "department": "emergency",
+        "permissions": [
+            "read:patient_chart",
+            "proxy:Patient/P-8823:emergency_contact_with_prior_directive"
+        ]
+    },
+    "action": {
+        "verb": "disclose",
+        "target_resource": "Patient/P-8823"
+    },
+    "prior_state": {
+        "patient_status": "incapacitated",
+        "incapacitation_cause": "traumatic_brain_injury",
+        "advance_directive_on_file": true,
+        "advance_directive_designates_emergency_contact": true,
+        "emergency_contact_identity_verified": true,
+        "disclosure_scope": "treatment_information_only"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient has advance directive on file naming this emergency contact as authorized representative during incapacitation. Identity verified. Disclosure limited to treatment information per directive scope.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

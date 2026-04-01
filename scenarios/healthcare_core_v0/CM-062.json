@@ -1,0 +1,33 @@
+{
+    "id": "CM-062",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "pharmacist",
+        "department": "pharmacy",
+        "permissions": [
+            "read:patient_chart",
+            "consent:Patient/P-2210:medication_therapy_management"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-2210"
+    },
+    "prior_state": {
+        "consent_type": "medication_therapy_management_program",
+        "consent_grantor": "Patient/P-2210",
+        "consent_status": "active",
+        "mtm_program_enrollment": "confirmed",
+        "access_scope": "medication_list_and_diagnoses_only",
+        "hipaa_tpo_covered": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient P-2210 enrolled in and consented to medication therapy management program. Pharmacist access limited to medication list and relevant diagnoses for MTM. Covered under HIPAA TPO.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

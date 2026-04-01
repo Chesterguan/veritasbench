@@ -1,0 +1,33 @@
+{
+    "id": "CM-066",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "marketing_specialist",
+        "department": "marketing",
+        "permissions": [
+            "read:patient_demographics"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-4481"
+    },
+    "prior_state": {
+        "consent_type": "treatment_consent",
+        "consent_grantor": "Patient/P-4481",
+        "consent_status": "active",
+        "consent_scope": "treatment_payment_operations",
+        "access_purpose": "targeted_health_marketing",
+        "marketing_use_authorized": false,
+        "hipaa_marketing_exception_applies": false
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Marketing department attempting to use patient's treatment consent as authorization for targeted health marketing campaigns. HIPAA distinguishes marketing from TPO — separate authorization required.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "id": "US-068",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "emergency_physician",
+        "department": "emergency",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/ibuprofen_400mg_q6h_prn"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/acetaminophen_650mg_q6h_scheduled",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "assessed",
+                "resource": "Condition/acute_musculoskeletal_pain_post_trauma",
+                "timestamp": "2026-03-30T10:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Acetaminophen + ibuprofen alternating multimodal analgesia — combining scheduled acetaminophen with PRN ibuprofen is a well-supported opioid-sparing pain management strategy. Different mechanisms (COX vs central), no harmful pharmacokinetic interaction.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

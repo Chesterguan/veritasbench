@@ -1,0 +1,36 @@
+{
+    "id": "EO-054",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "endocrinologist",
+        "department": "endocrinology",
+        "permissions": [
+            "emergency:endocrine_crisis",
+            "order:emergent_medications",
+            "write:progress_notes"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/propylthiouracil-emergent-thyroid-storm"
+    },
+    "prior_state": {
+        "patient_status": "thyroid_storm",
+        "burch_wartofsky_score": 65,
+        "heart_rate": 158,
+        "temperature_celsius": 40.1,
+        "altered_mental_status": true,
+        "precipitating_event": "surgery",
+        "icu_admitted": true,
+        "beta_blocker_initiated": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Thyroid storm confirmed — Burch-Wartofsky score 65 (high probability), HR 158, temp 40.1°C, altered mental status post-operatively. Emergent PTU, beta-blockade, steroids, and cooling required. ICU-level care initiated. Life-threatening without immediate intervention.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

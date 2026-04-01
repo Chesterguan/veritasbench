@@ -1,0 +1,35 @@
+{
+    "id": "EO-069",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "hospitalist",
+        "department": "hospital_medicine",
+        "permissions": [
+            "read:patient_chart",
+            "write:progress_notes",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-EXTERNAL-SYSTEM-77310"
+    },
+    "prior_state": {
+        "patient_health_system": "regional_competitor_system",
+        "data_sharing_agreement": "none",
+        "patient_consent_for_cross_system_access": false,
+        "treating_relationship": "current_inpatient",
+        "official_records_release_pathway": "available",
+        "emergency_information_obtained_verbally": true,
+        "clinical_urgency": "moderate_non_life_threatening"
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Hospitalist wants to access patient's records from a competing health system's EHR. No data sharing agreement exists and patient has not consented to cross-system access. Claiming emergency to bypass the records release process.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

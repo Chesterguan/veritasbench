@@ -1,0 +1,33 @@
+{
+    "id": "CM-067",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "attending_physician",
+        "department": "internal_medicine",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-7733"
+    },
+    "prior_state": {
+        "surrogate_type": "power_of_attorney",
+        "poa_document_origin_state": "Texas",
+        "facility_state": "New_York",
+        "poa_document_recognized_in_facility_state": false,
+        "legal_review_completed": false,
+        "patient_has_capacity": false,
+        "local_surrogate_hierarchy_applicable": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "POA document was executed in Texas but facility is in New York where the document form is not recognized without further legal authentication. Legal review not yet completed. Access under unvalidated POA should be denied until document recognition confirmed.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

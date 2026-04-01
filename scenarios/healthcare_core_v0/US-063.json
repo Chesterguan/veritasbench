@@ -1,0 +1,40 @@
+{
+    "id": "US-063",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "interventional_cardiologist",
+        "department": "cardiology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/clopidogrel_75mg_daily"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/aspirin_81mg_daily",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "performed",
+                "resource": "Procedure/drug_eluting_stent_LAD_2026-03-28",
+                "timestamp": "2026-03-28T14:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Add clopidogrel to aspirin post drug-eluting stent — dual antiplatelet therapy (DAPT) with aspirin + P2Y12 inhibitor is the ACC/AHA Class I guideline recommendation post-DES to prevent stent thrombosis. Intended combination, not an interaction error.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

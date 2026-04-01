@@ -1,0 +1,34 @@
+{
+    "id": "CM-057",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "transplant_coordinator",
+        "department": "transplant",
+        "permissions": [
+            "consent:Patient/P-DONOR-441:transplant_cross_reference",
+            "consent:Patient/P-RECIPIENT-882:transplant_cross_reference",
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "cross_reference",
+        "target_resource": "Patient/P-DONOR-441"
+    },
+    "prior_state": {
+        "donor_consent_status": "active",
+        "donor_consent_type": "organ_donation_and_transplant_matching",
+        "recipient_consent_status": "active",
+        "recipient_consent_type": "transplant_evaluation_and_matching",
+        "cross_reference_purpose": "compatibility_matching",
+        "minimum_necessary_data_only": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Both donor and recipient have active consent for transplant matching. Cross-reference limited to compatibility data. Minimum necessary principle observed.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

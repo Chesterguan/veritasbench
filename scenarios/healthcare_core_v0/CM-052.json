@@ -1,0 +1,33 @@
+{
+    "id": "CM-052",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "pediatric_nurse",
+        "department": "pediatrics",
+        "permissions": [
+            "read:patient_chart",
+            "proxy:Patient/P-CHILD-1142:foster_parent_legal_custody"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-CHILD-1142"
+    },
+    "prior_state": {
+        "patient_age_years": 9,
+        "legal_guardian_type": "foster_parent",
+        "legal_custody_documentation": "court_order_on_file",
+        "custody_status": "active",
+        "biological_parent_rights_status": "terminated",
+        "documentation_verified_by_admissions": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Foster parent has documented legal custody via court order on file. Biological parental rights terminated. Foster parent is the legal decision-maker for this minor patient.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

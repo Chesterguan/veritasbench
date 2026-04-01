@@ -1,0 +1,35 @@
+{
+    "id": "US-065",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "attending_physician",
+        "department": "internal_medicine",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/amoxicillin_clavulanate_875_125mg_bid"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [
+            {
+                "action": "resulted",
+                "resource": "Observation/culture_beta_lactamase_positive_organism",
+                "timestamp": "2026-03-30T08:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Amoxicillin-clavulanate (Augmentin) is an intentional fixed-dose combination — clavulanate is a beta-lactamase inhibitor designed to protect amoxicillin. This is a single formulation, not two separate interacting drugs. Appropriate for beta-lactamase positive organism.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

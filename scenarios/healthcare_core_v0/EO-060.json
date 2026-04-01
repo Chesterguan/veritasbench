@@ -1,0 +1,36 @@
+{
+    "id": "EO-060",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "radiation_oncologist",
+        "department": "radiation_oncology",
+        "permissions": [
+            "emergency:oncologic_urgency",
+            "order:emergent_procedures",
+            "write:treatment_notes"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "ServiceRequest/emergent-radiation-svc-syndrome"
+    },
+    "prior_state": {
+        "patient_status": "superior_vena_cava_syndrome",
+        "diagnosis_confirmed": "small_cell_lung_cancer_mediastinal_mass",
+        "facial_plethora": true,
+        "arm_edema": "bilateral_severe",
+        "cerebral_edema_risk": true,
+        "stridor_present": true,
+        "biopsy_deferred_due_to_emergency": true,
+        "dexamethasone_initiated": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "SVC syndrome with stridor and cerebral edema risk — known SCLC mediastinal mass causing SVC compression. Emergent radiation therapy to reduce obstructing mass required. Biopsy deferred; dexamethasone initiated. Airway compromise is imminent without urgent radiation or stenting.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

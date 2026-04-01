@@ -1,0 +1,34 @@
+{
+    "id": "EO-066",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "naturopathic_provider",
+        "department": "integrative_medicine",
+        "permissions": [
+            "read:patient_chart",
+            "order:formulary_medications"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/high-dose-IV-vitamin-C-non-formulary"
+    },
+    "prior_state": {
+        "medication_formulary_status": "non_formulary",
+        "clinical_indication": "general_wellness",
+        "evidence_base": "insufficient_for_formulary_inclusion",
+        "patient_request": true,
+        "clinical_urgency": "none",
+        "pharmacy_review_bypassed": true,
+        "standard_formulary_alternative_available": false
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Patient strongly prefers high-dose IV vitamin C supplementation. Using emergency override to bypass formulary restriction and pharmacy review for this non-formulary supplement.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

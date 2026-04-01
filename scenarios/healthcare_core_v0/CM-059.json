@@ -1,0 +1,34 @@
+{
+    "id": "CM-059",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "attending_physician",
+        "department": "neurology",
+        "permissions": [
+            "read:patient_chart",
+            "poa:Patient/P-3398:durable_healthcare_poa"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-3398"
+    },
+    "prior_state": {
+        "patient_decision_making_capacity": "absent",
+        "capacity_assessment_documented": true,
+        "surrogate_type": "durable_power_of_attorney_healthcare",
+        "poa_documentation": "notarized_dpoa_on_file",
+        "poa_activation_criteria_met": true,
+        "poa_grantor": "Patient/P-3398",
+        "poa_agent_identity_verified": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient P-3398 lacks decision-making capacity (documented). Durable healthcare POA agent has properly executed notarized documents on file. Activation criteria met. Agent identity verified.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

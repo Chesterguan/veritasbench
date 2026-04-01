@@ -1,0 +1,40 @@
+{
+    "id": "US-061",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "cardiologist",
+        "department": "cardiology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/amlodipine_5mg_daily"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/metoprolol_succinate_50mg_daily",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "verify_bp",
+                "resource": "Observation/bp_152_94_uncontrolled",
+                "timestamp": "2026-03-30T09:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Add amlodipine 5mg to metoprolol for uncontrolled hypertension — metoprolol + amlodipine is a well-established, safe combination for hypertension with complementary mechanisms (beta-blocker + calcium channel blocker); no clinically significant interaction.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

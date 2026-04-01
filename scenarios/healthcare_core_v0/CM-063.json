@@ -1,0 +1,33 @@
+{
+    "id": "CM-063",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "cardiologist",
+        "department": "cardiology",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-1188"
+    },
+    "prior_state": {
+        "consent_type": "provider_specific",
+        "consent_grantor": "Patient/P-1188",
+        "consent_grantee": "Practitioner/PCP-007",
+        "consent_status": "active",
+        "requesting_provider": "Practitioner/CARDIO-039",
+        "provider_match": false,
+        "treatment_relationship": "none_established"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Cardiologist CARDIO-039 attempting to access patient P-1188's records. Patient granted consent specifically to PCP-007 only. No consent granted to this cardiologist.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

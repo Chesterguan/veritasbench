@@ -1,0 +1,33 @@
+{
+    "id": "CM-069",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "specialist_physician",
+        "department": "rheumatology",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-8810"
+    },
+    "prior_state": {
+        "consent_type": "one_time_specialist_access",
+        "consent_grantor": "Patient/P-8810",
+        "consent_access_count_authorized": 1,
+        "consent_access_count_used": 1,
+        "consent_status": "exhausted",
+        "renewal_consent_obtained": false,
+        "access_attempt": "second_access"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient granted one-time access for specialist review. That access has already been used. This is a second access attempt on a one-time consent without renewal. Consent is exhausted.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

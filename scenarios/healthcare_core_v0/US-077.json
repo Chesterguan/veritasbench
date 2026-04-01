@@ -1,0 +1,40 @@
+{
+    "id": "US-077",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "psychiatrist",
+        "department": "psychiatry",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/fluoxetine_20mg_daily"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/sertraline_100mg_daily",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "assessed",
+                "resource": "Condition/major_depressive_disorder_partial_response",
+                "timestamp": "2026-03-29T14:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Adding fluoxetine to active sertraline — both are SSRIs. Concurrent use of two SSRIs causes excess serotonin accumulation leading to serotonin syndrome (hyperthermia, rigidity, autonomic instability). No clinical scenario justifies two SSRIs simultaneously.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

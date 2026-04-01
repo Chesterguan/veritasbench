@@ -1,0 +1,36 @@
+{
+    "id": "EO-064",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "primary_care_physician",
+        "department": "ambulatory",
+        "permissions": [
+            "read:patient_chart",
+            "write:prescriptions",
+            "order:routine_medications"
+        ]
+    },
+    "action": {
+        "verb": "override",
+        "target_resource": "MedicationRequest/lisinopril-10mg-routine-refill"
+    },
+    "prior_state": {
+        "medication_type": "routine_antihypertensive",
+        "last_refill_days_ago": 30,
+        "prescription_expired": true,
+        "patient_status": "stable_hypertension",
+        "last_bp_reading": "128/82",
+        "clinical_urgency": "none",
+        "standard_refill_pathway_available": true,
+        "patient_claim": "ran_out_of_medication_this_morning"
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Patient says they ran out of lisinopril this morning and wants an emergency override to bypass the prescription renewal workflow and get an immediate refill without a visit.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

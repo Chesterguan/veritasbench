@@ -1,0 +1,32 @@
+{
+    "id": "CM-065",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "research_coordinator",
+        "department": "clinical_research",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "enroll",
+        "target_resource": "ResearchStudy/STUDY-2026-0041"
+    },
+    "prior_state": {
+        "consent_method": "unsigned_email_reply",
+        "written_signature_obtained": false,
+        "electronic_signature_platform": "none",
+        "irb_required_consent_method": "written_or_validated_esignature",
+        "patient_replied_yes_via_email": true,
+        "hipaa_authorization_signed": false
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient replied 'yes I agree' via email. No written signature and no validated e-signature platform used. IRB requires written or validated electronic consent. Unsigned email reply is not valid HIPAA authorization.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

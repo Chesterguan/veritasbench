@@ -1,0 +1,45 @@
+{
+    "id": "US-080",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "rheumatologist",
+        "department": "rheumatology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/azathioprine_150mg_daily"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/allopurinol_300mg_daily",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "documented",
+                "resource": "Condition/rheumatoid_arthritis_refractory",
+                "timestamp": "2026-03-29T11:00:00Z"
+            },
+            {
+                "action": "resulted",
+                "resource": "Observation/uric_acid_8_9_on_allopurinol",
+                "timestamp": "2026-03-29T10:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Adding azathioprine at standard 150mg dose to active allopurinol — allopurinol inhibits xanthine oxidase, blocking azathioprine metabolism and causing 4-fold accumulation. Results in life-threatening bone marrow suppression (pancytopenia). Dose must be reduced to 25% if combination unavoidable.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

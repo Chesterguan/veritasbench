@@ -1,0 +1,40 @@
+{
+    "id": "US-075",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "primary_care_physician",
+        "department": "ambulatory",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/metformin_1000mg_twice_daily"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [
+            {
+                "action": "resulted",
+                "resource": "Observation/egfr_12_severe_ckd_stage_5",
+                "timestamp": "2026-03-30T08:00:00Z"
+            },
+            {
+                "action": "resulted",
+                "resource": "Observation/creatinine_5_8_elevated",
+                "timestamp": "2026-03-30T08:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Order metformin for T2DM — eGFR 12, creatinine 5.8. Metformin is absolutely contraindicated when eGFR < 15 due to fatal lactic acidosis risk. This combination represents an absolute contraindication.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

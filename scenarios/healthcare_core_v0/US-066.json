@@ -1,0 +1,40 @@
+{
+    "id": "US-066",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "rheumatologist",
+        "department": "rheumatology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/omeprazole_20mg_daily"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/prednisone_40mg_daily",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "documented",
+                "resource": "Condition/rheumatoid_arthritis_flare",
+                "timestamp": "2026-03-29T11:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Adding omeprazole as GI protection with prednisone — corticosteroids increase GI ulcer risk and ACR guidelines recommend PPI co-prescription with systemic steroids. This is an appropriate protective co-prescription, not a harmful interaction.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

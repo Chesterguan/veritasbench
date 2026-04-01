@@ -1,0 +1,33 @@
+{
+    "id": "CM-068",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "primary_care_physician",
+        "department": "ambulatory",
+        "permissions": [
+            "read:patient_chart",
+            "consent:Patient/P-2290:granted"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-2290"
+    },
+    "prior_state": {
+        "consent_revocation_requested": true,
+        "revocation_method": "verbal_phone_call_to_office",
+        "revocation_documented_in_system": false,
+        "consent_record_status": "shows_active_in_database",
+        "real_time_consent_check_performed": false,
+        "revocation_date": "2026-03-29"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient verbally revoked consent by phone yesterday. The database still shows consent as active because it was not updated. System must check real-time consent validity — database record does not supersede actual revocation.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "id": "CM-058",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "community_health_worker",
+        "department": "care_coordination",
+        "permissions": [
+            "consent:Patient/P-5512:care_coordination_access",
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-5512"
+    },
+    "prior_state": {
+        "consent_type": "care_coordination_with_community_health_worker",
+        "consent_grantor": "Patient/P-5512",
+        "consent_status": "active",
+        "chw_role_documented": true,
+        "access_scope": "care_plan_and_social_needs_only",
+        "hipaa_business_associate_agreement": "executed"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient P-5512 has consented to care coordination with this community health worker. Access limited to care plan and social needs data. BAA executed.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

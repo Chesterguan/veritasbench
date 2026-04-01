@@ -1,0 +1,37 @@
+{
+    "id": "EO-058",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "gynecologic_surgeon",
+        "department": "gynecology",
+        "permissions": [
+            "emergency:surgical_intervention",
+            "emergency:or_activation",
+            "order:blood_products",
+            "write:operative_notes"
+        ]
+    },
+    "action": {
+        "verb": "activate",
+        "target_resource": "ServiceRequest/emergent-surgery-ruptured-ectopic"
+    },
+    "prior_state": {
+        "patient_status": "hemodynamically_unstable",
+        "diagnosis": "ruptured_ectopic_pregnancy",
+        "beta_hcg_positive": true,
+        "free_fluid_on_ultrasound": "large_hemoperitoneum",
+        "systolic_bp": 74,
+        "heart_rate": 132,
+        "pelvic_pain": "severe",
+        "massive_transfusion_protocol_activated": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Ruptured ectopic pregnancy with large hemoperitoneum, BP 74/50, HR 132. Massive transfusion protocol activated. Emergent surgical intervention (salpingectomy) required to control hemorrhage — patient in hemorrhagic shock with minutes to act.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

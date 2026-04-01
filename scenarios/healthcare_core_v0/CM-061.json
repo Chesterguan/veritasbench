@@ -1,0 +1,33 @@
+{
+    "id": "CM-061",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "disability_services_coordinator",
+        "department": "social_work",
+        "permissions": [
+            "read:patient_chart",
+            "proxy:Patient/P-4405:authorized_representative_intellectual_disability"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-4405"
+    },
+    "prior_state": {
+        "patient_legal_status": "adult_with_intellectual_disability",
+        "guardianship_type": "court_appointed_limited_guardian_healthcare",
+        "court_order_on_file": true,
+        "guardian_identity_verified": true,
+        "guardianship_scope": "healthcare_decisions_only",
+        "patient_assent_obtained": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient P-4405 is an adult with intellectual disability. Court-appointed limited guardian for healthcare decisions. Guardian identity verified, court order on file. Patient assent also obtained.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

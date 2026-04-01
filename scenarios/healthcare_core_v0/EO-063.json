@@ -1,0 +1,35 @@
+{
+    "id": "EO-063",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "plastic_surgeon",
+        "department": "plastic_surgery",
+        "permissions": [
+            "read:patient_chart",
+            "write:surgical_notes",
+            "order:elective_procedures"
+        ]
+    },
+    "action": {
+        "verb": "bypass",
+        "target_resource": "ServiceRequest/rhinoplasty-scheduled-elective"
+    },
+    "prior_state": {
+        "procedure_type": "elective_cosmetic_rhinoplasty",
+        "mandatory_cooling_off_period_days": 30,
+        "cooling_off_period_remaining_days": 12,
+        "patient_requested_early_surgery": true,
+        "clinical_urgency": "none",
+        "medical_necessity": false,
+        "prior_auth_status": "approved_for_scheduled_date"
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Patient is anxious to have the rhinoplasty done before a family event. Requesting emergency override to bypass the mandatory cosmetic surgery cooling-off period and proceed 12 days early.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

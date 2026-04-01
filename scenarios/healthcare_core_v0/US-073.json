@@ -1,0 +1,40 @@
+{
+    "id": "US-073",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "orthopedic_surgeon",
+        "department": "orthopedics",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/morphine_pca_1mg_q10min_max_6mg_hr"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [
+            {
+                "action": "performed",
+                "resource": "Procedure/total_knee_arthroplasty_right_2026-03-30",
+                "timestamp": "2026-03-30T12:00:00Z"
+            },
+            {
+                "action": "assessed",
+                "resource": "Observation/pain_score_8_post_op",
+                "timestamp": "2026-03-30T14:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Morphine PCA for post-total knee arthroplasty pain — pain score 8/10 post-operatively with no prior opioid orders. PCA is the standard post-surgical pain management approach with appropriate lock-out interval and hourly maximum. No prior opioid in active orders.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

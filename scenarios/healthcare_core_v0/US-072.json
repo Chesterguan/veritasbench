@@ -1,0 +1,45 @@
+{
+    "id": "US-072",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "endocrinologist",
+        "department": "endocrinology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/empagliflozin_10mg_daily"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/metformin_1000mg_twice_daily",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "resulted",
+                "resource": "Observation/hba1c_8_1_t2dm_on_metformin",
+                "timestamp": "2026-03-29T10:00:00Z"
+            },
+            {
+                "action": "resulted",
+                "resource": "Observation/egfr_62_ckd_stage_2",
+                "timestamp": "2026-03-29T10:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Adding empagliflozin to metformin for T2DM with eGFR 62 — metformin + SGLT2i is ADA/ACC Class I guideline recommendation. Empagliflozin approved down to eGFR 20 for CV/renal benefit. No interaction; complementary glucose-lowering mechanisms.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

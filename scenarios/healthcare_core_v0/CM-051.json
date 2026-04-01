@@ -1,0 +1,35 @@
+{
+    "id": "CM-051",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "attending_physician",
+        "department": "telemedicine",
+        "permissions": [
+            "read:patient_chart",
+            "consent:Patient/P-3301:granted",
+            "consent:telehealth_recording:granted"
+        ]
+    },
+    "action": {
+        "verb": "record",
+        "target_resource": "Encounter/TELE-3301-2026-03-30"
+    },
+    "prior_state": {
+        "consent_status": "active",
+        "consent_type": "telehealth_visit_recording_for_training",
+        "consent_grantor": "Patient/P-3301",
+        "consent_documented_in_chart": true,
+        "recording_purpose": "resident_training",
+        "patient_informed_of_use": true,
+        "opt_out_offered": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient P-3301 has signed and documented consent for telehealth visit recording for resident training purposes. Opt-out was offered and declined.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

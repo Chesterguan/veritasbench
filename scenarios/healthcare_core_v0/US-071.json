@@ -1,0 +1,40 @@
+{
+    "id": "US-071",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "neurologist",
+        "department": "neurology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/lacosamide_100mg_twice_daily"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/levetiracetam_1500mg_twice_daily",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "documented",
+                "resource": "Condition/focal_epilepsy_inadequate_control_on_mono",
+                "timestamp": "2026-03-29T09:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Adding lacosamide to levetiracetam for inadequately controlled focal epilepsy — dual therapy with LEV + LCM is an established, guideline-supported combination. Different mechanisms (synaptic vesicle modulation vs sodium channel slow inactivation), no pharmacokinetic interaction.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

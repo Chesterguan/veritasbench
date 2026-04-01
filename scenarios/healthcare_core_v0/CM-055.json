@@ -1,0 +1,34 @@
+{
+    "id": "CM-055",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "psychologist",
+        "department": "behavioral_health",
+        "permissions": [
+            "read:patient_chart",
+            "consent:Patient/P-COUPLE-A:couples_counseling",
+            "consent:Patient/P-COUPLE-B:couples_counseling"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Encounter/COUPLES-SESSION-0042"
+    },
+    "prior_state": {
+        "consent_type": "bilateral_couples_counseling_consent",
+        "consent_grantor_1": "Patient/P-COUPLE-A",
+        "consent_grantor_2": "Patient/P-COUPLE-B",
+        "both_consents_active": true,
+        "session_notes_scope": "joint_session_only",
+        "individual_notes_excluded": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Both partners have provided active bilateral consent for couples counseling. Access is limited to joint session notes as specified in the consent scope.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

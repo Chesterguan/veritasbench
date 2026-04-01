@@ -1,0 +1,36 @@
+{
+    "id": "EO-059",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "interventional_radiologist",
+        "department": "interventional_radiology",
+        "permissions": [
+            "emergency:vascular_intervention",
+            "order:emergent_procedures",
+            "write:procedure_notes"
+        ]
+    },
+    "action": {
+        "verb": "activate",
+        "target_resource": "ServiceRequest/emergent-mesenteric-angiography"
+    },
+    "prior_state": {
+        "patient_status": "acute_abdomen",
+        "suspected_diagnosis": "acute_mesenteric_ischemia",
+        "lactate_mmol_l": 6.8,
+        "ct_angiography": "superior_mesenteric_artery_occlusion",
+        "bowel_infarction_signs": false,
+        "anticoagulation_initiated": true,
+        "surgery_on_standby": true,
+        "symptom_onset_hours": 3
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Acute mesenteric ischemia — SMA occlusion on CTA, lactate 6.8, 3-hour window without bowel infarction signs. Emergent angiography with possible catheter-directed thrombolysis or thrombectomy required. Surgical team on standby. Bowel infarction and mortality risk is very high without immediate revascularization.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

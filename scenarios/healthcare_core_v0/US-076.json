@@ -1,0 +1,40 @@
+{
+    "id": "US-076",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "neurologist",
+        "department": "neurology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/sumatriptan_100mg_prn_migraine"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/ergotamine_1mg_tartrate_prn",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "assessed",
+                "resource": "Condition/refractory_migraine",
+                "timestamp": "2026-03-30T09:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Sumatriptan with concurrent ergotamine — both cause coronary vasoconstriction via different mechanisms (5-HT1 agonist + ergot alkaloid). Concurrent or near-concurrent use causes additive coronary vasospasm risk with potential for myocardial ischemia. Absolute contraindication.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

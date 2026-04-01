@@ -1,0 +1,37 @@
+{
+    "id": "EO-057",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "neurosurgeon",
+        "department": "neurosurgery",
+        "permissions": [
+            "emergency:neurosurgical_intervention",
+            "order:emergent_imaging",
+            "emergency:or_activation",
+            "write:operative_notes"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "ServiceRequest/emergent-mri-spine-cauda-equina"
+    },
+    "prior_state": {
+        "patient_status": "neurological_emergency",
+        "suspected_diagnosis": "cauda_equina_syndrome",
+        "saddle_anesthesia": true,
+        "urinary_retention": true,
+        "bilateral_leg_weakness": true,
+        "bowel_incontinence": true,
+        "symptom_onset_hours": 6,
+        "mri_not_yet_performed": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Classic cauda equina syndrome presentation — saddle anesthesia, urinary retention, bilateral leg weakness, bowel incontinence at 6 hours onset. Emergent MRI spine required immediately to confirm and guide surgical decompression. Delay beyond 24-48 hours risks permanent incontinence.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

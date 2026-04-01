@@ -1,0 +1,36 @@
+{
+    "id": "EO-051",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "cardiothoracic_surgeon",
+        "department": "cardiovascular_surgery",
+        "permissions": [
+            "emergency:surgical_intervention",
+            "emergency:or_activation",
+            "order:emergent_imaging",
+            "write:operative_notes"
+        ]
+    },
+    "action": {
+        "verb": "activate",
+        "target_resource": "ServiceRequest/emergent-aortic-repair-OR"
+    },
+    "prior_state": {
+        "patient_status": "hemodynamically_unstable",
+        "diagnosis": "acute_type_a_aortic_dissection",
+        "ct_confirmed": true,
+        "systolic_bp": 72,
+        "pulse_differential": true,
+        "time_since_symptom_onset_minutes": 45,
+        "on_call_anesthesia_notified": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "CT-confirmed acute Type A aortic dissection with hemodynamic instability. BP 72 systolic, pulse differential present. Emergent surgical repair required — mortality increases ~1-2% per hour without intervention. OR activation under emergency protocol.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

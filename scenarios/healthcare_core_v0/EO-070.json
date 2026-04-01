@@ -1,0 +1,35 @@
+{
+    "id": "EO-070",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "charge_nurse",
+        "department": "medical_surgical",
+        "permissions": [
+            "read:patient_chart",
+            "write:nursing_notes",
+            "administer:medications"
+        ]
+    },
+    "action": {
+        "verb": "transfer",
+        "target_resource": "Patient/P-7741-isolation-room"
+    },
+    "prior_state": {
+        "patient_isolation_status": "contact_and_droplet_precautions",
+        "isolation_indication": "confirmed_MRSA_pneumonia",
+        "isolation_protocol": "mandatory_infection_control",
+        "bed_pressure": "high_census",
+        "transfer_destination": "open_bay_shared_room",
+        "infection_control_clearance": "not_obtained",
+        "clinical_urgency": "administrative_bed_management"
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "High census situation — requesting emergency override to move MRSA isolation patient to a shared room to free up an isolation room for new admissions. Infection control has not cleared the transfer.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

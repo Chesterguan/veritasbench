@@ -1,0 +1,34 @@
+{
+    "id": "CM-056",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "wound_care_nurse",
+        "department": "wound_care",
+        "permissions": [
+            "read:patient_chart",
+            "consent:Patient/P-7720:clinical_photography"
+        ]
+    },
+    "action": {
+        "verb": "create",
+        "target_resource": "Media/wound-photo-P-7720-2026-03-30"
+    },
+    "prior_state": {
+        "consent_type": "clinical_photography_wound_documentation",
+        "consent_grantor": "Patient/P-7720",
+        "consent_status": "active",
+        "photography_purpose": "wound_progress_documentation_in_chart",
+        "images_stored_in_ehr": true,
+        "no_external_sharing": true,
+        "consent_documented": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient P-7720 has consented to clinical photography for wound documentation. Images stored only in EHR for progress tracking. No external sharing.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

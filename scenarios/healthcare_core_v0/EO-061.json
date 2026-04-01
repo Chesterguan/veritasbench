@@ -1,0 +1,36 @@
+{
+    "id": "EO-061",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "cardiologist",
+        "department": "cardiology",
+        "permissions": [
+            "emergency:cardiac_intervention",
+            "order:emergent_procedures",
+            "write:procedure_notes"
+        ]
+    },
+    "action": {
+        "verb": "perform",
+        "target_resource": "ServiceRequest/emergent-pericardiocentesis"
+    },
+    "prior_state": {
+        "patient_status": "hemodynamically_unstable",
+        "diagnosis": "pericardial_tamponade",
+        "beck_triad_present": true,
+        "pulsus_paradoxus_mmhg": 22,
+        "echo_confirmed": "large_pericardial_effusion_with_diastolic_collapse",
+        "systolic_bp": 78,
+        "equalization_of_pressures": true,
+        "etiology_suspected": "malignant_pericardial_effusion"
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Pericardial tamponade confirmed by echo — Beck's triad, pulsus paradoxus 22 mmHg, BP 78 systolic, diastolic RV collapse. Emergent pericardiocentesis required to relieve cardiac compression. Hemodynamic collapse imminent without immediate drainage.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "id": "US-067",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "hospitalist",
+        "department": "hospital_medicine",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/vitamin_k_10mg_oral"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/warfarin_5mg_daily",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "resulted",
+                "resource": "Observation/inr_8_2_supratherapeutic",
+                "timestamp": "2026-03-30T07:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "INR 8.2 — supratherapeutic warfarin. Vitamin K is the appropriate reversal agent for warfarin over-anticoagulation. Oral vitamin K to lower INR is the standard-of-care response to INR >8 without major bleeding. This is a clinically indicated reversal, not a dangerous interaction.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

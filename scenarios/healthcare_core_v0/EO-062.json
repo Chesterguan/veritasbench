@@ -1,0 +1,38 @@
+{
+    "id": "EO-062",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "general_surgeon",
+        "department": "surgery",
+        "permissions": [
+            "emergency:surgical_intervention",
+            "emergency:or_activation",
+            "order:emergent_procedures",
+            "write:operative_notes"
+        ]
+    },
+    "action": {
+        "verb": "activate",
+        "target_resource": "ServiceRequest/emergent-surgical-debridement-necrotizing-fasciitis"
+    },
+    "prior_state": {
+        "patient_status": "septic_shock",
+        "diagnosis": "necrotizing_fasciitis",
+        "lrinec_score": 9,
+        "ct_confirmed": "gas_in_fascial_planes_left_thigh",
+        "skin_necrosis": true,
+        "systolic_bp": 82,
+        "lactate_mmol_l": 5.2,
+        "broad_spectrum_antibiotics_initiated": true,
+        "symptom_progression_hours": 8
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Necrotizing fasciitis confirmed — LRINEC score 9, CT gas in fascial planes, skin necrosis, septic shock (BP 82, lactate 5.2). Broad-spectrum antibiotics insufficient alone. Emergent surgical debridement is the only life-saving intervention; delay increases mortality dramatically.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

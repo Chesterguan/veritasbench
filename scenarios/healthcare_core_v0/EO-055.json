@@ -1,0 +1,37 @@
+{
+    "id": "EO-055",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "emergency_physician",
+        "department": "emergency",
+        "permissions": [
+            "emergency:endocrine_crisis",
+            "emergency:acls",
+            "order:emergent_medications",
+            "write:emergency_notes"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationRequest/hydrocortisone-100mg-iv-adrenal-crisis"
+    },
+    "prior_state": {
+        "patient_status": "hemodynamically_unstable",
+        "suspected_diagnosis": "adrenal_crisis",
+        "systolic_bp": 68,
+        "known_adrenal_insufficiency": true,
+        "recent_steroid_taper_completed": true,
+        "precipitating_stressor": "sepsis",
+        "iv_fluids_running": true,
+        "cortisol_drawn_before_treatment": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Suspected adrenal crisis — BP 68 systolic in known adrenal insufficiency patient after steroid taper, triggered by sepsis. Cortisol sample drawn. Emergent hydrocortisone 100mg IV required immediately; do not wait for cortisol result — delay is fatal.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}
