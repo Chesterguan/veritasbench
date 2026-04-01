@@ -41,6 +41,18 @@ pub struct Action {
 pub struct PriorState {
     pub active_orders: Vec<ActiveOrder>,
     pub recent_actions: Vec<RecentAction>,
+    /// Active disease conditions (ICD-10 coded)
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub conditions: Vec<Condition>,
+    /// Recent lab results (LOINC coded)
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub labs: Vec<LabResult>,
+    /// Documented allergies
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub allergies: Vec<Allergy>,
+    /// Patient demographic/clinical context (age, weight, pregnancy, etc.)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub patient_context: Option<PatientContext>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -54,6 +66,42 @@ pub struct RecentAction {
     pub action: String,
     pub resource: String,
     pub timestamp: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Condition {
+    pub code: String,
+    pub display: String,
+    pub status: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LabResult {
+    pub code: String,
+    pub display: String,
+    pub value: f64,
+    pub unit: String,
+    pub timestamp: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Allergy {
+    pub substance: String,
+    pub reaction: String,
+    pub status: String,
+    pub severity: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PatientContext {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub age: Option<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub weight_kg: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pregnant: Option<bool>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub gestational_age_weeks: Option<u32>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
