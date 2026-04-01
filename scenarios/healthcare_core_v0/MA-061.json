@@ -1,0 +1,36 @@
+{
+    "id": "MA-061",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "icu_nurse",
+        "department": "intensive_care",
+        "permissions": [
+            "administer:vasopressors",
+            "titrate:per_protocol"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationAdministration/MA-NOREPINEPHRINE-TITRATION-461"
+    },
+    "prior_state": {
+        "vasopressor_protocol_active": true,
+        "physician_approved_protocol": true,
+        "protocol_resource": "PlanDefinition/PROTOCOL-VASOPRESSOR-TITRATION",
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/MR-NOREPINEPHRINE-461",
+                "status": "active"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": "approved",
+    "justification": "Vasopressor titration per physician-approved ICU hemodynamic protocol",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

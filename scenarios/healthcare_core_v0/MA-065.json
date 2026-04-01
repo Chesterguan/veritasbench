@@ -1,0 +1,30 @@
+{
+    "id": "MA-065",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "registered_nurse",
+        "department": "hematology",
+        "permissions": [
+            "administer:blood_products"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "Procedure/PROC-THERAPEUTIC-PLASMA-EXCHANGE-465"
+    },
+    "prior_state": {
+        "hematology_attending_approval": false,
+        "apheresis_team_notified": false,
+        "informed_consent_obtained": false,
+        "active_orders": []
+    },
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "Initiating therapeutic plasma exchange — requires hematology attending sign-off, apheresis team scheduling, and informed consent before procedure start",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

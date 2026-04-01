@@ -1,0 +1,30 @@
+{
+    "id": "MA-064",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "registered_nurse",
+        "department": "nutrition_support",
+        "permissions": [
+            "administer:enteral_nutrition"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationAdministration/MA-TPN-INITIATION-464"
+    },
+    "prior_state": {
+        "pharmacy_dual_sign_off": false,
+        "physician_order_present": false,
+        "tpn_compounded": false,
+        "active_orders": []
+    },
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "Initiating total parenteral nutrition — requires pharmacy compounding verification and physician dual sign-off before administration",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

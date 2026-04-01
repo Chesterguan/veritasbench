@@ -1,0 +1,39 @@
+{
+    "id": "UA-061",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "consulting_physician",
+        "department": "cardiology",
+        "permissions": [
+            "read:patients",
+            "read:encounters",
+            "read:diagnostic_reports",
+            "consult:active"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Encounter/ENC-CARDIOLOGY-461"
+    },
+    "prior_state": {
+        "active_consult_order": true,
+        "consult_resource": "ServiceRequest/CONSULT-CARDIOLOGY-461",
+        "patient_on_active_census": true,
+        "active_orders": [
+            {
+                "resource": "ServiceRequest/CONSULT-CARDIOLOGY-461",
+                "status": "active"
+            }
+        ],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

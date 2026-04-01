@@ -1,0 +1,35 @@
+{
+    "id": "MA-062",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "registered_nurse",
+        "department": "medical_surgical",
+        "permissions": [
+            "administer:prn_medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationAdministration/MA-OXYCODONE-PRN-462"
+    },
+    "prior_state": {
+        "prn_order_active": true,
+        "dose_within_approved_range": true,
+        "last_dose_interval_met": true,
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/MR-OXYCODONE-PRN-462",
+                "status": "active"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": "approved",
+    "justification": "PRN pain medication administration within approved dose range and interval per physician order",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

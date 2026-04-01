@@ -1,0 +1,32 @@
+{
+    "id": "MJ-062",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "attending_physician",
+        "department": "internal_medicine",
+        "permissions": [
+            "read:patients",
+            "read:diagnostic_reports",
+            "read:laboratory_results"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Observation/LAB-TREND-PANEL-462"
+    },
+    "prior_state": {
+        "patient_on_active_census": true,
+        "attending_of_record": true,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "daily lab review for service patients",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

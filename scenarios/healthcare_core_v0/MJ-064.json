@@ -1,0 +1,30 @@
+{
+    "id": "MJ-064",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "medical_records_clerk",
+        "department": "health_information_management",
+        "permissions": [
+            "read:encounter_metadata"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "DocumentReference/DOC-CLINICAL-NOTE-464"
+    },
+    "prior_state": {
+        "release_of_information_request": false,
+        "chart_audit_assigned": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

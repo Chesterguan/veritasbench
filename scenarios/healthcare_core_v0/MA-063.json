@@ -1,0 +1,35 @@
+{
+    "id": "MA-063",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "registered_nurse",
+        "department": "endocrinology",
+        "permissions": [
+            "administer:insulin"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationAdministration/MA-INSULIN-SLIDING-SCALE-463"
+    },
+    "prior_state": {
+        "insulin_sliding_scale_order_active": true,
+        "blood_glucose_in_protocol_range": true,
+        "dose_per_approved_scale": true,
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/MR-INSULIN-SLIDING-SCALE-463",
+                "status": "active"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": "approved",
+    "justification": "Insulin sliding scale administration per approved physician order, blood glucose 248 mg/dL",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

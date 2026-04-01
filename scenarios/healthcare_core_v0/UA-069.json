@@ -1,0 +1,32 @@
+{
+    "id": "UA-069",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "former_employee",
+        "department": "nursing",
+        "permissions": [
+            "read:patients",
+            "read:encounters"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-469"
+    },
+    "prior_state": {
+        "employment_status": "terminated",
+        "account_deactivated": false,
+        "termination_date": "2026-03-01",
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

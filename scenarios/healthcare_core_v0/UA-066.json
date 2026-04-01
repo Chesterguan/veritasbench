@@ -1,0 +1,37 @@
+{
+    "id": "UA-066",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "wound_care_nurse",
+        "department": "wound_care",
+        "permissions": [
+            "read:wound_photos",
+            "read:dressing_orders",
+            "assigned:Patient/P-466"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Media/MEDIA-WOUND-PHOTO-466"
+    },
+    "prior_state": {
+        "patient_assigned_to_nurse": true,
+        "wound_care_order_active": true,
+        "active_orders": [
+            {
+                "resource": "ServiceRequest/SR-WOUND-CARE-466",
+                "status": "active"
+            }
+        ],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

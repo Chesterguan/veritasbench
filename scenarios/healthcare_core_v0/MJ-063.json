@@ -1,0 +1,32 @@
+{
+    "id": "MJ-063",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "infection_preventionist",
+        "department": "infection_prevention",
+        "permissions": [
+            "read:culture_results",
+            "read:microbiology_reports",
+            "read:surveillance_data"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "DiagnosticReport/DR-CULTURE-SURVEILLANCE-463"
+    },
+    "prior_state": {
+        "surveillance_protocol_active": true,
+        "hai_surveillance_role": true,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "hospital-acquired infection surveillance per protocol",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

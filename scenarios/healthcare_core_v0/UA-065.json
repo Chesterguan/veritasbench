@@ -1,0 +1,37 @@
+{
+    "id": "UA-065",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "physical_therapist",
+        "department": "rehabilitation",
+        "permissions": [
+            "read:mobility_orders",
+            "read:surgical_notes",
+            "assigned:Patient/P-465"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "DocumentReference/DOC-SURGICAL-NOTE-465"
+    },
+    "prior_state": {
+        "patient_assigned_to_therapist": true,
+        "rehab_order_active": true,
+        "active_orders": [
+            {
+                "resource": "ServiceRequest/SR-PT-REHAB-465",
+                "status": "active"
+            }
+        ],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

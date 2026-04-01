@@ -1,0 +1,29 @@
+{
+    "id": "UA-073",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "external_auditor",
+        "department": "external_compliance",
+        "permissions": []
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-473"
+    },
+    "prior_state": {
+        "business_associate_agreement_on_file": false,
+        "data_use_agreement_signed": false,
+        "de_identified_data_only": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "id": "UA-063",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "care_coordinator",
+        "department": "care_management",
+        "permissions": [
+            "read:transition_of_care",
+            "read:encounter_summary",
+            "assigned:Patient/P-463"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "DocumentReference/DOC-TOC-SUMMARY-463"
+    },
+    "prior_state": {
+        "patient_assigned_to_coordinator": true,
+        "transition_of_care_active": true,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

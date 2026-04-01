@@ -1,0 +1,38 @@
+{
+    "id": "UA-064",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "respiratory_therapist",
+        "department": "respiratory_therapy",
+        "permissions": [
+            "read:ventilator_orders",
+            "read:respiratory_care_plans",
+            "assigned:Patient/P-464"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "ServiceRequest/SR-VENTILATOR-ICU-464"
+    },
+    "prior_state": {
+        "patient_assigned_to_therapist": true,
+        "patient_in_icu": true,
+        "ventilator_active": true,
+        "active_orders": [
+            {
+                "resource": "ServiceRequest/SR-VENTILATOR-ICU-464",
+                "status": "active"
+            }
+        ],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}
