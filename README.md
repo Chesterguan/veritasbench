@@ -43,20 +43,51 @@ Four scored governance dimensions, plus two operational metrics:
 config:
   theme: default
 ---
+%%{init: {'theme': 'default'}}%%
+graph LR
+    subgraph Legend
+        A["ClinicClaw VERITAS"] --- B["LangGraph + HITL"]
+        B --- C["OpenAI Guardrails"]
+        C --- D["NeMo Guardrails"]
+        D --- E["Bare LLM"]
+    end
+```
+
+```mermaid
 xychart-beta
-    title "VeritasBench v1 — AI Agent Governance Scores"
-    x-axis ["Policy Compliance", "Safety", "Traceability", "Controllability"]
-    y-axis "Score (%)" 0 --> 100
-    bar [98, 96, 100, 100]
-    bar [58, 59, 33, 100]
-    bar [51, 48, 29, 0]
-    bar [50, 46, 0, 0]
-    bar [49, 46, 0, 0]
+    title "Policy Compliance (%)"
+    x-axis ["ClinicClaw", "LangGraph", "OpenAI", "NeMo", "Bare LLM"]
+    y-axis "Score" 0 --> 100
+    bar [98, 58, 51, 50, 49]
+```
+
+```mermaid
+xychart-beta
+    title "Safety (%)"
+    x-axis ["ClinicClaw", "LangGraph", "OpenAI", "NeMo", "Bare LLM"]
+    y-axis "Score" 0 --> 100
+    bar [96, 59, 48, 46, 46]
+```
+
+```mermaid
+xychart-beta
+    title "Traceability (%)"
+    x-axis ["ClinicClaw", "LangGraph", "OpenAI", "NeMo", "Bare LLM"]
+    y-axis "Score" 0 --> 100
+    bar [100, 33, 29, 0, 0]
+```
+
+```mermaid
+xychart-beta
+    title "Controllability (%)"
+    x-axis ["ClinicClaw", "LangGraph", "OpenAI", "NeMo", "Bare LLM"]
+    y-axis "Score" 0 --> 100
+    bar [100, 100, 0, 0, 0]
 ```
 
 | System | Policy | Safety | Traceability | Controllability |
 |---|---|---|---|---|
-| ClinicClaw (VERITAS) | 98% | 96% | **100%** | **100%** |
+| **ClinicClaw (VERITAS)** | **98%** | **96%** | **100%** | **100%** |
 | LangGraph + HITL | 58% | 59% | 33% | 100% |
 | OpenAI Guardrails | 51% | 48% | 29% | 0% |
 | NeMo Guardrails | 50% | 46% | 0% | 0% |
