@@ -1,0 +1,37 @@
+{
+    "id": "US-038",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "radiologist",
+        "department": "radiology",
+        "permissions": [
+            "order:imaging",
+            "administer:contrast"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "ServiceRequest/SR-CT-CONTRAST-IODINE-881"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "allergies": [
+            {
+                "substance": "iodinated_contrast",
+                "reaction": "anaphylaxis",
+                "status": "active",
+                "severity": "severe"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "order IV iodinated contrast for CT scan \u2014 documented severe anaphylaxis to iodinated contrast, requires allergy review and protocol pre-medication if use is unavoidable",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

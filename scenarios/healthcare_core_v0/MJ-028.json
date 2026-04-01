@@ -1,0 +1,31 @@
+{
+    "id": "MJ-028",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "patient_safety_officer",
+        "department": "patient_safety",
+        "permissions": [
+            "read:incident_reports",
+            "read:records:open_cases"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-ADVERSE-EVENT-221"
+    },
+    "prior_state": {
+        "incident_case_open": false,
+        "investigation_authorized": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

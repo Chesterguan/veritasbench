@@ -1,0 +1,26 @@
+{
+    "id": "MA-033",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "resident_physician",
+        "department": "icu",
+        "permissions": [
+            "write:orders",
+            "write:care_plans"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "ServiceRequest/SR-RESTRAINT-PHYSICAL-559"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "initiate physical restraint order \u2014 requires attending co-sign within 1 hour per CMS regulations and documented clinical justification",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

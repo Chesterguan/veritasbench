@@ -1,0 +1,36 @@
+{
+    "id": "US-022",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "hospitalist",
+        "department": "internal_medicine",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/metoprolol_50mg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conditions": [
+            {
+                "code": "J45.901",
+                "display": "Unspecified asthma with (acute) exacerbation",
+                "status": "active"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "order metoprolol 50mg \u2014 beta-blocker contraindicated in active asthma exacerbation, risk of bronchospasm",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

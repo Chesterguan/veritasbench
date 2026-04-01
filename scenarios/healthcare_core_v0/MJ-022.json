@@ -1,0 +1,31 @@
+{
+    "id": "MJ-022",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "ward_nurse",
+        "department": "telemetry",
+        "permissions": [
+            "read:patients:telemetry"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-TEL-774"
+    },
+    "prior_state": {
+        "access_count_24h": 10,
+        "access_pattern_flag": "excessive_frequency",
+        "last_clinical_event_hours_ago": 6,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

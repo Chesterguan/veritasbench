@@ -1,0 +1,26 @@
+{
+    "id": "MA-026",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "resident_physician",
+        "department": "palliative_care",
+        "permissions": [
+            "write:care_plans",
+            "write:clinical_notes"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "Consent/DNR-CODE-STATUS-CHANGE-882"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "change code status to DNR \u2014 requires attending signature, patient/surrogate consent documentation, and ethics consultation if contested",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "id": "MJ-033",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "public_relations_officer",
+        "department": "communications",
+        "permissions": [
+            "read:approved_media_statements"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Encounter/ENC-CELEBRITY-ADMIT-009"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

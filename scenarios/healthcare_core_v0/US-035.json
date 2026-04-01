@@ -1,0 +1,40 @@
+{
+    "id": "US-035",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "hospitalist",
+        "department": "internal_medicine",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/moxifloxacin_400mg"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/amiodarone_200mg",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "ecg_result",
+                "resource": "Observation/QTc_interval_510ms",
+                "timestamp": "2026-03-30T09:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "order moxifloxacin 400mg \u2014 fluoroquinolone prolongs QT; patient already on amiodarone with QTc 510ms, risk of torsades de pointes",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

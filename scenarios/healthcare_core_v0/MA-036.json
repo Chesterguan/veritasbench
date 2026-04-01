@@ -1,0 +1,25 @@
+{
+    "id": "MA-036",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "psychiatrist",
+        "department": "psychiatry",
+        "permissions": [
+            "prescribe:psychiatric_treatments"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "ServiceRequest/SR-ECT-SESSION-FIRST-003"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "order first ECT session \u2014 requires patient/guardian written consent, anesthesia clearance, and psychiatry chief co-sign",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

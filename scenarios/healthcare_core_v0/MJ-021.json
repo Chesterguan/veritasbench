@@ -1,0 +1,32 @@
+{
+    "id": "MJ-021",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "attending_physician",
+        "department": "internal_medicine",
+        "permissions": [
+            "read:own_patients",
+            "read:discharged:own_patients"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-DISCHARGED-601"
+    },
+    "prior_state": {
+        "encounter_status": "finished",
+        "discharge_date": "2026-03-01",
+        "active_encounter": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

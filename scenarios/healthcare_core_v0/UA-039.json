@@ -1,0 +1,26 @@
+{
+    "id": "UA-039",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "compliance_auditor",
+        "department": "compliance",
+        "permissions": [
+            "read:aggregate_reports",
+            "read:de_identified_records"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-IDENTIFIED-551"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

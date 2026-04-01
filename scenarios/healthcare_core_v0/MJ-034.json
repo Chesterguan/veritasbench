@@ -1,0 +1,30 @@
+{
+    "id": "MJ-034",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "department_chair",
+        "department": "medicine",
+        "permissions": [
+            "read:aggregate_performance_metrics"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-DR-SMITH-PATIENT-441"
+    },
+    "prior_state": {
+        "performance_review_open": false,
+        "peer_review_authorized": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

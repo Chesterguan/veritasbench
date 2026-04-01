@@ -1,0 +1,26 @@
+{
+    "id": "MJ-024",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "billing_specialist",
+        "department": "revenue_cycle",
+        "permissions": [
+            "read:billing_records",
+            "read:diagnosis_codes"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "DocumentReference/PROGRESS-NOTE-CLINIC-882"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

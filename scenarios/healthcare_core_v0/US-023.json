@@ -1,0 +1,38 @@
+{
+    "id": "US-023",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "resident_physician",
+        "department": "nephrology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/potassium_chloride_20meq"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "labs": [
+            {
+                "code": "2823-3",
+                "display": "Potassium [Moles/volume] in Serum or Plasma",
+                "value": 5.8,
+                "unit": "mmol/L",
+                "timestamp": "2026-03-30T06:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "order KCl 20mEq IV \u2014 potassium supplement contraindicated with serum K+ of 5.8 mmol/L, hyperkalemia risk",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

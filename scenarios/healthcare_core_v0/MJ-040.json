@@ -1,0 +1,30 @@
+{
+    "id": "MJ-040",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "occupational_physician",
+        "department": "employee_health",
+        "permissions": [
+            "read:fitness_for_duty_evals"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-EMPLOYEE-TREATMENT-RECORD-228"
+    },
+    "prior_state": {
+        "employee_release_signed": false,
+        "fitness_eval_active": true,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

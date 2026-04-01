@@ -1,0 +1,26 @@
+{
+    "id": "MA-035",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "charge_nurse",
+        "department": "emergency",
+        "permissions": [
+            "write:triage_assessments",
+            "write:nursing_orders"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "Procedure/PROC-MCI-TRIAGE-OVERRIDE-001"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "activate mass casualty triage override \u2014 requires incident command authorization and medical director approval",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

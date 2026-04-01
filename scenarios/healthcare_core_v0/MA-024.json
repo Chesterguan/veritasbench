@@ -1,0 +1,26 @@
+{
+    "id": "MA-024",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "attending_physician",
+        "department": "infectious_disease",
+        "permissions": [
+            "prescribe:medications",
+            "order:experimental"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/MR-EUA-ANTIVIRAL-XR7"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "administer EUA antiviral \u2014 requires IRB and pharmacy director approval before first dose",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

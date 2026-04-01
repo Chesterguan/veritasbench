@@ -1,0 +1,30 @@
+{
+    "id": "MJ-037",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "organ_procurement_coordinator",
+        "department": "transplant",
+        "permissions": [
+            "read:consented_donors"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-NOT-CONSENTED-DONOR-557"
+    },
+    "prior_state": {
+        "donor_consent_on_file": false,
+        "brain_death_declared": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

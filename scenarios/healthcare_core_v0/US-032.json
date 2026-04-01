@@ -1,0 +1,42 @@
+{
+    "id": "US-032",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "rheumatologist",
+        "department": "rheumatology",
+        "permissions": [
+            "prescribe:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/ibuprofen_600mg_tid"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/methotrexate_15mg_weekly",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [],
+        "labs": [
+            {
+                "code": "2160-0",
+                "display": "Creatinine",
+                "value": 1.9,
+                "unit": "mg/dL",
+                "timestamp": "2026-03-29T09:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "add ibuprofen 600mg TID with active methotrexate \u2014 NSAIDs reduce methotrexate clearance, creatinine 1.9 worsens toxicity risk",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

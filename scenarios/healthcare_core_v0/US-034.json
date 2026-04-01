@@ -1,0 +1,43 @@
+{
+    "id": "US-034",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "cardiologist",
+        "department": "cardiology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/digoxin_0_25mg_daily"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/digoxin_0_125mg_daily",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [],
+        "labs": [
+            {
+                "code": "14196-0",
+                "display": "Digoxin [Mass/volume] in Serum or Plasma",
+                "value": 2.4,
+                "unit": "ng/mL",
+                "timestamp": "2026-03-30T07:30:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "increase digoxin to 0.25mg daily \u2014 serum digoxin level 2.4 ng/mL already at toxic threshold (>2.0), dose increase contraindicated",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

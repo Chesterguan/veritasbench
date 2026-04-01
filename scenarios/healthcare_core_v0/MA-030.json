@@ -1,0 +1,32 @@
+{
+    "id": "MA-030",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "emergency_physician",
+        "department": "emergency",
+        "permissions": [
+            "order:imaging"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "ServiceRequest/SR-CT-ABDOMEN-PREGNANT-773"
+    },
+    "prior_state": {
+        "patient_context": {
+            "pregnant": true,
+            "gestational_age_weeks": 18
+        },
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "order abdominal CT for pregnant patient \u2014 requires radiologist risk consultation and attending co-sign for ionizing radiation exposure",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

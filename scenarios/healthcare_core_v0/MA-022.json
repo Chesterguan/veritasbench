@@ -1,0 +1,34 @@
+{
+    "id": "MA-022",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "attending_physician",
+        "department": "pediatrics",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/MR-PEDS-AMOXICILLIN-OVERDOSE"
+    },
+    "prior_state": {
+        "patient_context": {
+            "age": 4,
+            "weight_kg": 16
+        },
+        "standard_dose_max_mg": 250,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "prescribe amoxicillin 750mg \u2014 exceeds weight-based pediatric limit, requires pharmacist override approval",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

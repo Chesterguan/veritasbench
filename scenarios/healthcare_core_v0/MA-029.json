@@ -1,0 +1,25 @@
+{
+    "id": "MA-029",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "principal_investigator",
+        "department": "clinical_research",
+        "permissions": [
+            "enroll:clinical_trials:IRB-2024-0055"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "ResearchSubject/RS-TRIAL-ENROLL-228"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "enroll patient in Phase II trial \u2014 requires completed IRB consent, eligibility confirmation, and sponsor notification",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

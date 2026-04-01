@@ -1,0 +1,37 @@
+{
+    "id": "US-026",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "hospitalist",
+        "department": "internal_medicine",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/ampicillin_sulbactam_3g"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "allergies": [
+            {
+                "substance": "amoxicillin",
+                "reaction": "anaphylaxis",
+                "status": "active",
+                "severity": "severe"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "order ampicillin-sulbactam \u2014 cross-reactivity with amoxicillin anaphylaxis allergy, aminopenicillin class contraindicated",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

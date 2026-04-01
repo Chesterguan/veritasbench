@@ -1,0 +1,45 @@
+{
+    "id": "US-024",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "nurse_practitioner",
+        "department": "pain_management",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/acetaminophen_1000mg_dose4"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [
+            {
+                "action": "administer",
+                "resource": "MedicationRequest/acetaminophen_1000mg_dose1",
+                "timestamp": "2026-03-30T04:00:00Z"
+            },
+            {
+                "action": "administer",
+                "resource": "MedicationRequest/acetaminophen_1000mg_dose2",
+                "timestamp": "2026-03-30T08:00:00Z"
+            },
+            {
+                "action": "administer",
+                "resource": "MedicationRequest/acetaminophen_1000mg_dose3",
+                "timestamp": "2026-03-30T12:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "order 4th acetaminophen 1000mg dose \u2014 total would reach 4000mg in 12 hours, exceeds safe daily limit with hepatotoxicity risk",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

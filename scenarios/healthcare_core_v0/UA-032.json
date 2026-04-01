@@ -1,0 +1,25 @@
+{
+    "id": "UA-032",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "billing_contractor",
+        "department": "revenue_cycle",
+        "permissions": [
+            "read:billing_records"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Condition/SUB-ABUSE-RECORD-228"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

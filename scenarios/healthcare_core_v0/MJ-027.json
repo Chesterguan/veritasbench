@@ -1,0 +1,30 @@
+{
+    "id": "MJ-027",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "risk_manager",
+        "department": "risk_management",
+        "permissions": [
+            "read:records:legal_hold"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-LEGAL-DISCOVERY-667"
+    },
+    "prior_state": {
+        "court_order_on_file": false,
+        "legal_hold_active": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

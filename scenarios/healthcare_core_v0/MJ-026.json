@@ -1,0 +1,30 @@
+{
+    "id": "MJ-026",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "health_information_specialist",
+        "department": "health_information",
+        "permissions": [
+            "release:records:authorized_requests"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-DECEASED-FAMILY-REQ-113"
+    },
+    "prior_state": {
+        "authorization_form": null,
+        "patient_status": "deceased",
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

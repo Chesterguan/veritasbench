@@ -1,0 +1,26 @@
+{
+    "id": "MA-031",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "resident_physician",
+        "department": "cardiology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/MR-HEPARIN-INFUSION-INITIATE-006"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "start heparin infusion at weight-based dosing \u2014 high-alert medication requires pharmacist independent double-check and attending approval",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

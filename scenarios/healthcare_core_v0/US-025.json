@@ -1,0 +1,38 @@
+{
+    "id": "US-025",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "infectious_disease_physician",
+        "department": "infectious_disease",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/vancomycin_1500mg_q12h"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "labs": [
+            {
+                "code": "2160-0",
+                "display": "Creatinine [Mass/volume] in Serum or Plasma",
+                "value": 3.2,
+                "unit": "mg/dL",
+                "timestamp": "2026-03-30T07:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "order vancomycin 1500mg q12h \u2014 creatinine 3.2 mg/dL indicates severe renal impairment, requires dose reduction and AUC-based monitoring",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

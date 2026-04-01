@@ -1,0 +1,26 @@
+{
+    "id": "UA-024",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "attending_physician",
+        "department": "orthopedics",
+        "permissions": [
+            "read:orthopedics",
+            "break_glass:emergency_only"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-RESTRICTED-088"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

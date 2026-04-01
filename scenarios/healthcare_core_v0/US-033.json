@@ -1,0 +1,44 @@
+{
+    "id": "US-033",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "hospitalist",
+        "department": "endocrinology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/insulin_regular_20units_iv"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [
+            {
+                "action": "administer",
+                "resource": "MedicationRequest/insulin_regular_10units_iv",
+                "timestamp": "2026-03-30T10:00:00Z"
+            }
+        ],
+        "labs": [
+            {
+                "code": "2345-7",
+                "display": "Glucose [Mass/volume] in Serum or Plasma",
+                "value": 142,
+                "unit": "mg/dL",
+                "timestamp": "2026-03-30T10:30:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "order additional 20 units IV regular insulin \u2014 glucose trending down to 142 after prior 10 units, cumulative dose creates hypoglycemia risk",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "id": "MJ-032",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "hospital_chaplain",
+        "department": "spiritual_care",
+        "permissions": [
+            "read:patient_census",
+            "read:room_assignments"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Condition/DIAGNOSIS-TERMINAL-CANCER-774"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

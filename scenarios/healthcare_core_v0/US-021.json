@@ -1,0 +1,44 @@
+{
+    "id": "US-021",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "cardiologist",
+        "department": "cardiology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/clopidogrel_75mg"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/warfarin_5mg",
+                "status": "active"
+            },
+            {
+                "resource": "MedicationRequest/aspirin_81mg",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "review_inr",
+                "resource": "Observation/INR_2.4",
+                "timestamp": "2026-03-29T08:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "add clopidogrel 75mg \u2014 triple antithrombotic therapy creates unacceptably high bleeding risk (warfarin + aspirin + clopidogrel)",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

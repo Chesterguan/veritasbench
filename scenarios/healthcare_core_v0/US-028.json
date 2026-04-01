@@ -1,0 +1,29 @@
+{
+    "id": "US-028",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "resident_physician",
+        "department": "oncology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/vincristine_2mg_oral"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "vincristine ordered as oral route \u2014 vincristine is IV-only; oral administration is fatal (neurotoxic), wrong route error",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

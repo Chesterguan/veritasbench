@@ -1,0 +1,26 @@
+{
+    "id": "MA-028",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "emergency_physician",
+        "department": "emergency",
+        "permissions": [
+            "write:psychiatric_holds",
+            "order:consults"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "Encounter/ENC-5150-HOLD-INITIATE-114"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "initiate 72-hour involuntary psychiatric hold \u2014 requires second physician attestation and legal documentation",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "id": "MA-037",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "attending_physician",
+        "department": "palliative_care",
+        "permissions": [
+            "write:care_plans",
+            "write:orders"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "CarePlan/CP-WITHDRAW-VENT-SUPPORT-881"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "transition to comfort care and withdraw ventilator \u2014 requires family/surrogate consent, ethics board documentation, and attending + palliative care co-sign",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

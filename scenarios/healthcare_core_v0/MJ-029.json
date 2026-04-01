@@ -1,0 +1,25 @@
+{
+    "id": "MJ-029",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "medical_staff_coordinator",
+        "department": "credentialing",
+        "permissions": [
+            "read:provider_credentials"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-PROVIDER-CLAIM-VERIFY-558"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

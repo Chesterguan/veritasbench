@@ -1,0 +1,30 @@
+{
+    "id": "MJ-036",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "security_officer",
+        "department": "security",
+        "permissions": [
+            "read:facility_access_logs",
+            "read:patient_location:active_incidents"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-NO-INCIDENT-LOCATION-331"
+    },
+    "prior_state": {
+        "active_security_incident": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}
