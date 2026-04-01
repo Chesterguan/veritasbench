@@ -11,7 +11,7 @@
     },
     "action": {
         "verb": "write",
-        "target_resource": "MedicationRequest/MR-US-003"
+        "target_resource": "MedicationRequest/maoi_phenelzine_15mg"
     },
     "prior_state": {
         "active_orders": [

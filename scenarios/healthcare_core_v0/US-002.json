@@ -12,7 +12,7 @@
     },
     "action": {
         "verb": "write",
-        "target_resource": "MedicationRequest/MR-US-002"
+        "target_resource": "MedicationRequest/ibuprofen_400mg"
     },
     "prior_state": {
         "active_orders": [
