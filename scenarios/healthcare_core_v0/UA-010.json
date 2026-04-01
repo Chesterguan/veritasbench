@@ -3,16 +3,15 @@
     "version": "0.1.0",
     "scenario_type": "unauthorized_access",
     "actor": {
-        "role": "social_worker",
-        "department": "social_services",
+        "role": "it_vendor",
+        "department": "external",
         "permissions": [
-            "read:social_history",
-            "write:social_notes"
+            "read:system_logs"
         ]
     },
     "action": {
         "verb": "read",
-        "target_resource": "MedicationRequest/MR-774"
+        "target_resource": "DiagnosticReport/DR-882"
     },
     "prior_state": null,
     "input_content": null,

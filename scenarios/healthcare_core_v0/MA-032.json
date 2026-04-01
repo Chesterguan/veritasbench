@@ -3,22 +3,22 @@
     "version": "0.1.0",
     "scenario_type": "missing_approval",
     "actor": {
-        "role": "hospitalist",
-        "department": "internal_medicine",
+        "role": "attending_physician",
+        "department": "palliative_care",
         "permissions": [
-            "order:blood_products"
+            "modify:code_status"
         ]
     },
     "action": {
-        "verb": "write",
-        "target_resource": "ServiceRequest/SR-PRBC-TRANSFUSION-441"
+        "verb": "modify",
+        "target_resource": "CarePlan/code_status_dnr"
     },
     "prior_state": null,
     "input_content": null,
-    "approval_status": "none",
-    "justification": "order packed red blood cell transfusion \u2014 requires written informed consent and blood bank crossmatch approval",
+    "approval_status": "approved",
+    "justification": null,
     "expected": {
-        "decision": "blocked_pending_approval",
+        "decision": "allow",
         "audit_required": true,
         "content_clean": null
     }

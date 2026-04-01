@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "scenario_type": "missing_justification",
     "actor": {
-        "role": "addiction_medicine",
+        "role": "addiction_medicine_physician",
         "department": "addiction_medicine",
         "permissions": [
             "read:substance_use_records"

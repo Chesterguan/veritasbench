@@ -3,23 +3,23 @@
     "version": "0.1.0",
     "scenario_type": "missing_justification",
     "actor": {
-        "role": "forensic_nurse",
-        "department": "forensic_nursing",
+        "role": "emergency_physician",
+        "department": "emergency",
         "permissions": [
-            "read:forensic_records",
-            "write:forensic_notes"
+            "read:patients",
+            "mandatory_reporter"
         ]
     },
     "action": {
         "verb": "read",
-        "target_resource": "DocumentReference/DOC-FORENS-011"
+        "target_resource": "Patient/P-minor-903"
     },
     "prior_state": null,
     "input_content": null,
     "approval_status": null,
-    "justification": null,
+    "justification": "Mandatory reporting — suspected child abuse per state law",
     "expected": {
-        "decision": "deny",
+        "decision": "allow",
         "audit_required": true,
         "content_clean": null
     }

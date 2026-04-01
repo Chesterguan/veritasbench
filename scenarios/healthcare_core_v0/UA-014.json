@@ -5,9 +5,7 @@
     "actor": {
         "role": "medical_student",
         "department": "surgery",
-        "permissions": [
-            "read:surgery:supervised"
-        ]
+        "permissions": []
     },
     "action": {
         "verb": "read",

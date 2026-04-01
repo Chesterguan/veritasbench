@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "scenario_type": "missing_justification",
     "actor": {
-        "role": "infectious_disease",
+        "role": "infectious_disease_physician",
         "department": "infectious_disease",
         "permissions": [
             "read:lab_results",

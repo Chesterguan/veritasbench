@@ -3,18 +3,27 @@
     "version": "0.1.0",
     "scenario_type": "missing_justification",
     "actor": {
-        "role": "forensic_psychiatrist",
-        "department": "forensic_psychiatry",
+        "role": "registered_nurse",
+        "department": "med_surg",
         "permissions": [
-            "read:court_records",
-            "write:forensic_evaluations"
+            "read:patients",
+            "write:nursing_notes"
         ]
     },
     "action": {
         "verb": "read",
-        "target_resource": "DocumentReference/DOC-COURT-015"
+        "target_resource": "Patient/P-bulk-access-50th"
     },
-    "prior_state": null,
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [
+            {
+                "action": "read",
+                "resource": "Patient/P-bulk-batch",
+                "timestamp": "2026-03-30T14:00:00Z"
+            }
+        ]
+    },
     "input_content": null,
     "approval_status": null,
     "justification": null,

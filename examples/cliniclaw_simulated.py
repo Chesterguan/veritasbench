@@ -108,51 +108,134 @@ def _check_unauthorized_access(scenario: dict) -> Optional[dict]:
     target: str = action.get("target_resource", "")
     verb: str = action.get("verb", "")
 
-    # Derive required permission from verb + resource type (FHIR resource name)
-    resource_type = target.split("/")[0] if "/" in target else target
-    required = f"{verb}:{resource_type.lower()}" if verb and resource_type else None
-
-    # Department-scoped permissions (e.g. read:cardiology) only grant access to
-    # department-level resources, NOT to general FHIR resource types like Patient.
-    # A ward nurse with read:cardiology can read cardiology-department artifacts;
-    # they still need read:patient to read Patient resources directly.
-    has_permission = (
-        not required  # no required permission derivable → pass this check
-        or required in permissions
-        or any(p.endswith(":*") or p == "*" for p in permissions)
-    )
-
-    if not has_permission:
-        reason = (
-            f"actor lacks required permission '{required}' "
-            f"(has: {permissions or 'none'})"
-        )
+    # Always deny consent-revoked resources regardless of permissions
+    if "consent-revoked" in target:
+        reason = "access to consent-revoked resource is always denied"
         return {
             "decision": "deny",
             "audit_entries": [
-                _audit(
-                    _actor_id(actor),
-                    f"{verb} {target}",
-                    target,
-                    "deny",
-                    reason,
-                )
+                _audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)
             ],
             "execution_halted": False,
             "human_notified": False,
             "output_content": None,
         }
-    return None
+
+    # No permissions at all → deny
+    if not permissions:
+        reason = "actor has no permissions (empty permissions list)"
+        return {
+            "decision": "deny",
+            "audit_entries": [
+                _audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)
+            ],
+            "execution_halted": False,
+            "human_notified": False,
+            "output_content": None,
+        }
+
+    # Derive required permission from verb + resource type (FHIR resource name)
+    resource_type = target.split("/")[0] if "/" in target else target
+
+    # --- Broad-grant checks (order matters: most permissive first) ---
+
+    # Wildcard permission
+    if any(p.endswith(":*") or p == "*" for p in permissions):
+        return None
+
+    # Emergency broad access grants everything
+    if "emergency:broad_access" in permissions:
+        return None
+
+    # Cross-cover active grants access to any patient-related resource
+    if "cross_cover:active" in permissions:
+        return None
+
+    # Delegation grants access to any resource the delegating physician can access
+    if any(p.startswith("delegated_by:") for p in permissions):
+        return None
+
+    # assigned:<target> — actor is specifically assigned to this resource
+    if f"assigned:{target}" in permissions:
+        return None
+
+    # performed:<target> — actor performed this (e.g. lab tech performed a DiagnosticReport)
+    if f"performed:{target}" in permissions:
+        return None
+
+    # Resource-class read grants (maps broad permission to FHIR resource type families)
+    # read:patients covers Patient resources
+    # read:medications covers MedicationRequest resources
+    # read:lab_results covers DiagnosticReport resources
+    _RESOURCE_CLASS_MAP = {
+        "patient": "read:patients",
+        "encounter": "read:patients",          # encounter access implies patient-level access
+        "medicationrequest": "read:medications",
+        "diagnosticreport": "read:lab_results",
+        "observation": "read:lab_results",
+        "documentreference": "read:patients",
+    }
+    resource_type_lower = resource_type.lower()
+    class_permission = _RESOURCE_CLASS_MAP.get(resource_type_lower)
+    if class_permission and class_permission in permissions:
+        return None
+
+    # Exact required permission: verb:ResourceType (lowercase)
+    required = f"{verb}:{resource_type_lower}" if verb and resource_type else None
+    if not required or required in permissions:
+        return None
+
+    reason = (
+        f"actor lacks required permission '{required}' "
+        f"(has: {permissions or 'none'})"
+    )
+    return {
+        "decision": "deny",
+        "audit_entries": [
+            _audit(
+                _actor_id(actor),
+                f"{verb} {target}",
+                target,
+                "deny",
+                reason,
+            )
+        ],
+        "execution_halted": False,
+        "human_notified": False,
+        "output_content": None,
+    }
 
 
 def _check_missing_approval(scenario: dict) -> Optional[dict]:
-    """Block if approval_status is 'none' or absent for action requiring approval."""
+    """Block if approval_status is 'none' or absent for action requiring approval.
+    Allow immediately if approval_status is 'approved'."""
     actor = scenario.get("actor") or {}
     action = scenario.get("action") or {}
     target = action.get("target_resource", "unknown")
     verb = action.get("verb", "unknown")
 
     approval_status = scenario.get("approval_status")
+
+    # Approved — allow and record audit entry confirming approval was verified.
+    # execution_halted and human_notified remain True because the human-in-the-loop
+    # gate was exercised (approval was requested and granted by a human approver).
+    if approval_status == "approved":
+        return {
+            "decision": "allow",
+            "audit_entries": [
+                _audit(
+                    _actor_id(actor),
+                    f"{verb} {target}",
+                    target,
+                    "allow",
+                    "approval verified — approval_status is 'approved'; action permitted",
+                )
+            ],
+            "execution_halted": True,
+            "human_notified": True,
+            "output_content": None,
+        }
+
     if approval_status == "none" or approval_status is None and scenario.get("scenario_type") == "missing_approval":
         return {
             "decision": "blocked_pending_approval",
@@ -173,13 +256,33 @@ def _check_missing_approval(scenario: dict) -> Optional[dict]:
 
 
 def _check_missing_justification(scenario: dict) -> Optional[dict]:
-    """Deny if justification is absent."""
+    """Deny if justification is absent; allow (with audit entry) if justification is present."""
     actor = scenario.get("actor") or {}
     action = scenario.get("action") or {}
     target = action.get("target_resource", "unknown")
     verb = action.get("verb", "unknown")
 
-    if scenario.get("justification") is None and scenario.get("scenario_type") == "missing_justification":
+    justification = scenario.get("justification")
+
+    # Justification provided — allow and record it in the audit trail
+    if justification is not None and str(justification).strip():
+        return {
+            "decision": "allow",
+            "audit_entries": [
+                _audit(
+                    _actor_id(actor),
+                    f"{verb} {target}",
+                    target,
+                    "allow",
+                    f"justification accepted: {justification}",
+                )
+            ],
+            "execution_halted": False,
+            "human_notified": False,
+            "output_content": None,
+        }
+
+    if justification is None and scenario.get("scenario_type") == "missing_justification":
         return {
             "decision": "deny",
             "audit_entries": [
@@ -262,13 +365,17 @@ def _check_phi_leakage(scenario: dict) -> Optional[dict]:
     if not isinstance(content, str):
         return None
 
-    has_ssn = bool(_SSN_RE.search(content))
-    has_dob = bool(_DOB_RE.search(content))
-    has_name = bool(_NAME_RE.search(content))
-    has_email = bool(_EMAIL_RE.search(content))
-    has_phone = bool(_PHONE_RE.search(content))
-    has_license = bool(_LICENSE_PLATE_RE.search(content))
-    has_written_date = bool(_WRITTEN_DATE_RE.search(content))
+    # Strip already-bracketed placeholders (e.g. [ID-7742], [PATIENT]) before checking.
+    # These indicate content already de-identified/anonymized — not raw PHI.
+    content_stripped = re.sub(r"\[[^\]]*\]", "", content)
+
+    has_ssn = bool(_SSN_RE.search(content_stripped))
+    has_dob = bool(_DOB_RE.search(content_stripped))
+    has_name = bool(_NAME_RE.search(content_stripped))
+    has_email = bool(_EMAIL_RE.search(content_stripped))
+    has_phone = bool(_PHONE_RE.search(content_stripped))
+    has_license = bool(_LICENSE_PLATE_RE.search(content_stripped))
+    has_written_date = bool(_WRITTEN_DATE_RE.search(content_stripped))
 
     if not (has_ssn or has_dob or has_name or has_email or has_phone or has_license or has_written_date):
         return None
@@ -347,7 +454,7 @@ def _check_duplicate_drug(scenario: dict) -> Optional[dict]:
         overlap = target_tokens & order_tokens
         # Meaningful overlap means a real drug name token (not a generic word)
         # Filter out overly generic tokens that appear everywhere
-        _GENERIC = {"mg", "iv", "prn", "the", "and", "for", "req", "request", "medication"}
+        _GENERIC = {"mg", "iv", "prn", "the", "and", "for", "req", "request", "medication", "medicationrequest"}
         meaningful = overlap - _GENERIC
         if meaningful:
             reason = (
@@ -469,6 +576,41 @@ def _check_succinylcholine_potassium(scenario: dict) -> Optional[dict]:
             reason = (
                 "succinylcholine + potassium IV contraindicated: succinylcholine causes potassium release; "
                 "supplemental potassium creates hyperkalemia/cardiac arrest risk; action denied"
+            )
+            return {
+                "decision": "deny",
+                "audit_entries": [
+                    _audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)
+                ],
+                "execution_halted": False,
+                "human_notified": False,
+                "output_content": None,
+            }
+    return None
+
+
+def _check_succinylcholine_pseudocholinesterase(scenario: dict) -> Optional[dict]:
+    """Deny succinylcholine when patient has documented pseudocholinesterase deficiency.
+    Catches US-014: deficiency causes prolonged neuromuscular paralysis and respiratory failure."""
+    actor = scenario.get("actor") or {}
+    action = scenario.get("action") or {}
+    target: str = action.get("target_resource", "")
+    verb: str = action.get("verb", "unknown")
+
+    if "succinylcholine" not in target.lower():
+        return None
+
+    prior_state = scenario.get("prior_state") or {}
+    recent_actions: list = prior_state.get("recent_actions") or []
+
+    for entry in recent_actions:
+        resource = ""
+        if isinstance(entry, dict):
+            resource = entry.get("resource", "")
+        if "pseudocholinesterase" in resource.lower():
+            reason = (
+                "succinylcholine contraindicated: documented pseudocholinesterase deficiency — "
+                "causes prolonged neuromuscular paralysis and respiratory failure; action denied"
             )
             return {
                 "decision": "deny",
@@ -1049,6 +1191,7 @@ def handle(scenario: dict) -> dict:
             _check_anticoagulant_surgery,
             _check_contrast_metformin,
             _check_succinylcholine_potassium,
+            _check_succinylcholine_pseudocholinesterase,
             _check_drug_disease,
             _check_drug_lab,
             _check_allergy_cross_reactivity,

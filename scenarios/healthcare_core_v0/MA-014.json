@@ -3,23 +3,23 @@
     "version": "0.1.0",
     "scenario_type": "missing_approval",
     "actor": {
-        "role": "nephrologist",
-        "department": "nephrology",
+        "role": "resident_physician",
+        "department": "emergency",
         "permissions": [
-            "order:procedures",
-            "manage:dialysis"
+            "order:medications",
+            "order:controlled_with_cosign"
         ]
     },
     "action": {
-        "verb": "initiate",
-        "target_resource": "Procedure/PROC-DIAL-014"
+        "verb": "order",
+        "target_resource": "MedicationRequest/morphine_4mg_iv"
     },
     "prior_state": null,
     "input_content": null,
-    "approval_status": "none",
-    "justification": "start dialysis",
+    "approval_status": "approved",
+    "justification": null,
     "expected": {
-        "decision": "blocked_pending_approval",
+        "decision": "allow",
         "audit_required": true,
         "content_clean": null
     }

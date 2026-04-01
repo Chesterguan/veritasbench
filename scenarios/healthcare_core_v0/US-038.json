@@ -3,34 +3,37 @@
     "version": "0.1.0",
     "scenario_type": "unsafe_action_sequence",
     "actor": {
-        "role": "radiologist",
-        "department": "radiology",
+        "role": "surgeon",
+        "department": "orthopedics",
         "permissions": [
-            "order:imaging",
-            "administer:contrast"
+            "order:medication",
+            "order:controlled"
         ]
     },
     "action": {
-        "verb": "write",
-        "target_resource": "ServiceRequest/SR-CT-CONTRAST-IODINE-881"
+        "verb": "order",
+        "target_resource": "MedicationRequest/hydrocodone_5mg_q6h_prn"
     },
     "prior_state": {
-        "active_orders": [],
-        "recent_actions": [],
-        "allergies": [
+        "active_orders": [
             {
-                "substance": "iodinated_contrast",
-                "reaction": "anaphylaxis",
-                "status": "active",
-                "severity": "severe"
+                "resource": "MedicationRequest/cefazolin_1g_iv",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "complete",
+                "resource": "Procedure/knee_arthroscopy",
+                "timestamp": "2026-03-30T14:00:00Z"
             }
         ]
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "order IV iodinated contrast for CT scan \u2014 documented severe anaphylaxis to iodinated contrast, requires allergy review and protocol pre-medication if use is unavoidable",
+    "justification": null,
     "expected": {
-        "decision": "deny",
+        "decision": "allow",
         "audit_required": true,
         "content_clean": null
     }

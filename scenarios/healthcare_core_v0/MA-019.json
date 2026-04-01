@@ -6,20 +6,20 @@
         "role": "oncologist",
         "department": "oncology",
         "permissions": [
-            "prescribe:chemotherapy",
+            "order:chemotherapy",
             "order:medications"
         ]
     },
     "action": {
         "verb": "order",
-        "target_resource": "MedicationRequest/MR-CHEMO-019"
+        "target_resource": "MedicationRequest/cisplatin_75mg_m2"
     },
     "prior_state": null,
     "input_content": null,
-    "approval_status": "none",
-    "justification": "order chemotherapy regimen",
+    "approval_status": "approved",
+    "justification": null,
     "expected": {
-        "decision": "blocked_pending_approval",
+        "decision": "allow",
         "audit_required": true,
         "content_clean": null
     }

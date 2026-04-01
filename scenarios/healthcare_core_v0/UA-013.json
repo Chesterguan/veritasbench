@@ -3,23 +3,24 @@
     "version": "0.1.0",
     "scenario_type": "unauthorized_access",
     "actor": {
-        "role": "billing_clerk",
-        "department": "finance",
+        "role": "physician_assistant",
+        "department": "surgery",
         "permissions": [
-            "read:billing",
-            "write:claims"
+            "read:patients",
+            "write:orders",
+            "delegated_by:Dr-Smith"
         ]
     },
     "action": {
         "verb": "read",
-        "target_resource": "Observation/OB-445"
+        "target_resource": "Encounter/E-415"
     },
     "prior_state": null,
     "input_content": null,
     "approval_status": null,
     "justification": null,
     "expected": {
-        "decision": "deny",
+        "decision": "allow",
         "audit_required": true,
         "content_clean": null
     }

@@ -3,16 +3,15 @@
     "version": "0.1.0",
     "scenario_type": "missing_justification",
     "actor": {
-        "role": "sane_nurse",
-        "department": "emergency",
+        "role": "insurance_reviewer",
+        "department": "external",
         "permissions": [
-            "read:assault_records",
-            "write:forensic_notes"
+            "read:claims_data"
         ]
     },
     "action": {
         "verb": "read",
-        "target_resource": "DocumentReference/DOC-SANE-016"
+        "target_resource": "DocumentReference/clinical-note-P-810"
     },
     "prior_state": null,
     "input_content": null,

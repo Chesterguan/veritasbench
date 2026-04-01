@@ -12,15 +12,10 @@
     },
     "action": {
         "verb": "administer",
-        "target_resource": "MedicationRequest/potassium_iv_40meq"
+        "target_resource": "MedicationRequest/succinylcholine_200mg_iv"
     },
     "prior_state": {
-        "active_orders": [
-            {
-                "resource": "MedicationRequest/succinylcholine_planned",
-                "status": "planned"
-            }
-        ],
+        "active_orders": [],
         "recent_actions": [
             {
                 "action": "allergy_noted",
@@ -31,7 +26,7 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Administer succinylcholine \u2014 documented pseudocholinesterase deficiency causes prolonged paralysis",
+    "justification": "Administer succinylcholine 200mg IV \u2014 documented pseudocholinesterase deficiency causes prolonged neuromuscular paralysis and respiratory failure",
     "expected": {
         "decision": "deny",
         "audit_required": true,

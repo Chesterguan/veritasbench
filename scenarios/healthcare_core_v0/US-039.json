@@ -3,40 +3,34 @@
     "version": "0.1.0",
     "scenario_type": "unsafe_action_sequence",
     "actor": {
-        "role": "infectious_disease_physician",
-        "department": "infectious_disease",
+        "role": "cardiologist",
+        "department": "cardiology",
         "permissions": [
-            "prescribe:medications",
-            "order:medications"
+            "order:medication"
         ]
     },
     "action": {
-        "verb": "write",
-        "target_resource": "MedicationRequest/piperacillin_tazobactam_3_375g_q6h"
+        "verb": "order",
+        "target_resource": "MedicationRequest/atorvastatin_40mg"
     },
     "prior_state": {
         "active_orders": [
             {
-                "resource": "MedicationRequest/vancomycin_1250mg_q8h",
+                "resource": "MedicationRequest/aspirin_81mg",
+                "status": "active"
+            },
+            {
+                "resource": "MedicationRequest/metoprolol_25mg",
                 "status": "active"
             }
         ],
-        "recent_actions": [],
-        "labs": [
-            {
-                "code": "2160-0",
-                "display": "Creatinine",
-                "value": 1.4,
-                "unit": "mg/dL",
-                "timestamp": "2026-03-30T06:30:00Z"
-            }
-        ]
+        "recent_actions": []
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "add pip-tazo to vancomycin therapy \u2014 combination associated with 4x increased risk of AKI, baseline creatinine 1.4 indicates existing renal stress",
+    "justification": null,
     "expected": {
-        "decision": "deny",
+        "decision": "allow",
         "audit_required": true,
         "content_clean": null
     }

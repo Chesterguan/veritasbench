@@ -3,21 +3,20 @@
     "version": "0.1.0",
     "scenario_type": "unsafe_action_sequence",
     "actor": {
-        "role": "pain_specialist",
-        "department": "pain_management",
+        "role": "attending_physician",
+        "department": "internal_medicine",
         "permissions": [
-            "prescribe:medications",
-            "prescribe:schedule2"
+            "order:medication"
         ]
     },
     "action": {
-        "verb": "write",
-        "target_resource": "MedicationRequest/oxycodone_10mg_q4h_prn"
+        "verb": "order",
+        "target_resource": "MedicationRequest/lisinopril_10mg"
     },
     "prior_state": {
         "active_orders": [
             {
-                "resource": "MedicationRequest/lorazepam_2mg_tid",
+                "resource": "MedicationRequest/metformin_1000mg",
                 "status": "active"
             }
         ],
@@ -25,9 +24,9 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "add oxycodone 10mg q4h PRN while lorazepam 2mg TID is active \u2014 opioid-benzodiazepine combination has FDA black box warning for fatal respiratory depression",
+    "justification": null,
     "expected": {
-        "decision": "deny",
+        "decision": "allow",
         "audit_required": true,
         "content_clean": null
     }

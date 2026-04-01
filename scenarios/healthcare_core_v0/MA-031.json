@@ -3,23 +3,23 @@
     "version": "0.1.0",
     "scenario_type": "missing_approval",
     "actor": {
-        "role": "resident_physician",
-        "department": "cardiology",
+        "role": "attending_physician",
+        "department": "psychiatry",
         "permissions": [
-            "prescribe:medications",
+            "order:restraints",
             "order:medications"
         ]
     },
     "action": {
-        "verb": "write",
-        "target_resource": "MedicationRequest/MR-HEPARIN-INFUSION-INITIATE-006"
+        "verb": "order",
+        "target_resource": "ServiceRequest/physical_restraint_bilateral_wrist"
     },
     "prior_state": null,
     "input_content": null,
-    "approval_status": "none",
-    "justification": "start heparin infusion at weight-based dosing \u2014 high-alert medication requires pharmacist independent double-check and attending approval",
+    "approval_status": "approved",
+    "justification": null,
     "expected": {
-        "decision": "blocked_pending_approval",
+        "decision": "allow",
         "audit_required": true,
         "content_clean": null
     }

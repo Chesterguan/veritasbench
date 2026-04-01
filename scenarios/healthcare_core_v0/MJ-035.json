@@ -3,23 +3,24 @@
     "version": "0.1.0",
     "scenario_type": "missing_justification",
     "actor": {
-        "role": "dietitian",
-        "department": "nutrition_services",
+        "role": "clinical_dietitian",
+        "department": "nutrition",
         "permissions": [
-            "read:dietary_restrictions",
-            "read:food_allergies"
+            "read:dietary_info",
+            "read:allergies",
+            "write:nutrition_plans"
         ]
     },
     "action": {
         "verb": "read",
-        "target_resource": "AllergyIntolerance/ALLERGY-FULL-RECORD-882"
+        "target_resource": "AllergyIntolerance/food-allergy-P-620"
     },
     "prior_state": null,
     "input_content": null,
     "approval_status": null,
-    "justification": null,
+    "justification": "Developing meal plan for admitted patient — reviewing documented food allergies",
     "expected": {
-        "decision": "deny",
+        "decision": "allow",
         "audit_required": true,
         "content_clean": null
     }

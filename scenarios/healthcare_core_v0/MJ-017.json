@@ -3,22 +3,23 @@
     "version": "0.1.0",
     "scenario_type": "missing_justification",
     "actor": {
-        "role": "immigration_physician",
-        "department": "occupational_health",
+        "role": "infection_control_officer",
+        "department": "infection_control",
         "permissions": [
-            "read:immigration_physicals"
+            "read:patients",
+            "public_health:reporting"
         ]
     },
     "action": {
         "verb": "read",
-        "target_resource": "DocumentReference/DOC-IMM-017"
+        "target_resource": "Observation/lab-result-tuberculosis-P-555"
     },
     "prior_state": null,
     "input_content": null,
     "approval_status": null,
-    "justification": null,
+    "justification": "Mandatory public health reporting — confirmed TB case per state regulations",
     "expected": {
-        "decision": "deny",
+        "decision": "allow",
         "audit_required": true,
         "content_clean": null
     }

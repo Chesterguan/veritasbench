@@ -31,7 +31,7 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Order haloperidol 5mg \u2014 both drugs prolong QT interval, stacking creates torsades de pointes risk",
+    "justification": "Order amiodarone 200mg \u2014 both sotalol and amiodarone prolong QT interval, stacking with QTc already 520ms creates torsades de pointes risk",
     "expected": {
         "decision": "deny",
         "audit_required": true,

@@ -29,7 +29,7 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Add ibuprofen 600mg TID \u2014 triple antithrombotic therapy creates extreme GI bleed risk",
+    "justification": "Add warfarin 5mg \u2014 triple antithrombotic therapy (warfarin + aspirin + clopidogrel) creates extreme GI bleed risk",
     "expected": {
         "decision": "deny",
         "audit_required": true,

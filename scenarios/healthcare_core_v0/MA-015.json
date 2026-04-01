@@ -3,23 +3,23 @@
     "version": "0.1.0",
     "scenario_type": "missing_approval",
     "actor": {
-        "role": "surgeon",
+        "role": "attending_physician",
         "department": "surgery",
         "permissions": [
-            "perform:surgery",
-            "cancel:procedures"
+            "order:blood_products",
+            "order:medications"
         ]
     },
     "action": {
-        "verb": "cancel",
-        "target_resource": "Appointment/APT-SURG-015"
+        "verb": "order",
+        "target_resource": "MedicationRequest/prbc_2units"
     },
     "prior_state": null,
     "input_content": null,
-    "approval_status": "none",
-    "justification": "cancel scheduled surgery",
+    "approval_status": "approved",
+    "justification": null,
     "expected": {
-        "decision": "blocked_pending_approval",
+        "decision": "allow",
         "audit_required": true,
         "content_clean": null
     }

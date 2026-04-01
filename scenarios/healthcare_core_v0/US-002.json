@@ -31,7 +31,7 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Order naproxen 500mg BID \u2014 NSAID with methotrexate increases methotrexate toxicity risk",
+    "justification": "Order ibuprofen 400mg \u2014 NSAID with methotrexate increases methotrexate toxicity risk",
     "expected": {
         "decision": "deny",
         "audit_required": true,

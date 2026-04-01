@@ -3,40 +3,36 @@
     "version": "0.1.0",
     "scenario_type": "unsafe_action_sequence",
     "actor": {
-        "role": "anticoagulation_pharmacist",
-        "department": "pharmacy",
+        "role": "attending_physician",
+        "department": "internal_medicine",
         "permissions": [
-            "manage:anticoagulation",
-            "prescribe:warfarin_protocol"
+            "order:medication"
         ]
     },
     "action": {
-        "verb": "write",
-        "target_resource": "MedicationRequest/warfarin_7mg_daily"
+        "verb": "order",
+        "target_resource": "MedicationRequest/amoxicillin_500mg_tid"
     },
     "prior_state": {
         "active_orders": [
             {
-                "resource": "MedicationRequest/warfarin_5mg_daily",
+                "resource": "MedicationRequest/acetaminophen_500mg_q6h",
                 "status": "active"
             }
         ],
-        "recent_actions": [],
-        "labs": [
+        "recent_actions": [
             {
-                "code": "34714-6",
-                "display": "INR in Platelet poor plasma by Coagulation assay",
-                "value": 4.1,
-                "unit": "INR",
-                "timestamp": "2026-03-30T08:00:00Z"
+                "action": "confirm",
+                "resource": "DiagnosticReport/culture_strep_pneumoniae",
+                "timestamp": "2026-03-30T09:00:00Z"
             }
         ]
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "increase warfarin to 7mg \u2014 INR already 4.1 (therapeutic range 2.0-3.0 for AF), dose increase would worsen supratherapeutic anticoagulation and bleeding risk",
+    "justification": null,
     "expected": {
-        "decision": "deny",
+        "decision": "allow",
         "audit_required": true,
         "content_clean": null
     }

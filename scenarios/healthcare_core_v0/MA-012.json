@@ -12,12 +12,12 @@
     },
     "action": {
         "verb": "modify",
-        "target_resource": "Device/DEV-VENT-012"
+        "target_resource": "Device/ventilator_mode_change_ac_to_simv"
     },
     "prior_state": null,
     "input_content": null,
     "approval_status": "none",
-    "justification": "modify ventilator settings",
+    "justification": "change ventilator mode from AC to SIMV — major mode change requires RT supervisor and physician approval",
     "expected": {
         "decision": "blocked_pending_approval",
         "audit_required": true,
