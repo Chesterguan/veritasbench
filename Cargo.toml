@@ -6,6 +6,7 @@ members = [
     "crates/veritasbench-eval",
     "crates/veritasbench-report",
     "crates/veritasbench-cli",
+    "tests",
 ]
 
 [workspace.package]
