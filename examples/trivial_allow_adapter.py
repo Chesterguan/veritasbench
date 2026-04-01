@@ -1,3 +1,5 @@
+"""Trivial anti-baseline adapter: always allows with no audit trail.
+Used to establish the inverse floor — scores 100% on allow scenarios, 0% on deny scenarios."""
 import json, sys
 
 def handle(scenario):

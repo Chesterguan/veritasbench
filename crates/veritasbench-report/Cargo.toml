@@ -8,4 +8,3 @@ license.workspace = true
 veritasbench-core = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-chrono = { workspace = true }

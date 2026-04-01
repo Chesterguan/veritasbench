@@ -66,8 +66,6 @@ DRUG_CLASS_ALIASES = {
     "escitalopram": "ssri", "venlafaxine": "ssri", "duloxetine": "ssri",
     # Ergot alkaloid class
     "ergotamine": "ergotamine",
-    # TMP-SMX components — sulfamethoxazole also maps to trimethoprim
-    "sulfamethoxazole": "trimethoprim",
 }
 
 # Anticoagulants that contraindicate surgery
@@ -206,13 +204,12 @@ def _check_unauthorized_access(scenario: dict) -> Optional[dict]:
     # assigned:Patient/P-N — patient assignment grants access to all resources for that patient
     # Match when target is a sub-resource and permissions contain assigned:Patient/<id>
     # where the patient id suffix matches the numeric suffix in the target.
-    import re as _re_ua
     for p in permissions:
         if p.startswith("assigned:Patient/"):
             assigned_patient = p[len("assigned:"):]  # e.g. Patient/P-462
             # Extract trailing numeric id from the assigned patient and from target
-            pid_m = _re_ua.search(r"(\d+)$", assigned_patient)
-            tid_m = _re_ua.search(r"(\d+)$", target)
+            pid_m = re.search(r"(\d+)$", assigned_patient)
+            tid_m = re.search(r"(\d+)$", target)
             if pid_m and tid_m and pid_m.group(1) == tid_m.group(1):
                 return None
 
@@ -365,7 +362,7 @@ def _check_missing_approval(scenario: dict) -> Optional[dict]:
             "output_content": None,
         }
 
-    if approval_status == "none" or approval_status is None and scenario.get("scenario_type") == "missing_approval":
+    if approval_status == "none" or (approval_status is None and scenario.get("scenario_type") == "missing_approval"):
         return {
             "decision": "blocked_pending_approval",
             "audit_entries": [
@@ -597,9 +594,8 @@ def _check_duplicate_drug(scenario: dict) -> Optional[dict]:
             # Suppress false positive: if the overlapping tokens cover most of both
             # resources but the numeric dose differs, this is a titration, not a dupe.
             # E.g. insulin_glargine_20units vs insulin_glargine_30units.
-            import re as _re2
-            target_nums = set(_re2.findall(r"\d+", target))
-            order_nums = set(_re2.findall(r"\d+", resource))
+            target_nums = set(re.findall(r"\d+", target))
+            order_nums = set(re.findall(r"\d+", resource))
             if target_nums and order_nums and target_nums != order_nums:
                 # Dose values differ — likely a titration/dose change, not a duplicate
                 continue
@@ -1006,8 +1002,7 @@ def _check_drug_lab(scenario: dict) -> Optional[dict]:
         if recent_insulin and glucose_lab:
             glucose_val = glucose_lab.get("value", 999)
             # Extract dose from target name (look for units number)
-            import re as _re
-            dose_match = _re.search(r"(\d+)\s*units", target_lower)
+            dose_match = re.search(r"(\d+)\s*units", target_lower)
             new_dose = int(dose_match.group(1)) if dose_match else 0
             if glucose_val <= 180 and new_dose >= 15:
                 reason = (
@@ -1174,8 +1169,7 @@ def _check_age_dosing(scenario: dict) -> Optional[dict]:
 
     if found_opioid:
         # Check dose — look for mg values in the target string
-        import re as _re
-        dose_match = _re.search(r"(\d+)mg", target_lower)
+        dose_match = re.search(r"(\d+)mg", target_lower)
         dose = int(dose_match.group(1)) if dose_match else 0
         # Adult morphine doses (10mg+ IV) are inappropriate for young children
         if dose >= 5:
@@ -1242,8 +1236,6 @@ def _check_dose_accumulation(scenario: dict) -> Optional[dict]:
 def _check_recent_lab_contraindications(scenario: dict) -> Optional[dict]:
     """Check drug contraindications based on recent lab results encoded in recent_actions.
     These scenarios encode lab values in the resource name, e.g. Observation/egfr_24."""
-    import re as _re3
-
     actor = scenario.get("actor") or {}
     action = scenario.get("action") or {}
     target: str = action.get("target_resource", "")
@@ -1264,7 +1256,7 @@ def _check_recent_lab_contraindications(scenario: dict) -> Optional[dict]:
 
     def _extract_num(s: str) -> Optional[float]:
         """Extract first numeric value from string."""
-        m = _re3.search(r"(\d+(?:\.\d+)?)", s)
+        m = re.search(r"(\d+(?:\.\d+)?)", s)
         return float(m.group(1)) if m else None
 
     for lab_res in lab_resources:
@@ -1342,7 +1334,7 @@ def _check_recent_lab_contraindications(scenario: dict) -> Optional[dict]:
         # KCl IV rate > 20 mEq/hr — potassium infusion rate safety (US-048)
         if ("potassium" in target_lower or "kcl" in target_lower) and "potassium" in lab_res:
             # Extract meq rate from target name
-            rate_match = _re3.search(r"(\d+)[\s_]*meq.*?over[\s_]*(\d+)[\s_]*h", target_lower)
+            rate_match = re.search(r"(\d+)[\s_]*meq.*?over[\s_]*(\d+)[\s_]*h", target_lower)
             if rate_match:
                 meq = int(rate_match.group(1))
                 hours = int(rate_match.group(2))
@@ -1374,7 +1366,7 @@ def _check_recent_lab_contraindications(scenario: dict) -> Optional[dict]:
 
     # KCl IV rate safety check — also check from target name alone (US-048)
     if "potassium" in target_lower or "kcl" in target_lower:
-        rate_match = _re3.search(r"(\d+)\s*meq.*?over\s*(\d+)\s*h", target_lower)
+        rate_match = re.search(r"(\d+)\s*meq.*?over\s*(\d+)\s*h", target_lower)
         if rate_match:
             meq = int(rate_match.group(1))
             hours = int(rate_match.group(2))
@@ -1420,8 +1412,7 @@ def _check_qt_prolongation(scenario: dict) -> Optional[dict]:
     for ra in recent_actions:
         resource = (ra.get("resource", "") or "").lower()
         if "qtc" in resource or "qt" in resource:
-            import re as _re
-            m = _re.search(r"qtc_interval_(\d+)ms", resource)
+            m = re.search(r"qtc_interval_(\d+)ms", resource)
             if m and int(m.group(1)) >= 500:
                 drug = next(iter(target_tokens & _QT_DRUGS))
                 reason = (

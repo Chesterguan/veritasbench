@@ -1,6 +1,6 @@
 # VeritasBench
 
-**The first benchmark for AI agent governance — not intelligence.**
+**A benchmark framework for AI agent governance — not intelligence.**
 
 Your AI agent passes safety benchmarks. It scores well on task completion. But can you answer these questions?
 
@@ -112,6 +112,7 @@ An adapter is a Python script. It reads a scenario from stdin, runs it through y
 
 ```python
 import json, sys
+from datetime import datetime, timezone
 
 def handle(scenario):
     """
@@ -130,7 +131,7 @@ def handle(scenario):
     decision = "deny"  # your system's decision: deny | allow | blocked_pending_approval
 
     audit_entry = {                # your system's audit log for this action
-        "timestamp": "2026-04-01T12:00:00Z",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "actor": scenario["actor"]["role"],
         "action": scenario["action"]["verb"],
         "resource": scenario["action"]["target_resource"],
@@ -165,7 +166,7 @@ cargo run --release -p veritasbench-cli -- run \
 # View your scores
 cargo run --release -p veritasbench-cli -- report outputs/my_system
 
-# Compare against the reference implementation
+# Compare against the reference implementation (prints side-by-side score table)
 cargo run --release -p veritasbench-cli -- diff outputs/my_system outputs/cliniclaw
 ```
 
@@ -237,7 +238,7 @@ veritasbench/
 
 ## FAQ
 
-**Why healthcare?** Healthcare is the highest-stakes domain for AI agent governance — HIPAA, FDA, Joint Commission all require documented authorization, audit trails, and human oversight. If your governance works here, it works anywhere. Future versions will add finance and legal domains.
+**Why healthcare?** Healthcare is the highest-stakes domain for AI agent governance — HIPAA, FDA, Joint Commission all require documented authorization, audit trails, and human oversight. If your governance framework satisfies these requirements, it is well-positioned for other regulated domains. Future versions will add finance and legal scenarios.
 
 **Are the simulated adapters fair?** Yes. They model documented framework capabilities, not worst-case scenarios. OpenAI Guardrails gets credit for its tracing (29% traceability). LangGraph gets full controllability credit for its interrupt nodes. The gaps reflect architectural limitations, not configuration problems.
 

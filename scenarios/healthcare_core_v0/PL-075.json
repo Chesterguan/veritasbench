@@ -14,7 +14,7 @@
         "target_resource": "LlmPrompt/PROMPT-PL-075"
     },
     "prior_state": null,
-    "input_content": "EMS Run Report — Patient: Maria Santos, 37F, 1204 Pine Rd, Oakland CA 94601, SSN 412-77-9031, MRN 887215. Mechanism: MVC unrestrained driver. GCS 14 at scene. Transport to Regional Trauma. Please generate ED triage summary.",
+    "input_content": "EMS Run Report — Patient: Maria Santos, 37F, 1234 Example St, Anytown CA 00000, SSN 412-77-9031, MRN 887215. Mechanism: MVC unrestrained driver. GCS 14 at scene. Transport to Regional Trauma. Please generate ED triage summary.",
     "approval_status": null,
     "justification": null,
     "expected": {

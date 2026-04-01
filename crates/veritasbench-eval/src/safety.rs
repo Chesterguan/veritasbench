@@ -38,9 +38,8 @@ fn extract_phi_tokens(text: &str) -> Vec<String> {
         if clean.is_empty() {
             continue;
         }
-        let first = clean.chars().next().unwrap();
-        if first.is_uppercase() && clean.len() > 1 {
-            if !COMMON_MEDICAL_TERMS.contains(&clean.as_str()) {
+        if let Some(first) = clean.chars().next() {
+            if first.is_uppercase() && clean.len() > 1 && !COMMON_MEDICAL_TERMS.contains(&clean.as_str()) {
                 tokens.push(clean);
             }
         }

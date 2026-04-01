@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use clap::{Parser, Subcommand};
 use veritasbench_core::score::{BenchmarkReport, LatencyStats};
@@ -86,17 +86,17 @@ async fn run_command(
     let scenarios = match load_suite(&suite_dir) {
         Ok(s) => s,
         Err(e) => {
-            eprintln!("error: failed to load suite '{}': {}", suite_name, e);
+            eprintln!("error: failed to load suite '{suite_name}': {e}");
             std::process::exit(1);
         }
     };
 
     if scenarios.is_empty() {
-        eprintln!("error: suite '{}' contains no scenarios", suite_name);
+        eprintln!("error: suite '{suite_name}' contains no scenarios");
         std::process::exit(1);
     }
 
-    println!("Running {} scenarios x {} repeats", scenarios.len(), repeats);
+    println!("Running {} scenarios x {repeats} repeats", scenarios.len());
 
     // runs[repeat_index] = vec of decisions per scenario (for consistency)
     let mut all_runs: Vec<Vec<veritasbench_core::scenario::Decision>> = Vec::new();
@@ -127,7 +127,7 @@ async fn run_command(
             let saf = score.safety.map(|v| v.to_string()).unwrap_or_else(|| "-".into());
             let tra = score
                 .traceability
-                .map(|v| format!("{}/3", v))
+                .map(|v| format!("{v}/3"))
                 .unwrap_or_else(|| "-".into());
             let ctrl =
                 score.controllability.map(|v| v.to_string()).unwrap_or_else(|| "-".into());
@@ -159,12 +159,16 @@ async fn run_command(
     };
 
     // Latency stats
-    all_latencies.sort_unstable();
-    let len = all_latencies.len();
-    let latency = LatencyStats {
-        p50_ms: all_latencies[len / 2],
-        p95_ms: all_latencies[(len as f64 * 0.95) as usize],
-        p99_ms: all_latencies[(len as f64 * 0.99) as usize],
+    let latency = if all_latencies.is_empty() {
+        LatencyStats { p50_ms: 0, p95_ms: 0, p99_ms: 0 }
+    } else {
+        all_latencies.sort_unstable();
+        let len = all_latencies.len();
+        LatencyStats {
+            p50_ms: all_latencies[len / 2],
+            p95_ms: all_latencies[len.saturating_sub(1).min((len as f64 * 0.95) as usize)],
+            p99_ms: all_latencies[len.saturating_sub(1).min((len as f64 * 0.99) as usize)],
+        }
     };
 
     let report = BenchmarkReport {
@@ -185,11 +189,11 @@ async fn run_command(
     let md_path = output_dir.join("report.md");
 
     if let Err(e) = write_json_report(&report, &json_path) {
-        eprintln!("error: failed to write JSON report: {}", e);
+        eprintln!("error: failed to write JSON report: {e}");
         std::process::exit(1);
     }
     if let Err(e) = write_markdown_report(&report, &md_path) {
-        eprintln!("error: failed to write markdown report: {}", e);
+        eprintln!("error: failed to write markdown report: {e}");
         std::process::exit(1);
     }
 
@@ -210,7 +214,7 @@ fn report_command(dir: PathBuf) {
     let report: BenchmarkReport = match serde_json::from_str(&content) {
         Ok(r) => r,
         Err(e) => {
-            eprintln!("error: failed to parse report.json: {}", e);
+            eprintln!("error: failed to parse report.json: {e}");
             std::process::exit(1);
         }
     };
@@ -237,9 +241,9 @@ fn diff_command(a_dir: PathBuf, b_dir: PathBuf) {
         let pct_b = db.percentage() * 100.0;
         let delta = pct_b - pct_a;
         let delta_str = if delta > 0.0 {
-            format!("+{:.0}%", delta)
+            format!("+{delta:.0}%")
         } else if delta < 0.0 {
-            format!("{:.0}%", delta)
+            format!("{delta:.0}%")
         } else {
             "0%".to_string()
         };
@@ -265,7 +269,7 @@ fn diff_command(a_dir: PathBuf, b_dir: PathBuf) {
     );
 }
 
-fn load_report_from_dir(dir: &PathBuf) -> BenchmarkReport {
+fn load_report_from_dir(dir: &Path) -> BenchmarkReport {
     let json_path = dir.join("report.json");
     let content = match std::fs::read_to_string(&json_path) {
         Ok(c) => c,
