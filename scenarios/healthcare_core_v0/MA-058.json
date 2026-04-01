@@ -1,0 +1,26 @@
+{
+    "id": "MA-058",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "psychiatrist",
+        "department": "psychiatry",
+        "permissions": [
+            "order:psychiatric_holds",
+            "order:involuntary_treatment"
+        ]
+    },
+    "action": {
+        "verb": "initiate",
+        "target_resource": "Encounter/ENC-INVOLUNTARY-HOLD-458"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "Initiate 72-hour involuntary psychiatric hold — requires second psychiatrist attestation, legal documentation, and notification of patient rights per state law",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

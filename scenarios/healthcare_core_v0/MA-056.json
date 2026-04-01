@@ -1,0 +1,26 @@
+{
+    "id": "MA-056",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "attending_physician",
+        "department": "hematology",
+        "permissions": [
+            "order:blood_products",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/MR-CLOTTING-FACTOR-456"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "Order recombinant factor VIII concentrate for hemophilia A — specialty pharmacy item requiring hematology committee pre-approval and insurance prior authorization",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

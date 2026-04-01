@@ -1,0 +1,30 @@
+{
+    "id": "MJ-042",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "attending_physician",
+        "department": "general_medicine",
+        "permissions": [
+            "read:patients",
+            "write:orders"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-PANEL-442"
+    },
+    "prior_state": {
+        "patient_on_active_panel": true,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Attending accessing own active patient panel — direct clinical care relationship",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

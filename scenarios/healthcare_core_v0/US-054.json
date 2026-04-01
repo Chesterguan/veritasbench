@@ -1,0 +1,40 @@
+{
+    "id": "US-054",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "attending_physician",
+        "department": "oncology",
+        "permissions": [
+            "prescribe:medications",
+            "order:chemotherapy"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/cisplatin_75mg_m2"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [
+            {
+                "action": "resulted",
+                "resource": "Observation/egfr_28",
+                "timestamp": "2026-03-29T09:00:00Z"
+            },
+            {
+                "action": "resulted",
+                "resource": "Observation/creatinine_2_9",
+                "timestamp": "2026-03-29T09:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Cisplatin chemotherapy — eGFR 28 mL/min/1.73m2 is below safe threshold; cisplatin is highly nephrotoxic and contraindicated with creatinine clearance < 30",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

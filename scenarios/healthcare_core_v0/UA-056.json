@@ -1,0 +1,30 @@
+{
+    "id": "UA-056",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "quality_analyst",
+        "department": "quality_improvement",
+        "permissions": [
+            "read:aggregate_metrics"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Observation/OBS-IDENTIFIABLE-456"
+    },
+    "prior_state": {
+        "data_request_type": "identifiable",
+        "limited_dataset_agreement": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "id": "UA-050",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "organ_procurement_coordinator",
+        "department": "transplant_services",
+        "permissions": [
+            "read:organ_donor_records",
+            "read:patients:authorized_procurement"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-DONOR-450"
+    },
+    "prior_state": {
+        "authorization_status": "valid",
+        "authorization_id": "OPO-AUTH-450",
+        "procurement_case_active": true,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

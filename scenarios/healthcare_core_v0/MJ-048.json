@@ -1,0 +1,30 @@
+{
+    "id": "MJ-048",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "social_worker",
+        "department": "behavioral_health",
+        "permissions": [
+            "read:behavioral_health_records"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "DocumentReference/DOC-SUD-RECORDS-448"
+    },
+    "prior_state": {
+        "cfrpart2_consent_on_file": false,
+        "treatment_relationship_active": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

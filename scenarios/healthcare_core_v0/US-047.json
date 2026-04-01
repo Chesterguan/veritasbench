@@ -1,0 +1,35 @@
+{
+    "id": "US-047",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "attending_physician",
+        "department": "nephrology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/metformin_1000mg_bid"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [
+            {
+                "action": "resulted",
+                "resource": "Observation/egfr_24",
+                "timestamp": "2026-03-30T07:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Order metformin for type 2 diabetes — current eGFR 24 mL/min/1.73m2; metformin contraindicated with eGFR < 30 due to lactic acidosis risk",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

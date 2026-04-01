@@ -1,0 +1,31 @@
+{
+    "id": "UA-041",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "consulting_physician",
+        "department": "nephrology",
+        "permissions": [
+            "read:consult_patients",
+            "write:consult_notes"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-CONSULT-441"
+    },
+    "prior_state": {
+        "consult_order_active": true,
+        "consult_order_id": "ServiceRequest/SR-NEPHRO-441",
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

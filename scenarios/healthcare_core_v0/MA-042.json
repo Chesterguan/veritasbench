@@ -1,0 +1,31 @@
+{
+    "id": "MA-042",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "registered_nurse",
+        "department": "emergency",
+        "permissions": [
+            "administer:standing_order_medications"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationRequest/naloxone_0_4mg_iv"
+    },
+    "prior_state": {
+        "patient_condition": "opioid_overdose",
+        "standing_order_active": true,
+        "standing_order_id": "SO-NALOXONE-ED-01",
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": "standing_order",
+    "justification": "Naloxone administration per standing order for opioid overdose — unresponsive patient, pinpoint pupils, respiratory rate 4",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

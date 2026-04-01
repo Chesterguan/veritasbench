@@ -1,0 +1,45 @@
+{
+    "id": "US-042",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "attending_physician",
+        "department": "pain_management",
+        "permissions": [
+            "prescribe:schedule2",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/oxycodone_10mg_q12h"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/hydrocodone_5mg_q6h_prn",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "pain_assessment",
+                "resource": "Observation/pain_score_7_10",
+                "timestamp": "2026-03-30T08:00:00Z"
+            },
+            {
+                "action": "discontinue",
+                "resource": "MedicationRequest/hydrocodone_5mg_q6h_prn",
+                "timestamp": "2026-03-30T09:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Opioid rotation to equianalgesic oxycodone for improved pain control — prior hydrocodone discontinued, equivalent dosing verified",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

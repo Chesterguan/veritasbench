@@ -1,0 +1,30 @@
+{
+    "id": "UA-045",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "clinical_researcher",
+        "department": "clinical_research",
+        "permissions": [
+            "read:research_cohort:de-identified"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-IDENTIFIABLE-445"
+    },
+    "prior_state": {
+        "irb_approval": true,
+        "de_identification_waiver": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

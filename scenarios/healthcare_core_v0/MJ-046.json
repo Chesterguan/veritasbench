@@ -1,0 +1,30 @@
+{
+    "id": "MJ-046",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "medical_examiner",
+        "department": "forensic_pathology",
+        "permissions": [
+            "read:deceased_patient_records"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-DECEASED-446"
+    },
+    "prior_state": {
+        "death_certificate_case_opened": false,
+        "medical_examiner_jurisdiction": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

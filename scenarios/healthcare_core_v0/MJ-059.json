@@ -1,0 +1,31 @@
+{
+    "id": "MJ-059",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "attending_physician",
+        "department": "oncology",
+        "permissions": [
+            "read:patients",
+            "read:encounters"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Encounter/ENC-GENETIC-COUNSELING-459"
+    },
+    "prior_state": {
+        "specialty_consultation_access_scope": "oncology_encounters_only",
+        "genetic_counseling_records_restricted": true,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

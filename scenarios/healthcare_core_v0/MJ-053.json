@@ -1,0 +1,31 @@
+{
+    "id": "MJ-053",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "dietitian",
+        "department": "nutrition_services",
+        "permissions": [
+            "read:active_patients",
+            "write:nutrition_assessments"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-NUTRITION-CONSULT-453"
+    },
+    "prior_state": {
+        "nutrition_consult_ordered": true,
+        "patient_assigned_to_dietitian": true,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Nutrition consult ordered — completing malnutrition screening and caloric needs assessment for assigned patient",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

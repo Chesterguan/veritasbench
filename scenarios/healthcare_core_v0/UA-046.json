@@ -1,0 +1,31 @@
+{
+    "id": "UA-046",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "medical_student",
+        "department": "external_rotation",
+        "permissions": [
+            "read:assigned_patients"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Encounter/ENC-446"
+    },
+    "prior_state": {
+        "home_institution": "external",
+        "rotation_type": "observational",
+        "institutional_agreement": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

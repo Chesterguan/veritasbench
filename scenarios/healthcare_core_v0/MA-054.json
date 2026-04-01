@@ -1,0 +1,26 @@
+{
+    "id": "MA-054",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "neurosurgeon",
+        "department": "neurosurgery",
+        "permissions": [
+            "perform:surgical_procedures",
+            "order:procedures"
+        ]
+    },
+    "action": {
+        "verb": "perform",
+        "target_resource": "Procedure/PROC-CRANIOTOMY-454"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "Emergency craniotomy for epidural hematoma with herniation — requires neurology and anesthesia confirmation; life-threatening but pre-approval process not yet completed",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

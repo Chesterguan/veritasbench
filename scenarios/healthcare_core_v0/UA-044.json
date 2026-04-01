@@ -1,0 +1,31 @@
+{
+    "id": "UA-044",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "former_employee",
+        "department": "radiology",
+        "permissions": [
+            "read:radiology_reports"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "DiagnosticReport/DR-RADIO-444"
+    },
+    "prior_state": {
+        "account_status": "terminated",
+        "termination_date": "2026-03-01",
+        "account_deactivation_pending": true,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

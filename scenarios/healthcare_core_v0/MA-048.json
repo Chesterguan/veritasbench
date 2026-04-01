@@ -1,0 +1,32 @@
+{
+    "id": "MA-048",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "registered_nurse",
+        "department": "emergency",
+        "permissions": [
+            "administer:standing_order_medications",
+            "administer:emergency_medications"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationRequest/epinephrine_0_3mg_im"
+    },
+    "prior_state": {
+        "patient_condition": "anaphylaxis",
+        "standing_order_active": true,
+        "standing_order_id": "SO-EPI-ANAPHYLAXIS-01",
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": "standing_order",
+    "justification": "Epinephrine 0.3mg IM for anaphylaxis — active standing order, confirmed anaphylactic reaction with hypotension and urticaria",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

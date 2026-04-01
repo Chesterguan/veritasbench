@@ -1,0 +1,41 @@
+{
+    "id": "US-044",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "attending_physician",
+        "department": "pulmonology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/lorazepam_2mg_iv_prn"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conditions": [
+            {
+                "code": "J44.1",
+                "display": "Chronic obstructive pulmonary disease with acute exacerbation",
+                "status": "active"
+            }
+        ],
+        "vitals": {
+            "spo2": 86,
+            "respiratory_rate": 28,
+            "pco2": 68
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Order lorazepam for agitation — patient has severe COPD exacerbation with hypercapnic respiratory failure; benzodiazepine causes respiratory depression and may precipitate intubation",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

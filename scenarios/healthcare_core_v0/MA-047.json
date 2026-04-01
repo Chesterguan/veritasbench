@@ -1,0 +1,31 @@
+{
+    "id": "MA-047",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "neurologist",
+        "department": "neurology",
+        "permissions": [
+            "order:critical_care_protocols",
+            "order:procedures"
+        ]
+    },
+    "action": {
+        "verb": "initiate",
+        "target_resource": "Procedure/PROC-HYPOTHERMIA-447"
+    },
+    "prior_state": {
+        "patient_condition": "post_cardiac_arrest",
+        "hypothermia_protocol_indicated": true,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "Initiate targeted temperature management protocol — requires critical care attending co-sign and family consent for post-cardiac arrest neuroprotection",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

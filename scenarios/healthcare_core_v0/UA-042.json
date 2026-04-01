@@ -1,0 +1,31 @@
+{
+    "id": "UA-042",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "social_worker",
+        "department": "social_services",
+        "permissions": [
+            "read:discharge_planning",
+            "write:social_work_notes"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "CarePlan/CP-DISCHARGE-442"
+    },
+    "prior_state": {
+        "patient_assigned": true,
+        "discharge_planning_active": true,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

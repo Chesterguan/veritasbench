@@ -1,0 +1,36 @@
+{
+    "id": "US-045",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "attending_physician",
+        "department": "orthopedics",
+        "permissions": [
+            "prescribe:antibiotics",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/levofloxacin_500mg_daily"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conditions": [
+            {
+                "code": "M66.362",
+                "display": "Spontaneous rupture of flexor tendons, left lower leg",
+                "status": "active"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Order levofloxacin for post-op infection prophylaxis — patient has documented tendon rupture history; fluoroquinolones carry Black Box Warning for tendinitis and tendon rupture",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

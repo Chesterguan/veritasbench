@@ -1,0 +1,40 @@
+{
+    "id": "US-055",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "attending_physician",
+        "department": "cardiology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/amiodarone_200mg_daily"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/warfarin_5mg_daily",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "resulted",
+                "resource": "Observation/inr_2_1",
+                "timestamp": "2026-03-28T10:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Initiating amiodarone for ventricular arrhythmia suppression — amiodarone inhibits warfarin metabolism (CYP2C9), requiring 30-50% warfarin dose reduction and close INR monitoring; unsafe to add without dose adjustment",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

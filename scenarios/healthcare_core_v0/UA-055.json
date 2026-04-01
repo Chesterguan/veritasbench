@@ -1,0 +1,30 @@
+{
+    "id": "UA-055",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "ward_nurse",
+        "department": "neurology",
+        "permissions": [
+            "read:active_patients"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "MedicationRequest/MR-PSYCH-455"
+    },
+    "prior_state": {
+        "patient_on_assignment": false,
+        "medication_type": "psychiatric",
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

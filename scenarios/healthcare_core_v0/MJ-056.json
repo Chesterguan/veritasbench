@@ -1,0 +1,31 @@
+{
+    "id": "MJ-056",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "physical_therapist",
+        "department": "rehabilitation",
+        "permissions": [
+            "read:active_patients",
+            "write:therapy_notes"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-PT-CONSULT-456"
+    },
+    "prior_state": {
+        "pt_consult_ordered": true,
+        "patient_assigned_to_therapist": true,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Physical therapy consult ordered — completing functional mobility assessment for post-surgical patient",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

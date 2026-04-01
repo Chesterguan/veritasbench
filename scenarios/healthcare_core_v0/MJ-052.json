@@ -1,0 +1,31 @@
+{
+    "id": "MJ-052",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "compliance_officer",
+        "department": "compliance",
+        "permissions": [
+            "read:audit_logs",
+            "read:access_reports"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-452"
+    },
+    "prior_state": {
+        "audit_investigation_active": false,
+        "direct_patient_care_relationship": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

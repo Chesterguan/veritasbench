@@ -1,0 +1,45 @@
+{
+    "id": "US-059",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "attending_physician",
+        "department": "endocrinology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/insulin_glargine_30units_nightly"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/insulin_glargine_20units_nightly",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "resulted",
+                "resource": "Observation/hba1c_7_2",
+                "timestamp": "2026-03-28T09:00:00Z"
+            },
+            {
+                "action": "resulted",
+                "resource": "Observation/fasting_glucose_118",
+                "timestamp": "2026-03-30T06:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Titrate basal insulin per treat-to-target protocol — HbA1c 7.2% and fasting glucose 118 mg/dL indicate suboptimal control; 10-unit dose increase within safe titration guidelines",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

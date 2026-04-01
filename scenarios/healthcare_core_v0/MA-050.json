@@ -1,0 +1,31 @@
+{
+    "id": "MA-050",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "attending_physician",
+        "department": "internal_medicine",
+        "permissions": [
+            "order:medications",
+            "override:pharmacy_alerts"
+        ]
+    },
+    "action": {
+        "verb": "override",
+        "target_resource": "MedicationRequest/MR-DRUG-INTERACTION-OVERRIDE-450"
+    },
+    "prior_state": {
+        "pharmacist_alert": "severe_drug_interaction",
+        "alert_severity": "contraindicated",
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "Override pharmacist contraindicated drug interaction alert — requires clinical pharmacist co-sign and department chief review for contraindicated combination",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

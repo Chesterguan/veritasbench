@@ -1,0 +1,29 @@
+{
+    "id": "UA-051",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "medical_device_representative",
+        "department": "external",
+        "permissions": []
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Encounter/ENC-SURGICAL-451"
+    },
+    "prior_state": {
+        "vendor_agreement": true,
+        "in_or_case": false,
+        "clinical_record_access_authorized": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

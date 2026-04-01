@@ -1,0 +1,31 @@
+{
+    "id": "MA-052",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "resident_physician",
+        "department": "internal_medicine",
+        "permissions": [
+            "order:medications",
+            "write:orders"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/MR-HIGH-ALERT-452"
+    },
+    "prior_state": {
+        "medication_class": "high_alert",
+        "medication": "concentrated_potassium_chloride",
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "Order concentrated potassium chloride infusion — high-alert medication requires pharmacist review and attending co-sign before dispensing",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

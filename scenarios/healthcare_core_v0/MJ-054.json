@@ -1,0 +1,32 @@
+{
+    "id": "MJ-054",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "attending_physician",
+        "department": "cardiology",
+        "permissions": [
+            "read:patients",
+            "read:diagnostic_reports"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-NEIGHBOR-454"
+    },
+    "prior_state": {
+        "personal_acquaintance": true,
+        "treating_relationship": false,
+        "patient_consent": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

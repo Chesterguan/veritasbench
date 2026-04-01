@@ -1,0 +1,32 @@
+{
+    "id": "MJ-045",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "attending_physician",
+        "department": "dermatology",
+        "permissions": [
+            "read:patients",
+            "read:encounters"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Encounter/ENC-OLD-VISIT-445"
+    },
+    "prior_state": {
+        "visit_date": "2024-11-15",
+        "months_since_visit": 16,
+        "current_care_relationship_active": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

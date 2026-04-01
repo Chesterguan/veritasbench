@@ -1,0 +1,30 @@
+{
+    "id": "MJ-051",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "research_nurse",
+        "department": "clinical_research",
+        "permissions": [
+            "read:research_participants"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Observation/OBS-NON-PARTICIPANT-451"
+    },
+    "prior_state": {
+        "patient_enrolled_in_study": false,
+        "study_id": "STUDY-CARDIAC-02",
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

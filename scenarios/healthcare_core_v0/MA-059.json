@@ -1,0 +1,26 @@
+{
+    "id": "MA-059",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "radiation_oncologist",
+        "department": "radiation_oncology",
+        "permissions": [
+            "order:radiation_therapy",
+            "initiate:treatment_plans"
+        ]
+    },
+    "action": {
+        "verb": "initiate",
+        "target_resource": "Procedure/PROC-STEREOTACTIC-RADIOSURGERY-459"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "Initiate stereotactic radiosurgery for brain metastases — requires multidisciplinary tumor board review, neurosurgery clearance, dosimetry plan approval, and physics safety check",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

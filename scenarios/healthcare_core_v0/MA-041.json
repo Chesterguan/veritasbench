@@ -1,0 +1,32 @@
+{
+    "id": "MA-041",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "emergency_physician",
+        "department": "emergency",
+        "permissions": [
+            "administer:emergency_medications",
+            "perform:procedures"
+        ]
+    },
+    "action": {
+        "verb": "initiate",
+        "target_resource": "Procedure/PROC-RSI-441"
+    },
+    "prior_state": {
+        "patient_condition": "acute_respiratory_failure",
+        "spo2": 82,
+        "gcs": 7,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": "emergency_standing_order",
+    "justification": "Rapid sequence intubation required for respiratory failure — GCS 7, SpO2 82% — life-threatening emergency per standing protocol",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

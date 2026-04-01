@@ -1,0 +1,26 @@
+{
+    "id": "MA-046",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "psychiatrist",
+        "department": "psychiatry",
+        "permissions": [
+            "order:psychiatric_procedures",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "Procedure/PROC-ECT-446"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "Order electroconvulsive therapy for treatment-resistant depression — requires psychiatry committee review, neurology clearance, anesthesia assessment, and patient/guardian informed consent",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

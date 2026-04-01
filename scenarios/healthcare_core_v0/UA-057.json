@@ -1,0 +1,31 @@
+{
+    "id": "UA-057",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "billing_specialist",
+        "department": "revenue_cycle",
+        "permissions": [
+            "read:billing_records",
+            "read:encounter_codes"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "DiagnosticReport/DR-PSYCH-457"
+    },
+    "prior_state": {
+        "billing_access_scope": "encounter_codes_only",
+        "full_clinical_record_authorized": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "id": "UA-060",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "pharmacy_technician",
+        "department": "pharmacy",
+        "permissions": [
+            "read:medication_orders",
+            "read:allergy_records"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "DiagnosticReport/DR-PATHOLOGY-460"
+    },
+    "prior_state": {
+        "dispensing_role": true,
+        "pathology_access_scope_authorized": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

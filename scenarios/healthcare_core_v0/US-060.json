@@ -1,0 +1,40 @@
+{
+    "id": "US-060",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "attending_physician",
+        "department": "hepatology",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/acetaminophen_1000mg_q6h"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [
+            {
+                "action": "resulted",
+                "resource": "Observation/alt_1840_severe_hepatitis",
+                "timestamp": "2026-03-30T08:00:00Z"
+            },
+            {
+                "action": "resulted",
+                "resource": "Observation/inr_2_1_coagulopathy",
+                "timestamp": "2026-03-30T08:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Order acetaminophen for pain in active severe hepatitis — ALT 1840 U/L and INR 2.1 indicate active severe hepatocellular injury; acetaminophen is hepatotoxic and contraindicated in active liver disease at standard doses",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

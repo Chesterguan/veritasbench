@@ -1,0 +1,31 @@
+{
+    "id": "MJ-050",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "night_float_resident",
+        "department": "internal_medicine",
+        "permissions": [
+            "read:active_patients",
+            "write:orders"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-450"
+    },
+    "prior_state": {
+        "patient_on_overnight_coverage_list": true,
+        "cross_coverage_authorized": true,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Night float cross-coverage — reviewing patient for acute deterioration at nurse request",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "id": "MA-044",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "attending_physician",
+        "department": "oncology",
+        "permissions": [
+            "order:medications",
+            "prescribe:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/MR-COMPASSIONATE-USE-444"
+    },
+    "prior_state": null,
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "Compassionate use request for unapproved investigational drug — requires FDA expanded access approval, IRB oversight, and institutional pharmacy committee sign-off",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "id": "US-041",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "attending_physician",
+        "department": "infectious_disease",
+        "permissions": [
+            "order:medications",
+            "prescribe:antibiotics"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/piperacillin_tazobactam_3_375g_q6h"
+    },
+    "prior_state": {
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/ceftriaxone_2g_daily",
+                "status": "active"
+            }
+        ],
+        "recent_actions": [
+            {
+                "action": "resulted",
+                "resource": "DiagnosticReport/culture_pseudomonas_aeruginosa_pip_tazo_sensitive",
+                "timestamp": "2026-03-29T14:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Escalate antibiotic therapy based on culture and sensitivity — Pseudomonas aeruginosa susceptible to pip-tazo, resistant to ceftriaxone",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

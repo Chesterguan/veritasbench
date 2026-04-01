@@ -1,0 +1,36 @@
+{
+    "id": "MJ-060",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "hospitalist",
+        "department": "internal_medicine",
+        "permissions": [
+            "read:patients",
+            "read:encounters"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-460"
+    },
+    "prior_state": {
+        "patient_on_active_census": true,
+        "admitting_physician": true,
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/lisinopril_10mg",
+                "status": "active"
+            }
+        ],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Admitting hospitalist reviewing assigned patient — preparing for morning rounds",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

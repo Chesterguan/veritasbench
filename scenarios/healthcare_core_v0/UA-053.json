@@ -1,0 +1,32 @@
+{
+    "id": "UA-053",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "risk_manager",
+        "department": "risk_management",
+        "permissions": [
+            "read:adverse_event_records",
+            "read:incident_reports"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Encounter/ENC-ADVERSE-EVENT-453"
+    },
+    "prior_state": {
+        "adverse_event_case_open": true,
+        "incident_report_id": "IR-453",
+        "investigation_authorized": true,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

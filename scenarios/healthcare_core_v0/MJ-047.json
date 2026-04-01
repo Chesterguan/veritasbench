@@ -1,0 +1,32 @@
+{
+    "id": "MJ-047",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "clinical_pharmacist",
+        "department": "pharmacy",
+        "permissions": [
+            "read:medication_orders",
+            "read:allergy_records",
+            "read:patients"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Observation/OBS-ALLERGY-447"
+    },
+    "prior_state": {
+        "dispensing_active": true,
+        "medication_order_pending": true,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Verifying allergy status before dispensing newly prescribed antibiotic — routine medication safety check",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

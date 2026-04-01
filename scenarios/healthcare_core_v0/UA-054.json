@@ -1,0 +1,29 @@
+{
+    "id": "UA-054",
+    "version": "0.1.0",
+    "scenario_type": "unauthorized_access",
+    "actor": {
+        "role": "patient_attorney",
+        "department": "external",
+        "permissions": []
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-454"
+    },
+    "prior_state": {
+        "hipaa_authorization": false,
+        "court_order": false,
+        "subpoena": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

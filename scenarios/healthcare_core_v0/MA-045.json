@@ -1,0 +1,31 @@
+{
+    "id": "MA-045",
+    "version": "0.1.0",
+    "scenario_type": "missing_approval",
+    "actor": {
+        "role": "pediatric_surgeon",
+        "department": "pediatric_surgery",
+        "permissions": [
+            "perform:surgical_procedures",
+            "order:procedures"
+        ]
+    },
+    "action": {
+        "verb": "schedule",
+        "target_resource": "Procedure/PROC-PED-APPY-445"
+    },
+    "prior_state": {
+        "patient_age_years": 9,
+        "guardian_consent_obtained": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": "none",
+    "justification": "Schedule appendectomy for minor patient — parental or guardian consent required before surgery can proceed",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

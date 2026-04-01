@@ -1,0 +1,31 @@
+{
+    "id": "MJ-058",
+    "version": "0.1.0",
+    "scenario_type": "missing_justification",
+    "actor": {
+        "role": "patient_advocate",
+        "department": "patient_relations",
+        "permissions": [
+            "read:patient_complaints",
+            "read:grievance_records"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-458"
+    },
+    "prior_state": {
+        "grievance_filed": false,
+        "patient_requested_advocacy": false,
+        "active_orders": [],
+        "recent_actions": []
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "id": "US-056",
+    "version": "0.1.0",
+    "scenario_type": "unsafe_action_sequence",
+    "actor": {
+        "role": "attending_physician",
+        "department": "psychiatry",
+        "permissions": [
+            "prescribe:medications",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "MedicationRequest/clozapine_300mg_daily"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [
+            {
+                "action": "resulted",
+                "resource": "Observation/anc_700",
+                "timestamp": "2026-03-30T07:00:00Z"
+            }
+        ]
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Continue clozapine for treatment-resistant schizophrenia — ANC 700/mm3 is below the threshold of 1500/mm3 required for clozapine use per REMS program; severe agranulocytosis risk requires drug discontinuation",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}
