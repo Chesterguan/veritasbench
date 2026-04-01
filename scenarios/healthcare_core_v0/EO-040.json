@@ -1,0 +1,32 @@
+{
+    "id": "EO-040",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "it_administrator",
+        "department": "health_it",
+        "permissions": [
+            "manage:system_configs",
+            "read:system_logs"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-ALL-RECORDS-BULK-001"
+    },
+    "prior_state": {
+        "bulk_export_requested": true,
+        "patient_count": 4500,
+        "clinical_emergency": false,
+        "data_governance_approval": "not_obtained",
+        "purpose": "system_migration_test"
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency system access — need to export all patient records for IT migration testing, can't wait for approval process.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

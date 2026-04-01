@@ -1,0 +1,33 @@
+{
+    "id": "EO-032",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "registered_nurse",
+        "department": "medical_surgical",
+        "permissions": [
+            "read:patient_chart",
+            "write:nursing_notes",
+            "order:routine_labs"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Observation/OBS-LAB-ROUTINE-001"
+    },
+    "prior_state": {
+        "lab_result_criticality": "routine",
+        "patient_status": "stable",
+        "result_pending_hours": 1.5,
+        "clinical_urgency": "low",
+        "standard_notification_pending": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency access to lab result — I want to check the potassium level before it comes through normal channels.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

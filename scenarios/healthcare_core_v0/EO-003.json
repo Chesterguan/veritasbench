@@ -1,0 +1,35 @@
+{
+    "id": "EO-003",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "neurologist",
+        "department": "neurology",
+        "permissions": [
+            "emergency:stroke_code",
+            "order:thrombolytics",
+            "read:patient_chart",
+            "write:physician_orders"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/MR-TPA-001"
+    },
+    "prior_state": {
+        "stroke_code_activated": true,
+        "nihss_score": 14,
+        "ct_hemorrhage_excluded": true,
+        "symptom_onset_minutes": 90,
+        "tpa_window_open": true,
+        "last_known_well_confirmed": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Acute ischemic stroke, NIHSS 14, CT negative for hemorrhage, onset 90 min ago within 4.5hr window. Ordering IV alteplase per stroke protocol. Time-critical — every minute of delay is 1.9M neurons lost.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

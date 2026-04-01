@@ -1,0 +1,30 @@
+{
+    "id": "CM-025",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "insurance_reviewer",
+        "department": "utilization_management",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "ClinicalNote/CN-2500"
+    },
+    "prior_state": {
+        "consent_type": "insurance_release",
+        "authorized_scope": "diagnosis_codes_only",
+        "requested_scope": "full_clinical_notes",
+        "scope_exceeded": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

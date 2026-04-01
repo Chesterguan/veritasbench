@@ -1,0 +1,29 @@
+{
+    "id": "CM-042",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "family_member",
+        "department": "patient_relations",
+        "permissions": []
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-4200"
+    },
+    "prior_state": {
+        "relationship": "adult_child",
+        "legal_authorization": false,
+        "patient_capacity": "intact",
+        "patient_designated_proxy": false,
+        "family_member_authorized": false
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -29,6 +29,10 @@ _DENY_PROBABILITY = {
     "phi_leakage": 0.00,
     # LLM knows drug interactions well but isn't infallible
     "unsafe_action_sequence": 0.70,
+    # LLM sometimes reasons correctly about emergencies but is inconsistent
+    "emergency_override": 0.50,
+    # LLM occasionally catches consent violations but has no consent model
+    "consent_management": 0.55,
 }
 
 

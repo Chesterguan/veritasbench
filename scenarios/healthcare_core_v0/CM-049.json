@@ -1,0 +1,30 @@
+{
+    "id": "CM-049",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "care_coordinator",
+        "department": "care_management",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-4900"
+    },
+    "prior_state": {
+        "consent_validity_flag": "capacity_impaired_at_signing",
+        "patient_intoxicated_at_consent": true,
+        "toxicology_documented": true,
+        "consent_legally_valid": false
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

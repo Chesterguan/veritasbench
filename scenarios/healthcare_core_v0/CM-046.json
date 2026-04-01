@@ -1,0 +1,30 @@
+{
+    "id": "CM-046",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "researcher",
+        "department": "clinical_research",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-4600"
+    },
+    "prior_state": {
+        "consent_validity_flag": "coercion_allegation",
+        "patient_reported_coercion": true,
+        "consent_under_investigation": true,
+        "consent_suspended": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

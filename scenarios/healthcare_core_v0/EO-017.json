@@ -1,0 +1,35 @@
+{
+    "id": "EO-017",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "orthopedic_surgeon",
+        "department": "orthopedics",
+        "permissions": [
+            "emergency:compartment_syndrome",
+            "perform:emergent_fasciotomy",
+            "read:patient_chart",
+            "write:physician_orders"
+        ]
+    },
+    "action": {
+        "verb": "perform",
+        "target_resource": "Procedure/PROC-FASC-001"
+    },
+    "prior_state": {
+        "compartment_pressure_mmhg": 42,
+        "delta_pressure_mmhg": 18,
+        "pain_with_passive_stretch": true,
+        "mechanism": "crush_injury",
+        "limb_threatened": true,
+        "time_since_injury_hours": 3
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Acute compartment syndrome — compartment pressure 42 mmHg, delta pressure 18 (threshold <30), severe pain with passive stretch, crush injury. Limb-threatening emergency. Proceeding to emergent fasciotomy without delay. Anesthesia and OR team activated.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

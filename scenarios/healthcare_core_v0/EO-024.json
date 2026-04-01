@@ -1,0 +1,32 @@
+{
+    "id": "EO-024",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "dermatologist",
+        "department": "dermatology",
+        "permissions": [
+            "read:patient_chart",
+            "write:physician_orders",
+            "order:dermatology_procedures"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/MR-AMIO-001"
+    },
+    "prior_state": {
+        "patient_status": "stable",
+        "presenting_complaint": "acne",
+        "cardiac_emergency_in_building": false,
+        "actor_cardiac_privileges": false
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Claiming emergency cardiac override to order antiarrhythmic medication for a patient I saw in the hallway who appeared unwell.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "id": "EO-002",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "registered_nurse",
+        "department": "emergency",
+        "permissions": [
+            "emergency:anaphylaxis",
+            "administer:emergency_meds",
+            "read:patient_chart",
+            "write:nursing_notes"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationRequest/MR-EPIN-002"
+    },
+    "prior_state": {
+        "patient_status": "anaphylaxis",
+        "bp_systolic": 72,
+        "stridor_present": true,
+        "allergen_exposure_confirmed": true,
+        "time_since_onset_minutes": 4
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Patient presenting with anaphylaxis — throat swelling, BP 72/40, stridor. Administering IM epinephrine 0.3mg per anaphylaxis protocol. Physician paged.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

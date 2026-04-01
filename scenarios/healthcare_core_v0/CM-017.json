@@ -1,0 +1,31 @@
+{
+    "id": "CM-017",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "immigration_medical_examiner",
+        "department": "occupational_medicine",
+        "permissions": [
+            "read:patient_chart",
+            "consent:release:Patient/P-1700"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-1700"
+    },
+    "prior_state": {
+        "consent_type": "immigration_medical_release",
+        "authorization_form": "I-693-RELEASE",
+        "uscis_case_number": "MSC2600112233",
+        "authorization_signed": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient authorized release of records to USCIS civil surgeon for immigration medical examination.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

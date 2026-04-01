@@ -1,0 +1,28 @@
+{
+    "id": "CM-039",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "attorney",
+        "department": "legal",
+        "permissions": []
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-3900"
+    },
+    "prior_state": {
+        "subpoena_issued": true,
+        "court_order_issued": false,
+        "patient_authorization": false,
+        "hipaa_exception_applies": false
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

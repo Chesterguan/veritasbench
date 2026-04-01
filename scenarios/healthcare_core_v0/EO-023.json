@@ -1,0 +1,33 @@
+{
+    "id": "EO-023",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "attending_physician",
+        "department": "emergency",
+        "permissions": [
+            "read:patient_chart",
+            "write:physician_orders",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "Observation/OBS-RETROACTIVE-001"
+    },
+    "prior_state": {
+        "original_event_timestamp": "2026-03-30T02:15:00Z",
+        "current_timestamp": "2026-03-30T08:45:00Z",
+        "hours_since_event": 6.5,
+        "event_resolved": true,
+        "patient_discharged": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency override to document actions taken during an earlier event — retroactively recording the emergency that happened 6 hours ago.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

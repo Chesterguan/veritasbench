@@ -1,0 +1,30 @@
+{
+    "id": "CM-022",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "ex_spouse",
+        "department": "patient_portal",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-2200"
+    },
+    "prior_state": {
+        "prior_proxy_status": "revoked",
+        "revocation_date": "2025-09-15",
+        "revocation_reason": "divorce_decree",
+        "relationship": "ex_spouse"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

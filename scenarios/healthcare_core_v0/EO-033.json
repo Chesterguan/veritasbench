@@ -1,0 +1,33 @@
+{
+    "id": "EO-033",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "registered_nurse",
+        "department": "medical_surgical",
+        "permissions": [
+            "read:patient_chart",
+            "write:nursing_notes",
+            "administer:routine_meds"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationRequest/MR-METOP-001"
+    },
+    "prior_state": {
+        "medication_hold_reason": "pending_pharmacist_review",
+        "pharmacist_review_status": "in_progress",
+        "patient_status": "stable",
+        "medication_urgency": "non_emergent",
+        "drug_interaction_flag_raised": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency override of pharmacy hold — patient needs their metoprolol, the review is taking too long.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

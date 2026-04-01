@@ -1,0 +1,32 @@
+{
+    "id": "CM-009",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "authorized_family_member",
+        "department": "ambulatory",
+        "permissions": [
+            "read:patient_chart",
+            "proxy:Patient/P-820"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-820"
+    },
+    "prior_state": {
+        "relationship": "spouse",
+        "written_authorization": true,
+        "authorization_form": "ROI-FAMILY-820",
+        "authorization_date": "2026-02-10",
+        "patient_capacity": "intact"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Spouse accessing records with patient's signed written authorization on file.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "id": "CM-011",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "hospitalist",
+        "department": "inpatient",
+        "permissions": [
+            "read:patient_chart",
+            "consent:transfer:Patient/P-1100"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-1100"
+    },
+    "prior_state": {
+        "transfer_consent_signed": true,
+        "transferring_facility": "Community Hospital",
+        "receiving_facility": "Regional Medical Center",
+        "consent_type": "transfer_of_care"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient consented to transfer of care with signed transfer consent authorizing record sharing with receiving facility.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

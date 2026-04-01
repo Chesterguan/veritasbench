@@ -1,0 +1,30 @@
+{
+    "id": "CM-044",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "data_analytics_vendor",
+        "department": "population_health",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-4400"
+    },
+    "prior_state": {
+        "consent_type": "blanket_future_use",
+        "hipaa_compliance": "blanket_consent_not_valid_under_hipaa",
+        "specific_use_case_consent": false,
+        "consent_form_language": "all_future_uses_permitted"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

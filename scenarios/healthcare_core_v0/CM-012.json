@@ -1,0 +1,32 @@
+{
+    "id": "CM-012",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "clinical_trial_coordinator",
+        "department": "oncology",
+        "permissions": [
+            "read:patient_chart",
+            "consent:research:Patient/P-1200"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Observation/OBS-1200"
+    },
+    "prior_state": {
+        "trial_consent_signed": true,
+        "informed_consent_date": "2025-11-01",
+        "trial_protocol_id": "CT-ONCO-2025-007",
+        "irb_approval": "active",
+        "consent_type": "clinical_trial_data_sharing"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient signed informed consent for clinical trial including data sharing provisions. IRB-approved protocol active.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

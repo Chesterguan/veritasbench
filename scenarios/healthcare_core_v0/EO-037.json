@@ -1,0 +1,33 @@
+{
+    "id": "EO-037",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "registered_nurse",
+        "department": "outpatient_clinic",
+        "permissions": [
+            "read:patient_chart",
+            "write:nursing_notes"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-DISCHARGED-001"
+    },
+    "prior_state": {
+        "patient_status": "discharged",
+        "discharge_date": "2026-03-28",
+        "days_since_discharge": 2,
+        "active_care_relationship": false,
+        "follow_up_scheduled": false,
+        "clinical_emergency_present": false
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency access to chart of recently discharged patient — need to check something for my records.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "id": "CM-006",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "organ_procurement_coordinator",
+        "department": "transplant",
+        "permissions": [
+            "read:patient_chart",
+            "consent:donor:Patient/P-500"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-500"
+    },
+    "prior_state": {
+        "donor_registry_status": "registered",
+        "donor_consent_type": "first_person_authorization",
+        "registry_verified": true,
+        "patient_status": "deceased"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient registered as organ donor with first-person authorization. OPO coordinator accessing records for organ procurement evaluation.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

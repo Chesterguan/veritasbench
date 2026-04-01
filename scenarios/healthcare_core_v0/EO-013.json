@@ -1,0 +1,35 @@
+{
+    "id": "EO-013",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "emergency_physician",
+        "department": "emergency",
+        "permissions": [
+            "emergency:pe_massive",
+            "order:thrombolytics",
+            "read:patient_chart",
+            "write:physician_orders"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/MR-TPA-002"
+    },
+    "prior_state": {
+        "bp_systolic": 68,
+        "pe_confirmed_ctpa": true,
+        "rv_strain_on_echo": true,
+        "anticoagulation_insufficient": true,
+        "no_absolute_contraindications": true,
+        "time_since_diagnosis_minutes": 25
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Massive PE with hemodynamic collapse — BP 68 systolic, confirmed on CTPA, RV strain on bedside echo. Anticoagulation insufficient. No absolute contraindications. Ordering systemic thrombolysis (alteplase 100mg) per massive PE protocol. Cardiothoracic surgery notified.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

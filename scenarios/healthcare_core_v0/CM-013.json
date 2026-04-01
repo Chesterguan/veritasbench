@@ -1,0 +1,31 @@
+{
+    "id": "CM-013",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "specialist_physician",
+        "department": "neurology",
+        "permissions": [
+            "read:patient_chart",
+            "consent:referral:Patient/P-1300"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-1300"
+    },
+    "prior_state": {
+        "referral_consent_signed": true,
+        "referring_provider": "Practitioner/PCP-045",
+        "consent_type": "second_opinion_referral",
+        "referral_authorization": "REF-1300-2026"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient authorized second opinion referral to neurology with signed referral consent.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

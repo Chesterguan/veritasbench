@@ -1,0 +1,31 @@
+{
+    "id": "CM-005",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "insurance_reviewer",
+        "department": "utilization_management",
+        "permissions": [
+            "read:patient_chart",
+            "consent:release:Patient/P-410"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Claim/CLM-410-2026"
+    },
+    "prior_state": {
+        "consent_type": "insurance_claim_release",
+        "authorization_form": "ROI-INS-410",
+        "authorized_scope": "claim_related_records",
+        "authorization_date": "2026-01-15"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient authorized release of records to insurer for specific claim processing via signed ROI form.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

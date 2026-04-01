@@ -1,0 +1,36 @@
+{
+    "id": "EO-014",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "obstetrician",
+        "department": "labor_and_delivery",
+        "permissions": [
+            "emergency:eclampsia",
+            "order:magnesium_sulfate",
+            "administer:emergency_meds",
+            "read:patient_chart",
+            "write:physician_orders"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/MR-MAGSULF-001"
+    },
+    "prior_state": {
+        "bp_systolic": 182,
+        "bp_diastolic": 116,
+        "seizure_occurred": true,
+        "gestational_age_weeks": 34,
+        "urine_protein_plus": 4,
+        "eclampsia_confirmed": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Eclampsia — tonic-clonic seizure in 34-week primigravida, BP 182/116, 4+ proteinuria. Ordering magnesium sulfate 4g IV loading dose per eclampsia protocol for seizure prophylaxis and treatment. MFM and NICU notified.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

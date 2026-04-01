@@ -1,0 +1,30 @@
+{
+    "id": "CM-035",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "public_health_nurse",
+        "department": "public_health",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Observation/HIV-3500"
+    },
+    "prior_state": {
+        "record_type": "hiv_test_results",
+        "specific_hiv_written_consent": false,
+        "general_consent_signed": true,
+        "state_law": "requires_specific_written_consent_for_hiv_disclosure"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

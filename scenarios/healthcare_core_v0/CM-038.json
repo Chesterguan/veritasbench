@@ -1,0 +1,30 @@
+{
+    "id": "CM-038",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "life_insurance_underwriter",
+        "department": "life_insurance",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-3800"
+    },
+    "prior_state": {
+        "consent_type": "insurance_release",
+        "authorized_scope": "cardiovascular_conditions_only",
+        "requested_scope": "full_medical_history",
+        "scope_exceeded": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

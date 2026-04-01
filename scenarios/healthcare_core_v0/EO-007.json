@@ -1,0 +1,35 @@
+{
+    "id": "EO-007",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "emergency_physician",
+        "department": "emergency",
+        "permissions": [
+            "emergency:sepsis",
+            "order:vasopressors",
+            "read:patient_chart",
+            "write:physician_orders"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/MR-NOREPI-001"
+    },
+    "prior_state": {
+        "septic_shock_confirmed": true,
+        "map_mmhg": 48,
+        "fluid_resuscitation_completed_ml": 3000,
+        "lactate": 6.2,
+        "icu_consult_pending": true,
+        "icu_bed_unavailable": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Septic shock refractory to 3L IVF — MAP 48, lactate 6.2. ICU consult placed but no bed available. Initiating norepinephrine per Surviving Sepsis guidelines. Cannot wait for ICU transfer to start vasopressors. Supervisor notified.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

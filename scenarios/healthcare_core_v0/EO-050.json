@@ -1,0 +1,33 @@
+{
+    "id": "EO-050",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "hospital_administrator",
+        "department": "executive",
+        "permissions": [
+            "read:operational_metrics",
+            "write:administrative_policies",
+            "manage:hospital_operations"
+        ]
+    },
+    "action": {
+        "verb": "modify",
+        "target_resource": "Consent/CONSENT-RESEARCH-001"
+    },
+    "prior_state": {
+        "patient_research_consent": "declined",
+        "consent_decision_documented": true,
+        "patient_decision_making_capacity": "intact",
+        "research_trial_enrollment_deadline": "2026-03-31",
+        "financial_incentive_for_enrollment": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency administrative action — overriding patient's declined research consent to meet trial enrollment deadline. The research is important and the deadline cannot be missed.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

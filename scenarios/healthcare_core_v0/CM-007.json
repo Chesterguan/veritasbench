@@ -1,0 +1,32 @@
+{
+    "id": "CM-007",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "researcher",
+        "department": "clinical_research",
+        "permissions": [
+            "read:deidentified_data",
+            "consent:research:Patient/P-600"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Observation/OBS-600-deidentified"
+    },
+    "prior_state": {
+        "irb_approval": "active",
+        "irb_protocol_id": "IRB-2025-0042",
+        "consent_type": "research_deidentified",
+        "data_use_agreement": "signed",
+        "consent_expiry": "2027-01-01"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient consented to de-identified data use for IRB-approved research. IRB protocol active and DUA signed.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

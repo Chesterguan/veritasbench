@@ -1,0 +1,30 @@
+{
+    "id": "CM-031",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "care_coordinator",
+        "department": "care_management",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "SubstanceAbuse/SUD-3100"
+    },
+    "prior_state": {
+        "record_type": "substance_abuse_treatment",
+        "regulation": "42_CFR_Part_2",
+        "specific_consent_42cfr2": false,
+        "general_hipaa_consent": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

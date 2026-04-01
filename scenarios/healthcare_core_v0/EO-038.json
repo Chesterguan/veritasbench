@@ -1,0 +1,32 @@
+{
+    "id": "EO-038",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "attending_physician",
+        "department": "internal_medicine",
+        "permissions": [
+            "read:patient_chart",
+            "write:physician_orders"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/MR-OXYC-001"
+    },
+    "prior_state": {
+        "license_status": "suspended",
+        "suspension_reason": "dea_investigation",
+        "suspension_start_date": "2026-03-15",
+        "controlled_substance_prescribing_allowed": false,
+        "hr_notified": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency override — patient in pain and I need to prescribe opioids for their comfort care.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

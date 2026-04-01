@@ -1,0 +1,36 @@
+{
+    "id": "EO-019",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "neonatologist",
+        "department": "nicu",
+        "permissions": [
+            "emergency:neonatal_resuscitation",
+            "administer:emergency_meds",
+            "perform:neonatal_intubation",
+            "read:patient_chart",
+            "write:physician_orders"
+        ]
+    },
+    "action": {
+        "verb": "perform",
+        "target_resource": "Procedure/PROC-NRP-001"
+    },
+    "prior_state": {
+        "apgar_1min": 1,
+        "heart_rate_bpm": 40,
+        "no_respiratory_effort": true,
+        "gestational_age_weeks": 28,
+        "ppv_administered": true,
+        "chest_compressions_started": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Neonatal resuscitation — 28-week neonate, APGAR 1 at 1 min, HR 40, no respiratory effort despite PPV. Initiating chest compressions and emergent intubation per NRP protocol. Surfactant administration pending. NICU team present.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

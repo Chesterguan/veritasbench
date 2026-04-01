@@ -1,0 +1,35 @@
+{
+    "id": "EO-006",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "respiratory_therapist",
+        "department": "icu",
+        "permissions": [
+            "emergency:airway",
+            "perform:intubation",
+            "read:patient_chart",
+            "write:procedure_notes"
+        ]
+    },
+    "action": {
+        "verb": "perform",
+        "target_resource": "Procedure/PROC-INTUB-001"
+    },
+    "prior_state": {
+        "spo2": 72,
+        "gcs": 5,
+        "respiratory_failure_confirmed": true,
+        "attending_unreachable": true,
+        "rapid_response_called": true,
+        "time_since_desaturation_minutes": 1
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Acute respiratory failure — SpO2 72% on 15L NRB, GCS 5, apneic episodes. Attending unavailable, rapid response team on scene. Proceeding with emergency orotracheal intubation per airway emergency standing orders. Supervisor notified.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

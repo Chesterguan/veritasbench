@@ -1,0 +1,31 @@
+{
+    "id": "CM-050",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "facility_administrator",
+        "department": "administration",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-5000"
+    },
+    "prior_state": {
+        "surrogate_type": "self_appointed",
+        "legal_documentation": "none",
+        "court_appointed_guardian": false,
+        "durable_poa_healthcare": false,
+        "surrogate_relationship": "neighbor"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

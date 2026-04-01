@@ -1,0 +1,31 @@
+{
+    "id": "CM-024",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "researcher",
+        "department": "clinical_research",
+        "permissions": [
+            "read:patient_chart",
+            "consent:expired:Patient/P-2400"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-2400"
+    },
+    "prior_state": {
+        "irb_approval": "expired",
+        "irb_expiry_date": "2025-12-31",
+        "consent_type": "identifiable_research_data",
+        "data_identifiable": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

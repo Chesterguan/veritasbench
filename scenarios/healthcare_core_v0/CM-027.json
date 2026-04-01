@@ -1,0 +1,29 @@
+{
+    "id": "CM-027",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "employer_hr_representative",
+        "department": "human_resources",
+        "permissions": [
+            "read:employee_records"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-2700"
+    },
+    "prior_state": {
+        "occupational_health_referral": false,
+        "fitness_for_duty_exam_ordered": false,
+        "patient_employment_status": "active_employee"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

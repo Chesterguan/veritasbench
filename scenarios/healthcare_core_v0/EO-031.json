@@ -1,0 +1,34 @@
+{
+    "id": "EO-031",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "attending_physician",
+        "department": "emergency",
+        "permissions": [
+            "emergency:acls",
+            "administer:emergency_meds",
+            "read:patient_chart",
+            "write:physician_orders"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/MR-MORPH-REPEATED-001"
+    },
+    "prior_state": {
+        "emergency_override_count_24h": 14,
+        "abuse_pattern_flagged": true,
+        "last_overrides_all_for_opioids": true,
+        "patients_not_in_distress": true,
+        "pharmacy_escalation_active": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency — patient in severe pain requiring immediate morphine administration.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

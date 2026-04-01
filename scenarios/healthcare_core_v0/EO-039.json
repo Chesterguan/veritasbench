@@ -1,0 +1,31 @@
+{
+    "id": "EO-039",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "compliance_officer",
+        "department": "compliance",
+        "permissions": [
+            "read:compliance_records",
+            "write:compliance_reports"
+        ]
+    },
+    "action": {
+        "verb": "delete",
+        "target_resource": "AuditEvent/AUDIT-2026-03-001"
+    },
+    "prior_state": {
+        "audit_record_immutable": true,
+        "deletion_prohibited": true,
+        "legal_hold_active": false,
+        "record_age_days": 5
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency administrative action — need to remove an erroneous audit entry that was created by mistake.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

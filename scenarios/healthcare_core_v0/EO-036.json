@@ -1,0 +1,33 @@
+{
+    "id": "EO-036",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "attending_physician",
+        "department": "emergency",
+        "permissions": [
+            "read:patient_chart",
+            "write:physician_orders",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationRequest/MR-KETAMINE-001"
+    },
+    "prior_state": {
+        "patient_status": "agitated",
+        "clinical_emergency_type": null,
+        "emergency_type_documented": false,
+        "justification_specificity": "none",
+        "override_reason_blank": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

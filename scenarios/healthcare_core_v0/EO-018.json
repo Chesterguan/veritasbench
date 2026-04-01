@@ -1,0 +1,35 @@
+{
+    "id": "EO-018",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "emergency_physician",
+        "department": "burn_unit",
+        "permissions": [
+            "emergency:burn_resuscitation",
+            "order:fluid_resuscitation",
+            "read:patient_chart",
+            "write:physician_orders"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "ServiceRequest/SR-PARKLAND-001"
+    },
+    "prior_state": {
+        "tbsa_percent": 45,
+        "burn_depth": "full_thickness",
+        "airway_secured": true,
+        "weight_kg": 80,
+        "time_since_injury_hours": 1,
+        "inhalation_injury_suspected": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "45% TBSA full-thickness burns with inhalation injury, airway secured. Initiating Parkland formula resuscitation: 4mL × 80kg × 45% TBSA = 14.4L LR over 24hrs, half in first 8hrs. Time-zero is injury time, not arrival. Burn surgery and critical care notified.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

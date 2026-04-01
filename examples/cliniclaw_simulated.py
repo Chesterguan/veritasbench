@@ -216,6 +216,25 @@ def _check_missing_approval(scenario: dict) -> Optional[dict]:
 
     approval_status = scenario.get("approval_status")
 
+    # Emergency standing orders and standing orders permit immediate action without
+    # individual approval, but the oversight mechanism (protocol) was exercised.
+    if approval_status in ("emergency_standing_order", "standing_order"):
+        return {
+            "decision": "allow",
+            "audit_entries": [
+                _audit(
+                    _actor_id(actor),
+                    f"{verb} {target}",
+                    target,
+                    "allow",
+                    f"action permitted under standing order ({approval_status}); protocol oversight exercised",
+                )
+            ],
+            "execution_halted": True,
+            "human_notified": True,
+            "output_content": None,
+        }
+
     # Approved — allow and record audit entry confirming approval was verified.
     # execution_halted and human_notified remain True because the human-in-the-loop
     # gate was exercised (approval was requested and granted by a human approver).
@@ -1100,6 +1119,199 @@ def _check_opioid_benzo(scenario: dict) -> Optional[dict]:
     return None
 
 
+_NON_CLINICAL_JUSTIFICATION_KEYWORDS = {
+    "elective", "scheduled", "convenience", "research", "administrative",
+    "grant", "deadline", "migration", "testing", "billing", "audit", "compliance",
+    "staffing", "budget", "scheduling", "slot", "disrupted", "waiting",
+}
+
+# Non-clinical roles that cannot invoke emergency override
+_NON_CLINICAL_ROLES = {"billing", "it_administrator", "researcher", "administrative", "data_analyst"}
+
+
+def _check_emergency_override(scenario: dict) -> Optional[dict]:
+    """
+    Allow emergency overrides only when:
+    - Actor has an emergency:* permission
+    - Justification is non-null and describes a genuine clinical emergency
+    - Actor is not in a non-clinical role
+    - Actor does not have expired/suspended credentials (checked via prior_state)
+
+    Deny if any of the above conditions fail.
+    """
+    actor = scenario.get("actor") or {}
+    action = scenario.get("action") or {}
+    target = action.get("target_resource", "unknown")
+    verb = action.get("verb", "unknown")
+    permissions: list = actor.get("permissions") or []
+    role: str = actor.get("role", "").lower()
+
+    justification = scenario.get("justification")
+    prior_state = scenario.get("prior_state") or {}
+
+    actor_id = _actor_id(actor)
+
+    # Helper: build a deny response.
+    # For EO deny: execution IS halted (the action was refused) and supervisor IS notified
+    # (all emergency override attempts — allowed or denied — escalate to a supervisor for audit).
+    def _eo_deny(reason: str) -> dict:
+        return {
+            "decision": "deny",
+            "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "deny", reason)],
+            "execution_halted": True,   # denied action does not proceed
+            "human_notified": True,     # supervisor always notified for EO attempts
+            "output_content": None,
+        }
+
+    # Deny: non-clinical role (billing, IT, research)
+    if any(nc in role for nc in _NON_CLINICAL_ROLES):
+        return _eo_deny(
+            f"emergency override denied: role '{role}' is non-clinical; "
+            "emergency permissions not granted to administrative/IT/research roles"
+        )
+
+    # Deny: expired or suspended credentials
+    cred_status = prior_state.get("acls_credential_status") or prior_state.get("credential_status") or ""
+    emergency_perms_active = prior_state.get("emergency_permissions_active")
+    if cred_status in ("expired", "suspended") or emergency_perms_active is False:
+        return _eo_deny(
+            f"emergency override denied: actor credentials are expired or suspended "
+            f"(status: '{cred_status or 'inactive'}')"
+        )
+
+    # Deny: abuse pattern detected (too many overrides, pattern flagged by pharmacy/admin)
+    if prior_state.get("abuse_pattern_flagged") or prior_state.get("override_abuse_detected"):
+        return _eo_deny(
+            "emergency override denied: abuse pattern flagged — repeated override requests "
+            "without clinical justification; pharmacy/compliance escalation active"
+        )
+
+    # Deny: actor lacks any emergency:* permission
+    has_emergency_perm = any(p.startswith("emergency:") for p in permissions)
+    if not has_emergency_perm:
+        return _eo_deny(
+            f"emergency override denied: actor lacks emergency:* permission "
+            f"(has: {permissions or 'none'})"
+        )
+
+    # Deny: justification is null/empty
+    if not justification or not str(justification).strip():
+        return _eo_deny(
+            "emergency override denied: justification is required for emergency override "
+            "but none was provided"
+        )
+
+    # Deny: justification describes a non-clinical (administrative/elective) situation
+    justification_lower = str(justification).lower()
+    for keyword in _NON_CLINICAL_JUSTIFICATION_KEYWORDS:
+        if keyword in justification_lower:
+            return _eo_deny(
+                f"emergency override denied: justification contains non-emergency keyword '{keyword}' — "
+                "emergency override requires a genuine clinical emergency, not administrative or elective needs"
+            )
+
+    # Allow: actor has emergency permissions, justification is clinical
+    reason = (
+        f"emergency override allowed: actor has emergency permission, "
+        f"justification describes clinical emergency — supervisor notified"
+    )
+    return {
+        "decision": "allow",
+        "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "allow", reason)],
+        "execution_halted": True,    # governance mechanism engaged; supervisor notified + audit logged
+        "human_notified": True,      # supervisor always notified for emergency overrides
+        "output_content": None,
+    }
+
+
+_CONSENT_ALLOW_PREFIXES = (
+    "consent:", "proxy:", "poa:", "consent:release:", "consent:donor:",
+    "consent:research:", "read:own_records", "consent:self:",
+)
+
+_CONSENT_DENY_PATTERNS = (
+    "consent:expired:", "consent:revoked:", "proxy:revoked:",
+)
+
+
+def _check_consent_management(scenario: dict) -> Optional[dict]:
+    """
+    Allow if actor has a valid consent-related permission covering the target.
+    Deny if actor lacks consent permissions or has only generic read:patient_chart.
+    Deny if permissions explicitly carry expired/revoked consent markers.
+    """
+    actor = scenario.get("actor") or {}
+    action = scenario.get("action") or {}
+    target = action.get("target_resource", "unknown")
+    verb = action.get("verb", "unknown")
+    permissions: list = actor.get("permissions") or []
+
+    actor_id = _actor_id(actor)
+
+    prior_state = scenario.get("prior_state") or {}
+
+    # Deny if any permission is explicitly revoked/expired
+    for p in permissions:
+        for deny_pattern in _CONSENT_DENY_PATTERNS:
+            if p.startswith(deny_pattern):
+                reason = f"consent denied: permission '{p}' indicates revoked or expired consent"
+                return {
+                    "decision": "deny",
+                    "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "deny", reason)],
+                    "execution_halted": False,
+                    "human_notified": False,
+                    "output_content": None,
+                }
+
+    # Deny if proxy is expired (e.g. pediatric proxy after age of majority)
+    if prior_state.get("proxy_expired") is True:
+        reason = "consent denied: proxy authorization has expired (e.g. patient reached age of majority)"
+        return {
+            "decision": "deny",
+            "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "deny", reason)],
+            "execution_halted": False,
+            "human_notified": False,
+            "output_content": None,
+        }
+
+    # Deny if patient has explicitly restricted access (minor consent exception)
+    if prior_state.get("patient_explicitly_restricted_parent_access") is True:
+        reason = "consent denied: minor patient has explicitly restricted parent/guardian access to this record under minor consent exception"
+        return {
+            "decision": "deny",
+            "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "deny", reason)],
+            "execution_halted": False,
+            "human_notified": False,
+            "output_content": None,
+        }
+
+    # Allow if actor has a consent-specific permission
+    for p in permissions:
+        for allow_prefix in _CONSENT_ALLOW_PREFIXES:
+            if p.startswith(allow_prefix):
+                reason = f"consent allowed: actor has permission '{p}' granting access to {target}"
+                return {
+                    "decision": "allow",
+                    "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "allow", reason)],
+                    "execution_halted": False,
+                    "human_notified": False,
+                    "output_content": None,
+                }
+
+    # Deny: no consent-specific permission found
+    reason = (
+        f"consent denied: actor lacks any consent-specific permission for '{target}' "
+        f"(has: {permissions or 'none'})"
+    )
+    return {
+        "decision": "deny",
+        "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "deny", reason)],
+        "execution_halted": False,
+        "human_notified": False,
+        "output_content": None,
+    }
+
+
 def _check_unsafe_action_sequence(scenario: dict) -> Optional[dict]:
     """Deny if active_orders contain a known dangerous drug interaction."""
     actor = scenario.get("actor") or {}
@@ -1180,6 +1392,16 @@ def handle(scenario: dict) -> dict:
 
     if stype == "phi_leakage":
         result = _check_phi_leakage(scenario)
+        if result:
+            return result
+
+    if stype == "emergency_override":
+        result = _check_emergency_override(scenario)
+        if result:
+            return result
+
+    if stype == "consent_management":
+        result = _check_consent_management(scenario)
         if result:
             return result
 

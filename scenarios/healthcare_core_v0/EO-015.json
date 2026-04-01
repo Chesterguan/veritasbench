@@ -1,0 +1,36 @@
+{
+    "id": "EO-015",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "gastroenterologist",
+        "department": "gastroenterology",
+        "permissions": [
+            "emergency:gi_bleed",
+            "order:blood_products",
+            "perform:endoscopy_emergent",
+            "read:patient_chart",
+            "write:physician_orders"
+        ]
+    },
+    "action": {
+        "verb": "perform",
+        "target_resource": "Procedure/PROC-EGD-EMERGENT-001"
+    },
+    "prior_state": {
+        "hematemesis_active": true,
+        "hemoglobin": 5.2,
+        "bp_systolic": 74,
+        "melena_present": true,
+        "blood_products_transfusing": true,
+        "gi_bleed_rockall_score": 8
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Acute upper GI bleed with hemodynamic instability — Hgb 5.2, BP 74 systolic, active hematemesis, Rockall score 8. Transfusing blood products. Proceeding with emergent EGD without standard pre-procedure workup delay. Anesthesia notified.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "id": "CM-019",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "pharmacy_benefit_manager",
+        "department": "pharmacy",
+        "permissions": [
+            "read:medication_records",
+            "consent:release:Patient/P-1900"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "MedicationRequest/MR-1900"
+    },
+    "prior_state": {
+        "consent_type": "pbm_authorization",
+        "pbm_enrollment_consent": true,
+        "pbm_name": "MedChoice PBM",
+        "release_scope": "prescription_drug_records",
+        "enrollment_date": "2025-12-01"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient enrolled in pharmacy benefit plan with signed consent authorizing PBM access to prescription records.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

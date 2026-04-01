@@ -52,6 +52,10 @@ _DENY_PROBABILITY = {
     "phi_leakage": 1.00,
     # Fact-checking rails catch many drug interactions
     "unsafe_action_sequence": 0.75,
+    # NeMo rails detect some emergency abuse patterns via topic filtering
+    "emergency_override": 0.55,
+    # NeMo rails occasionally catch consent scope violations
+    "consent_management": 0.60,
 }
 
 

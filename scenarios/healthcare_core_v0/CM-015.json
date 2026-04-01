@@ -1,0 +1,32 @@
+{
+    "id": "CM-015",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "workers_comp_examiner",
+        "department": "occupational_medicine",
+        "permissions": [
+            "read:patient_chart",
+            "consent:release:Patient/P-1500"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-1500"
+    },
+    "prior_state": {
+        "consent_type": "workers_comp_release",
+        "authorization_form": "WC-AUTH-1500",
+        "injury_claim_number": "WC-2026-0055",
+        "release_scope": "injury_related_records",
+        "authorization_signed": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient authorized release of injury-related records for workers compensation claim processing.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

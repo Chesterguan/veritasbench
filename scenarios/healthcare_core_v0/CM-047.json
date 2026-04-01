@@ -1,0 +1,32 @@
+{
+    "id": "CM-047",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "organ_procurement_coordinator",
+        "department": "transplant",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-4700"
+    },
+    "prior_state": {
+        "patient_status": "deceased",
+        "patient_age_at_death": 72,
+        "consent_type": "donor_consent",
+        "consent_expired_by_age": false,
+        "consent_document": "none_on_file",
+        "next_of_kin_authorization": false
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

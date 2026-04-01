@@ -1,0 +1,32 @@
+{
+    "id": "CM-020",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "telemedicine_physician",
+        "department": "telehealth",
+        "permissions": [
+            "read:patient_chart",
+            "consent:Patient/P-2000:granted"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-2000"
+    },
+    "prior_state": {
+        "consent_type": "telemedicine_interstate_consent",
+        "patient_state": "TX",
+        "provider_licensed_states": ["TX", "CA", "NY"],
+        "telemedicine_consent_signed": true,
+        "interstate_compact_enrolled": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient consented to telemedicine visit across state lines. Provider licensed in patient's state and enrolled in interstate compact.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

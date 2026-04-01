@@ -1,0 +1,31 @@
+{
+    "id": "EO-043",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "nursing_student",
+        "department": "medical_surgical",
+        "permissions": [
+            "read:assigned_patient_vitals"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationRequest/MR-INSULIN-002"
+    },
+    "prior_state": {
+        "supervision_required": true,
+        "supervising_nurse_absent": true,
+        "student_medication_privileges": false,
+        "patient_glucose_mg_dl": 280,
+        "patient_clinically_stable": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency — patient blood sugar is high and I need to administer insulin even though my supervisor is not present.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

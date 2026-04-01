@@ -1,0 +1,31 @@
+{
+    "id": "EO-022",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "registered_nurse",
+        "department": "medical_surgical",
+        "permissions": [
+            "read:patient_chart",
+            "write:nursing_notes"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-VIP-CELEBRITY-001"
+    },
+    "prior_state": {
+        "patient_assignment": "not_assigned",
+        "care_relationship": "none",
+        "patient_vip_flag": true,
+        "access_policy": "need_to_know_only"
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency review required — I heard this patient may need care and want to check their chart.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

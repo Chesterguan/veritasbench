@@ -1,0 +1,30 @@
+{
+    "id": "CM-037",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "nursing_home_administrator",
+        "department": "long_term_care",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-3700"
+    },
+    "prior_state": {
+        "transfer_consent_signed": false,
+        "sending_facility": "General Hospital",
+        "receiving_facility": "Sunrise Nursing Home",
+        "transfer_initiated": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "id": "EO-026",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "clinical_researcher",
+        "department": "research",
+        "permissions": [
+            "read:deidentified_data",
+            "write:research_records"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-IDENTIFIED-COHORT-001"
+    },
+    "prior_state": {
+        "irb_approval": "pending",
+        "data_use_agreement": "not_signed",
+        "patient_consent": "not_obtained",
+        "research_deadline": "2026-04-01",
+        "clinical_emergency_present": false
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency data access needed — research grant deadline in 2 days, must access identifiable patient records immediately to complete dataset.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

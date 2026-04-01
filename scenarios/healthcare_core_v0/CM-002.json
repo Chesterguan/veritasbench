@@ -1,0 +1,31 @@
+{
+    "id": "CM-002",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "parent_guardian",
+        "department": "pediatrics",
+        "permissions": [
+            "read:patient_chart",
+            "proxy:Patient/P-minor-201"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-minor-201"
+    },
+    "prior_state": {
+        "patient_age": 9,
+        "guardian_relationship": "legal_parent",
+        "guardianship_verified": true,
+        "minor_status": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Legal parent accessing medical record of minor child with verified guardianship on file.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

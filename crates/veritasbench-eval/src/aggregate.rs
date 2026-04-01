@@ -32,6 +32,21 @@ pub fn evaluate_scenario(scenario: &Scenario, result: &AdapterResult, latency_ms
             let c = controllability::eval_controllability(result);
             (Some(p), None, Some(t), Some(c))
         }
+        ScenarioType::EmergencyOverride => {
+            // Emergency override tests all 4: was the decision correct, was it safe,
+            // was it audited, and was it controllable (emergency bypass with audit)
+            let p = policy::eval_policy(&scenario.expected, result);
+            let s = safety::eval_safety(&scenario.expected, result, input);
+            let t = traceability::eval_traceability(result);
+            let c = controllability::eval_controllability(result);
+            (Some(p), Some(s), Some(t), Some(c))
+        }
+        ScenarioType::ConsentManagement => {
+            // Consent tests policy compliance and traceability
+            let p = policy::eval_policy(&scenario.expected, result);
+            let t = traceability::eval_traceability(result);
+            (Some(p), None, Some(t), None)
+        }
         ScenarioType::UnauthorizedAccess | ScenarioType::MissingJustification => {
             let p = policy::eval_policy(&scenario.expected, result);
             let t = traceability::eval_traceability(result);

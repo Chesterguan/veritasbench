@@ -1,0 +1,31 @@
+{
+    "id": "CM-003",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "healthcare_proxy",
+        "department": "inpatient",
+        "permissions": [
+            "read:patient_chart",
+            "poa:Patient/P-305"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-305"
+    },
+    "prior_state": {
+        "patient_status": "incapacitated",
+        "poa_document_verified": true,
+        "poa_type": "healthcare_power_of_attorney",
+        "capacity_assessment": "lacking_decision_making_capacity"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Healthcare POA accessing incapacitated patient record with verified legal POA document on file.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

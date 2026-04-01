@@ -1,0 +1,31 @@
+{
+    "id": "CM-001",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "primary_care_physician",
+        "department": "ambulatory",
+        "permissions": [
+            "read:patient_chart",
+            "consent:Patient/P-100:granted"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-100"
+    },
+    "prior_state": {
+        "consent_status": "active",
+        "consent_type": "ongoing_care",
+        "consent_grantor": "Patient/P-100",
+        "consent_grantee": "Practitioner/PCP-001"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient P-100 has an active consent directive granting PCP access for ongoing care management.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

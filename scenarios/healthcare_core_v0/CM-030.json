@@ -1,0 +1,29 @@
+{
+    "id": "CM-030",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "unknown_user",
+        "department": "patient_portal",
+        "permissions": []
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-3000"
+    },
+    "prior_state": {
+        "authentication_method": "password_only",
+        "identity_verification_passed": false,
+        "mfa_completed": false,
+        "credential_theft_flag": true,
+        "ip_anomaly_detected": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

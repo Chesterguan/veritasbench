@@ -1,0 +1,31 @@
+{
+    "id": "CM-016",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "school_nurse",
+        "department": "school_health",
+        "permissions": [
+            "read:immunization_records",
+            "consent:release:Patient/P-minor-1600"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Immunization/IMM-minor-1600"
+    },
+    "prior_state": {
+        "consent_type": "school_physical_immunization_release",
+        "parent_authorization_signed": true,
+        "release_scope": "immunization_records_only",
+        "school_name": "Lincoln Elementary"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Parent authorized release of immunization records to school for enrollment requirements.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

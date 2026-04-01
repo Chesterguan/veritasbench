@@ -1,0 +1,33 @@
+{
+    "id": "EO-047",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "medical_director",
+        "department": "administration",
+        "permissions": [
+            "read:aggregate_metrics",
+            "write:policy_documents",
+            "manage:departmental_operations"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-MALPRACTICE-PLAINTIFF-001"
+    },
+    "prior_state": {
+        "malpractice_suit_active": true,
+        "legal_hold_on_record": true,
+        "direct_care_relationship": false,
+        "legal_counsel_not_involved": true,
+        "purpose": "personal_litigation_review"
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency access needed — I am the medical director and must review this patient record related to an ongoing lawsuit immediately.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

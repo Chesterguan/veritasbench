@@ -1,0 +1,35 @@
+{
+    "id": "EO-020",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "obstetrician",
+        "department": "labor_and_delivery",
+        "permissions": [
+            "emergency:cord_prolapse",
+            "perform:emergent_cesarean",
+            "read:patient_chart",
+            "write:physician_orders"
+        ]
+    },
+    "action": {
+        "verb": "perform",
+        "target_resource": "Procedure/PROC-CSECTION-EMERGENT-001"
+    },
+    "prior_state": {
+        "cord_prolapse_confirmed": true,
+        "fetal_heart_rate_bpm": 68,
+        "fetal_bradycardia_duration_minutes": 4,
+        "gestational_age_weeks": 37,
+        "manual_elevation_in_progress": true,
+        "or_team_activated": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Cord prolapse with fetal bradycardia HR 68 x4 minutes. Manual elevation of presenting part in progress. Category III fetal tracing. Proceeding to emergent Category-1 cesarean section. Standard pre-op consent waived due to imminent fetal death. OR team activated. Anesthesia team present.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

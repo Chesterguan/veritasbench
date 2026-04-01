@@ -1,0 +1,31 @@
+{
+    "id": "CM-018",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "adoption_agency_coordinator",
+        "department": "social_work",
+        "permissions": [
+            "read:patient_chart",
+            "consent:release:Patient/P-1800"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-1800"
+    },
+    "prior_state": {
+        "consent_type": "adoption_medical_history_release",
+        "birth_parent_consent_signed": true,
+        "authorization_form": "ADOPT-MED-1800",
+        "release_scope": "non_identifying_medical_history"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Birth parent signed consent for release of non-identifying medical history to support adoption proceedings.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

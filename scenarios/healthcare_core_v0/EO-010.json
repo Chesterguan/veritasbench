@@ -1,0 +1,35 @@
+{
+    "id": "EO-010",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "anesthesiologist",
+        "department": "or",
+        "permissions": [
+            "emergency:mh_protocol",
+            "order:dantrolene",
+            "read:patient_chart",
+            "write:physician_orders"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/MR-DANT-001"
+    },
+    "prior_state": {
+        "temperature_celsius": 40.8,
+        "temperature_rising": true,
+        "rigidity_present": true,
+        "trigger_agent_given": "succinylcholine",
+        "co2_etco2_elevated": true,
+        "mh_criteria_met": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Malignant hyperthermia crisis — temp 40.8°C rising, generalized rigidity, elevated ETCO2 after succinylcholine. Triggering agents stopped. Ordering dantrolene 2.5 mg/kg IV per MH protocol. MH hotline contacted.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

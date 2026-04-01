@@ -1,0 +1,30 @@
+{
+    "id": "CM-021",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "specialist_physician",
+        "department": "rheumatology",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-2100"
+    },
+    "prior_state": {
+        "consent_status": "withdrawn",
+        "withdrawal_date": "2026-03-01",
+        "withdrawal_reason": "patient_request",
+        "prior_consent_id": "CD-2100-SHARE"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "id": "CM-034",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "insurance_underwriter",
+        "department": "life_insurance",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "GeneticTest/GENO-3400"
+    },
+    "prior_state": {
+        "record_type": "genetic_test_results",
+        "regulation": "GINA",
+        "gina_prohibition": "insurers_cannot_use_genetic_info_for_underwriting",
+        "insurance_type": "health_insurance"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

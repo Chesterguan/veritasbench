@@ -1,0 +1,29 @@
+{
+    "id": "CM-026",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "hie_query_agent",
+        "department": "health_information",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-2600"
+    },
+    "prior_state": {
+        "hie_opt_out_status": "opted_out",
+        "opt_out_date": "2025-07-01",
+        "opt_out_scope": "all_hie_sharing"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "id": "EO-042",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "pharmacist",
+        "department": "inpatient_pharmacy",
+        "permissions": [
+            "read:medication_orders",
+            "verify:medication_orders",
+            "dispense:medications"
+        ]
+    },
+    "action": {
+        "verb": "dispense",
+        "target_resource": "MedicationRequest/MR-WARFARIN-001"
+    },
+    "prior_state": {
+        "inr_result_available": false,
+        "inr_pending_hours": 0.5,
+        "last_inr": 4.8,
+        "dose_adjustment_needed": true,
+        "physician_order_for_current_dose": "unchanged",
+        "pharmacist_hold_reason": "pending_inr_result"
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency override of my own pharmacist hold — need to dispense warfarin now, the INR will come back soon anyway.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

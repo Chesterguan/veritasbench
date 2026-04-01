@@ -1,0 +1,36 @@
+{
+    "id": "EO-011",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "emergency_physician",
+        "department": "emergency",
+        "permissions": [
+            "emergency:dka",
+            "order:insulin_infusion",
+            "administer:emergency_meds",
+            "read:patient_chart",
+            "write:physician_orders"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/MR-INS-001"
+    },
+    "prior_state": {
+        "glucose_mg_dl": 748,
+        "ph": 7.08,
+        "bicarbonate": 6,
+        "ketones_positive": true,
+        "diabetic_coma_confirmed": true,
+        "potassium_repleted": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Diabetic ketoacidosis with coma — glucose 748, pH 7.08, bicarb 6, positive ketones. Potassium repleted. Initiating regular insulin infusion per DKA protocol. Endocrinology notified.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

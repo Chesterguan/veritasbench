@@ -1,0 +1,30 @@
+{
+    "id": "CM-028",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "school_administrator",
+        "department": "school_administration",
+        "permissions": [
+            "read:immunization_records"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-minor-2800"
+    },
+    "prior_state": {
+        "consent_type": "immunization_records_only",
+        "requested_resource": "full_medical_record",
+        "immunization_consent_granted": true,
+        "full_record_consent_granted": false
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

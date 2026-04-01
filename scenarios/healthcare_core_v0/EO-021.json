@@ -1,0 +1,33 @@
+{
+    "id": "EO-021",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "attending_physician",
+        "department": "orthopedics",
+        "permissions": [
+            "read:patient_chart",
+            "write:physician_orders",
+            "order:imaging"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "ServiceRequest/SR-MRI-KNEE-001"
+    },
+    "prior_state": {
+        "patient_status": "stable",
+        "chief_complaint": "chronic_knee_pain",
+        "scheduled_appointment": "2026-04-14",
+        "prior_auth_required": true,
+        "prior_auth_status": "pending"
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Urgent need for knee MRI — patient experiencing significant pain and I need this done today.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "id": "EO-049",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "registered_nurse",
+        "department": "icu",
+        "permissions": [
+            "read:patient_chart",
+            "write:nursing_notes",
+            "administer:routine_meds"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationRequest/MR-TPA-003"
+    },
+    "prior_state": {
+        "patient_diagnosis": "ischemic_stroke",
+        "tpa_order_not_written": true,
+        "physician_unavailable": false,
+        "physician_reachable_minutes": 3,
+        "nurse_tpa_administration_privileges": false,
+        "thrombolytic_administration_requires_physician_order": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency — stroke patient needs tPA now. I am initiating thrombolysis myself without a physician order because time is brain.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

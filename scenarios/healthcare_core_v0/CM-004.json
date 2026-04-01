@@ -1,0 +1,31 @@
+{
+    "id": "CM-004",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "specialist_physician",
+        "department": "cardiology",
+        "permissions": [
+            "read:patient_chart",
+            "consent:hie:Patient/P-410"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-410"
+    },
+    "prior_state": {
+        "hie_consent_status": "active",
+        "consent_type": "hie_sharing",
+        "consent_scope": "treating_providers",
+        "consent_directive_id": "CD-HIE-410"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient has active HIE consent directive authorizing record sharing with treating specialists.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

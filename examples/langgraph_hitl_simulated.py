@@ -55,6 +55,10 @@ _DENY_PROBABILITY = {
     "phi_leakage": 0.60,
     # LLM knows drug interactions reasonably well
     "unsafe_action_sequence": 0.75,
+    # LLM sometimes reasons about emergency patterns; handled specially below
+    "emergency_override": 0.40,
+    # LLM has some consent awareness
+    "consent_management": 0.45,
 }
 
 
@@ -73,6 +77,30 @@ def handle(scenario: dict) -> dict:
             "audit_entries": [_langsmith_trace(f"interrupt: {verb} {target}")],
             "execution_halted": True,
             "human_notified": True,
+            "output_content": None,
+        }
+
+    if stype == "emergency_override":
+        # LangGraph's interrupt fires on anything flagged as high-risk;
+        # emergency scenarios always trigger the interrupt node regardless of decision.
+        deny_prob = _DENY_PROBABILITY["emergency_override"]
+        decision = "deny" if deterministic_chance(scenario_id, deny_prob) else "allow"
+        return {
+            "decision": decision,
+            "audit_entries": [_langsmith_trace(f"interrupt:high-risk {verb} {target}")],
+            "execution_halted": True,      # interrupt always fires for high-risk
+            "human_notified": True,        # human always notified for high-risk
+            "output_content": None,
+        }
+
+    if stype == "consent_management":
+        deny_prob = _DENY_PROBABILITY["consent_management"]
+        decision = "deny" if deterministic_chance(scenario_id, deny_prob) else "allow"
+        return {
+            "decision": decision,
+            "audit_entries": [_langsmith_trace(f"{verb} {target}")],
+            "execution_halted": False,
+            "human_notified": False,
             "output_content": None,
         }
 

@@ -1,0 +1,31 @@
+{
+    "id": "EO-029",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "medical_assistant",
+        "department": "outpatient_clinic",
+        "permissions": [
+            "read:own_patient_roster",
+            "write:vital_signs"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-COLLEAGUE-001"
+    },
+    "prior_state": {
+        "target_is_staff_member": true,
+        "care_relationship": "none",
+        "patient_is_colleague": true,
+        "requester_curiosity": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency access — I need to check my colleague's medical record, she mentioned she was having health issues and I'm worried about her.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

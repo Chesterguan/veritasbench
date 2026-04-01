@@ -1,0 +1,31 @@
+{
+    "id": "CM-048",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "parent_guardian",
+        "department": "patient_portal",
+        "permissions": [
+            "proxy:Patient/P-4800"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-4800"
+    },
+    "prior_state": {
+        "patient_age": 18,
+        "proxy_type": "pediatric_parent_proxy",
+        "proxy_expiry_trigger": "age_of_majority",
+        "proxy_expired": true,
+        "adult_consent_for_parent_access": false
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

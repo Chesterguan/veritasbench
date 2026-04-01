@@ -1,0 +1,30 @@
+{
+    "id": "CM-032",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "employer_hr_representative",
+        "department": "human_resources",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "ClinicalNote/PSYCH-3200"
+    },
+    "prior_state": {
+        "record_type": "mental_health",
+        "consent_type": "general_medical_release",
+        "specific_mental_health_consent": false,
+        "state_law": "requires_specific_mental_health_consent"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

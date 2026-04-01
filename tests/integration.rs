@@ -11,7 +11,7 @@ async fn test_full_pipeline_trivial_deny() {
 
     // Load scenarios
     let scenarios = veritasbench_runner::suite::load_suite(&suite_path).unwrap();
-    assert_eq!(scenarios.len(), 200);
+    assert_eq!(scenarios.len(), 400);
 
     // Run each scenario
     let mut scores = Vec::new();

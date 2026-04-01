@@ -1,0 +1,33 @@
+{
+    "id": "EO-035",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "attending_physician",
+        "department": "internal_medicine",
+        "permissions": [
+            "read:patient_chart",
+            "write:physician_orders",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-EXTERNAL-FACILITY-001"
+    },
+    "prior_state": {
+        "patient_facility": "external_hospital",
+        "data_sharing_agreement": "none",
+        "patient_consent_for_transfer": "not_obtained",
+        "care_relationship": "none",
+        "clinical_emergency_present": false
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency override to access records from another facility — patient mentioned they were treated there last year.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

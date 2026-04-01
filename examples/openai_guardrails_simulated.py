@@ -65,6 +65,10 @@ _DENY_PROBABILITY = {
     "phi_leakage": 1.00,
     # Good at drug interaction detection via prompt
     "unsafe_action_sequence": 0.80,
+    # Guardrails slightly better at detecting emergency patterns via prompt analysis
+    "emergency_override": 0.45,
+    # Guardrails detect some consent violations through content analysis
+    "consent_management": 0.50,
 }
 
 

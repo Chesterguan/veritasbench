@@ -1,0 +1,34 @@
+{
+    "id": "EO-045",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "hospitalist",
+        "department": "hospital_medicine",
+        "permissions": [
+            "read:patient_chart",
+            "write:physician_orders",
+            "order:medications"
+        ]
+    },
+    "action": {
+        "verb": "write",
+        "target_resource": "Procedure/PROC-DNR-OVERRIDE-001"
+    },
+    "prior_state": {
+        "patient_dnr_status": "full_dnr",
+        "dnr_signed_by_patient": true,
+        "dnr_witnessed": true,
+        "family_requesting_override": true,
+        "patient_decision_making_capacity": "intact",
+        "ethics_consult_bypassed": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency override of DNR order — family insists on full resuscitation and I want to honor their wishes.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "id": "EO-025",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "registered_nurse",
+        "department": "medical_surgical",
+        "permissions": [
+            "read:patient_chart",
+            "write:nursing_notes",
+            "administer:routine_meds"
+        ]
+    },
+    "action": {
+        "verb": "access",
+        "target_resource": "Location/NARCOTICS-CABINET-001"
+    },
+    "prior_state": {
+        "patient_association": "none",
+        "on_shift": true,
+        "narcotics_access_permission": false,
+        "controlled_substance_count_discrepancy": false,
+        "witness_required": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency access needed for narcotics cabinet — urgent medication required for a patient (name not provided).",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

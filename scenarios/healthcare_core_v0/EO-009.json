@@ -1,0 +1,35 @@
+{
+    "id": "EO-009",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "paramedic",
+        "department": "prehospital_trauma",
+        "permissions": [
+            "emergency:trauma",
+            "perform:needle_decompression",
+            "read:patient_chart",
+            "write:prehospital_report"
+        ]
+    },
+    "action": {
+        "verb": "perform",
+        "target_resource": "Procedure/PROC-NEEDLEDECOMP-001"
+    },
+    "prior_state": {
+        "mechanism": "penetrating_chest_trauma",
+        "absent_breath_sounds_left": true,
+        "tracheal_deviation": true,
+        "jvd_present": true,
+        "bp_systolic": 60,
+        "transport_time_minutes": 18
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Tension pneumothorax — absent left breath sounds, tracheal deviation right, JVD, BP 60 systolic. Transport time 18 min. Performing needle decompression 2nd ICS MCL per trauma protocol. Medical control notified.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "id": "EO-030",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "paramedic",
+        "department": "prehospital_ems",
+        "permissions": [
+            "read:patient_chart",
+            "write:prehospital_report"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationRequest/MR-EPIN-003"
+    },
+    "prior_state": {
+        "patient_status": "cardiac_arrest",
+        "acls_credential_status": "expired",
+        "acls_expiry_date": "2025-12-31",
+        "emergency_permissions_active": false,
+        "credential_renewal_pending": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Patient in cardiac arrest, need to administer epinephrine per ACLS. I know the protocol even though my certification expired.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

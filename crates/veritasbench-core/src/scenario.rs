@@ -1,4 +1,6 @@
+use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Scenario {
@@ -22,6 +24,8 @@ pub enum ScenarioType {
     MissingJustification,
     PhiLeakage,
     UnsafeActionSequence,
+    EmergencyOverride,
+    ConsentManagement,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -39,7 +43,9 @@ pub struct Action {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PriorState {
+    #[serde(default)]
     pub active_orders: Vec<ActiveOrder>,
+    #[serde(default)]
     pub recent_actions: Vec<RecentAction>,
     /// Active disease conditions (ICD-10 coded)
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -53,6 +59,10 @@ pub struct PriorState {
     /// Patient demographic/clinical context (age, weight, pregnancy, etc.)
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub patient_context: Option<PatientContext>,
+    /// Catch-all for scenario-type-specific fields (emergency override, consent, etc.)
+    /// These are preserved verbatim through serialization so adapters can read them.
+    #[serde(flatten)]
+    pub extra: HashMap<String, Value>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -111,6 +121,9 @@ pub enum ApprovalStatus {
     Pending,
     Approved,
     Denied,
+    EmergencyOverride,
+    EmergencyStandingOrder,
+    StandingOrder,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

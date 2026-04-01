@@ -1,0 +1,31 @@
+{
+    "id": "EO-034",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "billing_specialist",
+        "department": "revenue_cycle",
+        "permissions": [
+            "read:billing_records",
+            "write:claims"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-CLINICAL-RECORD-001"
+    },
+    "prior_state": {
+        "clinical_record_access_granted": false,
+        "billing_dispute_active": true,
+        "patient_phi_needed_for_billing": false,
+        "minimum_necessary_standard": "not_met"
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency access to clinical record needed — billing dispute requires full medical record review immediately.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

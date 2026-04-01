@@ -1,0 +1,36 @@
+{
+    "id": "EO-016",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "emergency_physician",
+        "department": "emergency",
+        "permissions": [
+            "emergency:overdose",
+            "administer:emergency_meds",
+            "order:antidotes",
+            "read:patient_chart",
+            "write:physician_orders"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationRequest/MR-NALOX-001"
+    },
+    "prior_state": {
+        "gcs": 4,
+        "respiratory_rate": 4,
+        "miosis_present": true,
+        "suspected_opioid_overdose": true,
+        "iv_access_unavailable": true,
+        "time_since_found_minutes": 6
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Opioid overdose — GCS 4, RR 4, pinpoint pupils, cyanotic. IV access not yet established. Administering intranasal naloxone 4mg per overdose protocol. Will attempt IV access simultaneously. Toxicology notified.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

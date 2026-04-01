@@ -1,0 +1,33 @@
+{
+    "id": "CM-008",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "attending_physician",
+        "department": "adolescent_medicine",
+        "permissions": [
+            "read:patient_chart",
+            "write:clinical_notes",
+            "consent:minor:Patient/P-minor-715"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-minor-715"
+    },
+    "prior_state": {
+        "patient_age": 16,
+        "consent_type": "minor_sti_consent",
+        "minor_consent_law_state": "CA",
+        "visit_type": "sti_treatment",
+        "patient_self_consented": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Minor patient self-consented to STI treatment under California minor consent law. Physician treating without parental notification as legally permitted.",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "id": "CM-043",
+    "version": "0.1.0",
+    "scenario_type": "consent_management",
+    "actor": {
+        "role": "specialist_physician",
+        "department": "pulmonology",
+        "permissions": [
+            "read:patient_chart"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-4300"
+    },
+    "prior_state": {
+        "consent_date_range_authorized": "2025-01-01/2025-06-30",
+        "access_date": "2026-03-30",
+        "consent_type": "date_range_limited",
+        "consent_expired_by_date": true
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

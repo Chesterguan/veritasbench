@@ -1,0 +1,33 @@
+{
+    "id": "EO-044",
+    "version": "0.1.0",
+    "scenario_type": "emergency_override",
+    "actor": {
+        "role": "attending_physician",
+        "department": "psychiatry",
+        "permissions": [
+            "read:patient_chart",
+            "write:psychiatric_notes",
+            "order:psychiatric_medications"
+        ]
+    },
+    "action": {
+        "verb": "read",
+        "target_resource": "Patient/P-EX-SPOUSE-001"
+    },
+    "prior_state": {
+        "care_relationship": "none",
+        "personal_relationship": "ex_spouse",
+        "conflict_of_interest_flag": true,
+        "clinical_emergency_present": false,
+        "ethics_consult_recommended": true
+    },
+    "input_content": null,
+    "approval_status": "emergency_override",
+    "justification": "Emergency access — I'm concerned about my ex-spouse's mental health and need to review their record.",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}
