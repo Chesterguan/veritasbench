@@ -39,51 +39,14 @@ Four scored governance dimensions, plus two operational metrics:
 ## Benchmark Results (v1, 500 scenarios)
 
 ```mermaid
----
-config:
-  theme: default
----
-%%{init: {'theme': 'default'}}%%
-graph LR
-    subgraph Legend
-        A["ClinicClaw VERITAS"] --- B["LangGraph + HITL"]
-        B --- C["OpenAI Guardrails"]
-        C --- D["NeMo Guardrails"]
-        D --- E["Bare LLM"]
-    end
+xychart-beta
+    title "VeritasBench v1 — Governance Scores by System (500 scenarios)"
+    x-axis ["ClinicClaw-Policy", "ClinicClaw-Safety", "ClinicClaw-Trace", "ClinicClaw-Ctrl", " ", "LangGraph-Policy", "LangGraph-Safety", "LangGraph-Trace", "LangGraph-Ctrl", "  ", "OpenAI-Policy", "OpenAI-Safety", "OpenAI-Trace", "OpenAI-Ctrl", "   ", "NeMo-Policy", "NeMo-Safety", "NeMo-Trace", "NeMo-Ctrl", "    ", "BareLLM-Policy", "BareLLM-Safety", "BareLLM-Trace", "BareLLM-Ctrl"]
+    y-axis "Score (%)" 0 --> 100
+    bar [98, 96, 100, 100, 0, 58, 59, 33, 100, 0, 51, 48, 29, 0, 0, 50, 46, 0, 0, 0, 49, 46, 0, 0]
 ```
 
-```mermaid
-xychart-beta
-    title "Policy Compliance (%)"
-    x-axis ["ClinicClaw", "LangGraph", "OpenAI", "NeMo", "Bare LLM"]
-    y-axis "Score" 0 --> 100
-    bar [98, 58, 51, 50, 49]
-```
-
-```mermaid
-xychart-beta
-    title "Safety (%)"
-    x-axis ["ClinicClaw", "LangGraph", "OpenAI", "NeMo", "Bare LLM"]
-    y-axis "Score" 0 --> 100
-    bar [96, 59, 48, 46, 46]
-```
-
-```mermaid
-xychart-beta
-    title "Traceability (%)"
-    x-axis ["ClinicClaw", "LangGraph", "OpenAI", "NeMo", "Bare LLM"]
-    y-axis "Score" 0 --> 100
-    bar [100, 33, 29, 0, 0]
-```
-
-```mermaid
-xychart-beta
-    title "Controllability (%)"
-    x-axis ["ClinicClaw", "LangGraph", "OpenAI", "NeMo", "Bare LLM"]
-    y-axis "Score" 0 --> 100
-    bar [100, 100, 0, 0, 0]
-```
+> **Reading the chart:** Each system has 4 bars — Policy, Safety, Traceability, Controllability. ClinicClaw (VERITAS) scores 98-100% across all four. The others drop to 0% on traceability and controllability — the dimensions no existing guardrails framework addresses.
 
 | System | Policy | Safety | Traceability | Controllability |
 |---|---|---|---|---|
@@ -92,8 +55,6 @@ xychart-beta
 | OpenAI Guardrails | 51% | 48% | 29% | 0% |
 | NeMo Guardrails | 50% | 46% | 0% | 0% |
 | Bare LLM | 49% | 46% | 0% | 0% |
-
-**What the numbers show:** Content guardrails (OpenAI, NeMo) add marginal safety improvement over a bare LLM, but provide zero traceability and zero controllability. The governance gap is architectural, not a configuration problem.
 
 ## How It Works
 
