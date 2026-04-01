@@ -39,14 +39,20 @@ Four scored governance dimensions, plus two operational metrics:
 ## Benchmark Results (v1, 500 scenarios)
 
 ```mermaid
-xychart-beta
-    title "VeritasBench v1 — Governance Scores by System (500 scenarios)"
-    x-axis ["ClinicClaw-Policy", "ClinicClaw-Safety", "ClinicClaw-Trace", "ClinicClaw-Ctrl", " ", "LangGraph-Policy", "LangGraph-Safety", "LangGraph-Trace", "LangGraph-Ctrl", "  ", "OpenAI-Policy", "OpenAI-Safety", "OpenAI-Trace", "OpenAI-Ctrl", "   ", "NeMo-Policy", "NeMo-Safety", "NeMo-Trace", "NeMo-Ctrl", "    ", "BareLLM-Policy", "BareLLM-Safety", "BareLLM-Trace", "BareLLM-Ctrl"]
-    y-axis "Score (%)" 0 --> 100
-    bar [98, 96, 100, 100, 0, 58, 59, 33, 100, 0, 51, 48, 29, 0, 0, 50, 46, 0, 0, 0, 49, 46, 0, 0]
+quadrantChart
+    title VeritasBench v1 — Governance vs Intelligence (500 scenarios)
+    x-axis "Low Traceability" --> "Full Traceability"
+    y-axis "Low Policy Compliance" --> "Full Policy Compliance"
+    quadrant-1 "Governed"
+    quadrant-2 "Compliant but opaque"
+    quadrant-3 "Ungoverned"
+    quadrant-4 "Auditable but non-compliant"
+    ClinicClaw: [0.95, 0.98]
+    LangGraph: [0.33, 0.58]
+    OpenAI Guardrails: [0.29, 0.51]
+    NeMo Guardrails: [0.03, 0.50]
+    Bare LLM: [0.03, 0.49]
 ```
-
-> **Reading the chart:** Each system has 4 bars — Policy, Safety, Traceability, Controllability. ClinicClaw (VERITAS) scores 98-100% across all four. The others drop to 0% on traceability and controllability — the dimensions no existing guardrails framework addresses.
 
 | System | Policy | Safety | Traceability | Controllability |
 |---|---|---|---|---|
@@ -55,6 +61,8 @@ xychart-beta
 | OpenAI Guardrails | 51% | 48% | 29% | 0% |
 | NeMo Guardrails | 50% | 46% | 0% | 0% |
 | Bare LLM | 49% | 46% | 0% | 0% |
+
+> ClinicClaw is the only system in the **"Governed"** quadrant — high policy compliance AND full traceability. Every other system clusters in the bottom-left: partial compliance, no audit trail.
 
 ## How It Works
 
