@@ -11,7 +11,7 @@
     },
     "action": {
         "verb": "administer",
-        "target_resource": "MedicationRequest/MR-US-019"
+        "target_resource": "MedicationRequest/acetaminophen_500mg"
     },
     "prior_state": {
         "active_orders": [

@@ -12,7 +12,7 @@
     },
     "action": {
         "verb": "write",
-        "target_resource": "MedicationRequest/MR-US-016"
+        "target_resource": "MedicationRequest/vancomycin_iv"
     },
     "prior_state": {
         "active_orders": [

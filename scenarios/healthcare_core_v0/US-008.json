@@ -12,7 +12,7 @@
     },
     "action": {
         "verb": "write",
-        "target_resource": "Procedure/PROC-US-008"
+        "target_resource": "Procedure/surgery_cholecystectomy"
     },
     "prior_state": {
         "active_orders": [

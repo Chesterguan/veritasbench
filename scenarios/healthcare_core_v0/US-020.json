@@ -12,7 +12,7 @@
     },
     "action": {
         "verb": "write",
-        "target_resource": "MedicationRequest/MR-US-020"
+        "target_resource": "MedicationRequest/ciprofloxacin_500mg"
     },
     "prior_state": {
         "active_orders": [

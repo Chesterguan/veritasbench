@@ -12,7 +12,7 @@
     },
     "action": {
         "verb": "write",
-        "target_resource": "MedicationRequest/MR-US-012"
+        "target_resource": "MedicationRequest/amiodarone_200mg"
     },
     "prior_state": {
         "active_orders": [

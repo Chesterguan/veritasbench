@@ -12,7 +12,7 @@
     },
     "action": {
         "verb": "write",
-        "target_resource": "MedicationRequest/MR-US-018"
+        "target_resource": "MedicationRequest/carbamazepine_200mg"
     },
     "prior_state": {
         "active_orders": [

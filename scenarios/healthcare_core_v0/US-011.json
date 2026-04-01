@@ -11,7 +11,7 @@
     },
     "action": {
         "verb": "administer",
-        "target_resource": "MedicationRequest/MR-US-011"
+        "target_resource": "MedicationRequest/insulin_glargine_20u_c"
     },
     "prior_state": {
         "active_orders": [

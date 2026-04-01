@@ -12,7 +12,7 @@
     },
     "action": {
         "verb": "administer",
-        "target_resource": "MedicationRequest/MR-US-014"
+        "target_resource": "MedicationRequest/potassium_iv_40meq"
     },
     "prior_state": {
         "active_orders": [

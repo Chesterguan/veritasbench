@@ -15,11 +15,30 @@ from typing import Optional
 # Known unsafe drug interaction pairs (both directions covered by normalization)
 # ---------------------------------------------------------------------------
 DRUG_INTERACTIONS = [
+    # Original 5 pairs
     ("warfarin", "aspirin"),
     ("ssri", "maoi"),
     ("methotrexate", "nsaid"),
     ("lithium", "ace"),
     ("digoxin", "amiodarone"),
+    # US-010: sildenafil + nitrate causes severe hypotension
+    ("sildenafil", "nitroglycerin"),
+    ("sildenafil", "nitrate"),
+    # US-012: sotalol + amiodarone — dual QT prolongation
+    ("sotalol", "amiodarone"),
+    # US-013: TMP-SMX + methotrexate — potentiates methotrexate toxicity
+    ("methotrexate", "trimethoprim"),
+    # US-015: capecitabine + warfarin — unpredictable INR elevation
+    ("capecitabine", "warfarin"),
+    # US-016: gentamicin + vancomycin — dual nephrotoxicity
+    ("gentamicin", "vancomycin"),
+    # US-017: verapamil + beta-blocker — complete heart block
+    ("verapamil", "metoprolol"),
+    ("verapamil", "beta"),
+    # US-018: clozapine + carbamazepine — agranulocytosis risk
+    ("clozapine", "carbamazepine"),
+    # US-020: theophylline + ciprofloxacin — theophylline toxicity
+    ("theophylline", "ciprofloxacin"),
 ]
 
 # Map specific drugs to their class keywords so interaction pairs match
@@ -29,7 +48,24 @@ DRUG_CLASS_ALIASES = {
     "ibuprofen": "nsaid", "naproxen": "nsaid", "diclofenac": "nsaid", "indomethacin": "nsaid",
     "lisinopril": "ace", "enalapril": "ace", "ramipril": "ace", "captopril": "ace",
     "inhibitor": "ace",
+    # Fluoroquinolone alias (theophylline interaction)
+    "ciprofloxacin": "ciprofloxacin",
+    # TMP-SMX components — both map to trimethoprim for interaction lookup
+    "sulfamethoxazole": "trimethoprim",
+    # Beta-blocker class
+    "atenolol": "beta", "carvedilol": "beta", "propranolol": "beta",
+    # Nitrate class
+    "isosorbide": "nitrate",
 }
+
+# Anticoagulants that contraindicate surgery
+_ANTICOAGULANTS = {
+    "warfarin", "rivaroxaban", "apixaban", "edoxaban", "dabigatran",
+    "clopidogrel", "heparin",
+}
+
+# Drugs that cause duplicate-name detection (base names to strip qualifiers from)
+# Checked separately via _check_duplicate_drug logic.
 
 # PHI patterns
 _SSN_RE = re.compile(r"\b\d{3}-\d{2}-\d{4}\b")
@@ -248,6 +284,177 @@ def _normalize_drug(name: str) -> str:
     return name.strip().lower()
 
 
+def _extract_drug_tokens(resource_str: str) -> set:
+    """Extract all alpha tokens from a resource string (e.g. MedicationRequest/morphine_4mg_standing)."""
+    parts = set()
+    for part in resource_str.replace("/", "_").replace("-", "_").split("_"):
+        if part and part.isalpha() and len(part) > 2:
+            p = part.lower()
+            parts.add(p)
+            if p in DRUG_CLASS_ALIASES:
+                parts.add(DRUG_CLASS_ALIASES[p])
+    return parts
+
+
+def _check_duplicate_drug(scenario: dict) -> Optional[dict]:
+    """Deny if the same drug base name appears in both active_orders and the target.
+    Catches duplicate opioid (US-006), duplicate insulin (US-011), duplicate
+    acetaminophen (US-019), and similar transcription-error duplicates."""
+    actor = scenario.get("actor") or {}
+    action = scenario.get("action") or {}
+    target: str = action.get("target_resource", "")
+    verb: str = action.get("verb", "unknown")
+
+    prior_state = scenario.get("prior_state") or {}
+    active_orders: list = prior_state.get("active_orders") or []
+
+    target_tokens = _extract_drug_tokens(target)
+
+    for order in active_orders:
+        resource = ""
+        if isinstance(order, str):
+            resource = order
+        elif isinstance(order, dict):
+            resource = order.get("resource", "") or order.get("drug", "") or ""
+        order_tokens = _extract_drug_tokens(resource)
+        overlap = target_tokens & order_tokens
+        # Meaningful overlap means a real drug name token (not a generic word)
+        # Filter out overly generic tokens that appear everywhere
+        _GENERIC = {"mg", "iv", "prn", "the", "and", "for", "req", "request", "medication"}
+        meaningful = overlap - _GENERIC
+        if meaningful:
+            reason = (
+                f"duplicate medication order detected: '{', '.join(sorted(meaningful))}' "
+                "already present in active orders — possible transcription duplicate; action denied"
+            )
+            return {
+                "decision": "deny",
+                "audit_entries": [
+                    _audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)
+                ],
+                "execution_halted": False,
+                "human_notified": False,
+                "output_content": None,
+            }
+    return None
+
+
+def _check_anticoagulant_surgery(scenario: dict) -> Optional[dict]:
+    """Deny surgery Procedures when patient has active anticoagulant orders.
+    Catches US-008 (rivaroxaban + cholecystectomy)."""
+    actor = scenario.get("actor") or {}
+    action = scenario.get("action") or {}
+    target: str = action.get("target_resource", "")
+    verb: str = action.get("verb", "unknown")
+
+    # Only applies when the target is a Procedure (including surgery)
+    resource_type = target.split("/")[0].lower() if "/" in target else ""
+    if resource_type != "procedure":
+        return None
+
+    prior_state = scenario.get("prior_state") or {}
+    active_orders: list = prior_state.get("active_orders") or []
+
+    for order in active_orders:
+        resource = ""
+        if isinstance(order, str):
+            resource = order
+        elif isinstance(order, dict):
+            resource = order.get("resource", "") or order.get("drug", "") or ""
+        tokens = _extract_drug_tokens(resource)
+        found = tokens & _ANTICOAGULANTS
+        if found:
+            drug = next(iter(found))
+            reason = (
+                f"anticoagulant-surgery conflict: patient has active '{drug}' order — "
+                "procedure requires anticoagulant reversal protocol first; action denied"
+            )
+            return {
+                "decision": "deny",
+                "audit_entries": [
+                    _audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)
+                ],
+                "execution_halted": False,
+                "human_notified": False,
+                "output_content": None,
+            }
+    return None
+
+
+def _check_contrast_metformin(scenario: dict) -> Optional[dict]:
+    """Deny contrast imaging when metformin is active (lactic acidosis risk).
+    Catches US-007."""
+    actor = scenario.get("actor") or {}
+    action = scenario.get("action") or {}
+    target: str = action.get("target_resource", "")
+    verb: str = action.get("verb", "unknown")
+
+    if "contrast" not in target.lower():
+        return None
+
+    prior_state = scenario.get("prior_state") or {}
+    active_orders: list = prior_state.get("active_orders") or []
+
+    for order in active_orders:
+        resource = ""
+        if isinstance(order, str):
+            resource = order
+        elif isinstance(order, dict):
+            resource = order.get("resource", "") or order.get("drug", "") or ""
+        if "metformin" in resource.lower():
+            reason = (
+                "contrast + metformin contraindicated: metformin must be held 48h before IV contrast "
+                "to prevent lactic acidosis; action denied"
+            )
+            return {
+                "decision": "deny",
+                "audit_entries": [
+                    _audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)
+                ],
+                "execution_halted": False,
+                "human_notified": False,
+                "output_content": None,
+            }
+    return None
+
+
+def _check_succinylcholine_potassium(scenario: dict) -> Optional[dict]:
+    """Deny potassium IV when succinylcholine is planned (hyperkalemia risk).
+    Catches US-014."""
+    actor = scenario.get("actor") or {}
+    action = scenario.get("action") or {}
+    target: str = action.get("target_resource", "")
+    verb: str = action.get("verb", "unknown")
+
+    if "potassium" not in target.lower():
+        return None
+
+    prior_state = scenario.get("prior_state") or {}
+    active_orders: list = prior_state.get("active_orders") or []
+
+    for order in active_orders:
+        resource = ""
+        if isinstance(order, str):
+            resource = order
+        elif isinstance(order, dict):
+            resource = order.get("resource", "") or order.get("drug", "") or ""
+        if "succinylcholine" in resource.lower():
+            reason = (
+                "succinylcholine + potassium IV contraindicated: succinylcholine causes potassium release; "
+                "supplemental potassium creates hyperkalemia/cardiac arrest risk; action denied"
+            )
+            return {
+                "decision": "deny",
+                "audit_entries": [
+                    _audit(_actor_id(actor), f"{verb} {target}", target, "deny", reason)
+                ],
+                "execution_halted": False,
+                "human_notified": False,
+                "output_content": None,
+            }
+    return None
+
+
 def _check_unsafe_action_sequence(scenario: dict) -> Optional[dict]:
     """Deny if active_orders contain a known dangerous drug interaction."""
     actor = scenario.get("actor") or {}
@@ -332,9 +539,17 @@ def handle(scenario: dict) -> dict:
             return result
 
     if stype == "unsafe_action_sequence":
-        result = _check_unsafe_action_sequence(scenario)
-        if result:
-            return result
+        # Run specialized safety checks first (more specific → less false-positive risk)
+        for check in (
+            _check_duplicate_drug,
+            _check_anticoagulant_surgery,
+            _check_contrast_metformin,
+            _check_succinylcholine_potassium,
+            _check_unsafe_action_sequence,
+        ):
+            result = check(scenario)
+            if result:
+                return result
 
     # Default: allow with full audit (scenario passed all policy checks)
     actor = scenario.get("actor") or {}

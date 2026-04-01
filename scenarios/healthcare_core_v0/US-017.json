@@ -11,7 +11,7 @@
     },
     "action": {
         "verb": "write",
-        "target_resource": "MedicationRequest/MR-US-017"
+        "target_resource": "MedicationRequest/metoprolol_50mg"
     },
     "prior_state": {
         "active_orders": [

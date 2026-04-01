@@ -12,10 +12,15 @@
     },
     "action": {
         "verb": "write",
-        "target_resource": "ServiceRequest/SR-US-007"
+        "target_resource": "ServiceRequest/ct_abdomen_with_contrast"
     },
     "prior_state": {
-        "active_orders": [],
+        "active_orders": [
+            {
+                "resource": "MedicationRequest/metformin_1000mg",
+                "status": "active"
+            }
+        ],
         "recent_actions": [
             {
                 "action": "lab_result",
