@@ -38,31 +38,45 @@ Four scored governance dimensions, plus two operational metrics:
 
 ## Benchmark Results (v1, 500 scenarios)
 
+<!-- Legend: CC=ClinicClaw(VERITAS)  LG=LangGraph+HITL  OAI=OpenAI Guardrails  NM=NeMo Guardrails  BL=Bare LLM -->
+
+| | CC | LG | OAI | NM | BL |
+|---|---|---|---|---|---|
+| **Legend** | ClinicClaw (VERITAS) | LangGraph + HITL | OpenAI Guardrails | NeMo Guardrails | Bare LLM |
+
 ```mermaid
-quadrantChart
-    title VeritasBench v1 — Governance vs Intelligence (500 scenarios)
-    x-axis "Low Traceability" --> "Full Traceability"
-    y-axis "Low Policy Compliance" --> "Full Policy Compliance"
-    quadrant-1 "Governed"
-    quadrant-2 "Compliant but opaque"
-    quadrant-3 "Ungoverned"
-    quadrant-4 "Auditable but non-compliant"
-    ClinicClaw: [0.95, 0.98]
-    LangGraph: [0.33, 0.58]
-    OpenAI Guardrails: [0.29, 0.51]
-    NeMo Guardrails: [0.03, 0.50]
-    Bare LLM: [0.03, 0.49]
+xychart-beta
+    title "Policy Compliance"
+    x-axis ["CC", "LG", "OAI", "NM", "BL"]
+    y-axis "%" 0 --> 100
+    bar [98, 58, 51, 50, 49]
 ```
 
-| System | Policy | Safety | Traceability | Controllability |
-|---|---|---|---|---|
-| **ClinicClaw (VERITAS)** | **98%** | **96%** | **100%** | **100%** |
-| LangGraph + HITL | 58% | 59% | 33% | 100% |
-| OpenAI Guardrails | 51% | 48% | 29% | 0% |
-| NeMo Guardrails | 50% | 46% | 0% | 0% |
-| Bare LLM | 49% | 46% | 0% | 0% |
+```mermaid
+xychart-beta
+    title "Safety"
+    x-axis ["CC", "LG", "OAI", "NM", "BL"]
+    y-axis "%" 0 --> 100
+    bar [96, 59, 48, 46, 46]
+```
 
-> ClinicClaw is the only system in the **"Governed"** quadrant — high policy compliance AND full traceability. Every other system clusters in the bottom-left: partial compliance, no audit trail.
+```mermaid
+xychart-beta
+    title "Traceability"
+    x-axis ["CC", "LG", "OAI", "NM", "BL"]
+    y-axis "%" 0 --> 100
+    bar [100, 33, 29, 0, 0]
+```
+
+```mermaid
+xychart-beta
+    title "Controllability"
+    x-axis ["CC", "LG", "OAI", "NM", "BL"]
+    y-axis "%" 0 --> 100
+    bar [100, 100, 0, 0, 0]
+```
+
+> **Key finding:** Traceability and Controllability are the governance gap. Content guardrails (OpenAI, NeMo) score identically to a bare LLM on these dimensions — 0%. The gap is architectural, not a configuration problem.
 
 ## How It Works
 
