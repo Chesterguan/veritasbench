@@ -38,43 +38,7 @@ Four scored governance dimensions, plus two operational metrics:
 
 ## Benchmark Results (500 scenarios)
 
-<!-- Legend: CC=ClinicClaw(VERITAS)  LG=LangGraph+HITL  OAI=OpenAI Guardrails  NM=NeMo Guardrails  BL=Bare LLM -->
-
-| | CC | LG | OAI | NM | BL |
-|---|---|---|---|---|---|
-| **Legend** | ClinicClaw (VERITAS) | LangGraph + HITL | OpenAI Guardrails | NeMo Guardrails | Bare LLM |
-
-```mermaid
-xychart-beta
-    title "Policy Compliance"
-    x-axis ["CC", "LG", "OAI", "NM", "BL"]
-    y-axis "%" 0 --> 100
-    bar [98, 58, 51, 50, 49]
-```
-
-```mermaid
-xychart-beta
-    title "Safety"
-    x-axis ["CC", "LG", "OAI", "NM", "BL"]
-    y-axis "%" 0 --> 100
-    bar [96, 59, 48, 46, 46]
-```
-
-```mermaid
-xychart-beta
-    title "Traceability"
-    x-axis ["CC", "LG", "OAI", "NM", "BL"]
-    y-axis "%" 0 --> 100
-    bar [100, 33, 29, 0, 0]
-```
-
-```mermaid
-xychart-beta
-    title "Controllability"
-    x-axis ["CC", "LG", "OAI", "NM", "BL"]
-    y-axis "%" 0 --> 100
-    bar [100, 100, 0, 0, 0]
-```
+![chart](./docs/benchmark-chart.png)
 
 **Raw scores (500 scenarios, deterministic adapters):**
 
