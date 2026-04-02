@@ -36,7 +36,7 @@ Four scored governance dimensions, plus two operational metrics:
 | Consistency | Same input N times = same output? | % identical across runs |
 | Latency | What overhead does governance add? | p50 / p95 / p99 in ms |
 
-## Benchmark Results (v1, 500 scenarios)
+## Benchmark Results (500 scenarios)
 
 <!-- Legend: CC=ClinicClaw(VERITAS)  LG=LangGraph+HITL  OAI=OpenAI Guardrails  NM=NeMo Guardrails  BL=Bare LLM -->
 
@@ -76,7 +76,18 @@ xychart-beta
     bar [100, 100, 0, 0, 0]
 ```
 
-> **Key finding:** Traceability and Controllability are the governance gap. Content guardrails (OpenAI, NeMo) score identically to a bare LLM on these dimensions — 0%. The gap is architectural, not a configuration problem.
+**Raw scores (500 scenarios, deterministic adapters):**
+
+| Dimension | ClinicClaw | LangGraph+HITL | OpenAI Guardrails | NeMo Guardrails | Bare LLM |
+|---|---|---|---|---|---|
+| Policy Compliance | 417/425 (98%) | 245/425 (58%) | 216/425 (51%) | 212/425 (50%) | 209/425 (49%) |
+| Safety | 217/225 (96%) | 133/225 (59%) | 107/225 (48%) | 103/225 (46%) | 103/225 (46%) |
+| Traceability | 1500/1500 (100%) | 500/1500 (33%) | 435/1500 (29%) | 0/1500 (0%) | 0/1500 (0%) |
+| Controllability | 270/270 (100%) | 270/270 (100%) | 0/270 (0%) | 0/270 (0%) | 0/270 (0%) |
+
+All adapters show 100% consistency (identical decisions across repeated runs) because they are deterministic simulations. Latency ranges from p50=18ms (Bare LLM) to p50=23ms (ClinicClaw).
+
+> **Key finding:** Traceability and Controllability expose the governance gap. NeMo Guardrails scores within 1 percentage point of a bare LLM on all four dimensions (50/46/0/0 vs 49/46/0/0) — adding content guardrails produced no measurable governance improvement. OpenAI Guardrails adds partial traceability (29%) through its tracing infrastructure but provides no controllability (0%). The gap is architectural — adding content rules to a system without an audit store or human-in-the-loop gates does not make it governable.
 
 ## How It Works
 
@@ -190,7 +201,7 @@ Latency: p50=15ms  p95=45ms  p99=120ms
 
 **If your controllability is 0%:** Your system never pauses for human approval. High-risk actions (controlled substances, code status changes, emergency overrides) proceed without a human gate.
 
-**If your policy compliance is ~50%:** Your system is roughly coin-flipping on governance decisions. It probably denies most things (catching the ~68% deny scenarios) but incorrectly denies legitimate access too.
+**If your policy compliance is ~50%:** Your system is roughly coin-flipping on governance decisions. Without a policy engine, it gets some right and some wrong across both allow and deny scenarios, with no systematic reasoning about authorization rules.
 
 ## 500 Scenarios, 7 Types
 
@@ -240,17 +251,27 @@ veritasbench/
 
 **Why healthcare?** Healthcare is the highest-stakes domain for AI agent governance — HIPAA, FDA, Joint Commission all require documented authorization, audit trails, and human oversight. If your governance framework satisfies these requirements, it is well-positioned for other regulated domains. Future versions will add finance and legal scenarios.
 
-**Are the simulated adapters fair?** Yes. They model documented framework capabilities, not worst-case scenarios. OpenAI Guardrails gets credit for its tracing (29% traceability). LangGraph gets full controllability credit for its interrupt nodes. The gaps reflect architectural limitations, not configuration problems.
+**Are the simulated adapters fair?** The adapters model documented framework capabilities — not worst-case scenarios. OpenAI Guardrails gets credit for its tracing (29% traceability). LangGraph gets full controllability credit for its interrupt nodes. However, these are simulated implementations, not production deployments of each framework. A real integration might score differently depending on configuration. The structural gaps (traceability, controllability) are architectural and would persist regardless of configuration, but policy compliance scores could vary.
 
-**Why not test with real LLM calls?** The governance scores (traceability, controllability) are determined by architecture, not LLM quality. A system without an audit store will score 0% traceability regardless of which LLM powers it. Real-LLM adapters are planned for v2.
+**Why not test with real LLM calls?** The governance scores (traceability, controllability) are determined by architecture, not LLM quality. A system without an audit store will score 0% traceability regardless of which LLM powers it. Policy compliance scores would vary with real LLM calls due to non-deterministic inference. Real-LLM adapters are planned for v2.
 
 **Can I add my own scenarios?** Yes. Drop a JSON file in `scenarios/healthcare_core_v0/` following the schema. Run the benchmark — it automatically picks up new files.
 
 **How do I improve my score?** The benchmark tells you exactly where your gaps are. If traceability is 0%, add structured audit logging. If controllability is 0%, add human-in-the-loop gates. If policy compliance is low, implement a policy engine instead of relying on LLM judgment.
 
+## Limitations
+
+- **Simulated adapters, not production systems.** The included adapters model framework capabilities based on documentation, not live integrations. Real deployments may score differently depending on configuration and version.
+- **Healthcare only.** All 500 scenarios are clinical governance situations. Results may not generalize to other regulated domains (finance, legal) without domain-specific scenarios.
+- **Deterministic adapters only (v0).** All current adapters are deterministic — no real LLM calls. Policy compliance and safety scores would show variance with non-deterministic inference. Traceability and controllability scores are architecture-dependent and would not change.
+- **No statistical significance testing.** Results are reported as raw percentages across 500 scenarios. No standard deviations or p-values are provided because the current adapters are deterministic (zero variance across runs). Statistical analysis becomes relevant when non-deterministic adapters are introduced in v2.
+- **Scenario coverage.** 500 scenarios across 7 types is a starting point. Edge cases, multi-step workflows, and adversarial inputs (prompt injection resistance) are not covered in v0.
+- **Binary scoring for policy and safety.** A wrong decision scores 0 regardless of how close it was to correct. There is no partial credit for policy compliance or safety.
+- **No performance overhead measurement.** Latency is reported but all adapters run locally as Python subprocesses. The benchmark does not measure governance overhead in production architectures (network calls, database writes, policy engine evaluation).
+
 ## Related Projects
 
-- [ClinicClaw](https://github.com/Chesterguan/cliniclaw) — AI-native Hospital Information System built on the VERITAS trust model (reference implementation that scores 98/96/100/100)
+- [ClinicClaw](https://github.com/Chesterguan/cliniclaw) — AI-native Hospital Information System built on the VERITAS trust model (reference adapter scores: policy 98%, safety 96%, traceability 100%, controllability 100% on 500 scenarios)
 - [VERITAS](https://github.com/Chesterguan/veritas) — Trust and governance layer for AI agent systems (the thesis VeritasBench validates)
 
 ## License
