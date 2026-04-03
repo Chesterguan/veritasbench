@@ -2,6 +2,8 @@
 
 **Your AI gets 88% of clinical governance decisions right. It can't prove any of them.**
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19403623.svg)](https://doi.org/10.5281/zenodo.19403623)
+
 AI agent benchmarks test whether agents are smart, safe, or policy-aware. None test whether agents are **governable** -- whether they produce the documentation a regulated institution needs to function.
 
 In healthcare, a correct decision with no audit trail is the same as no decision. A physician writes an order and signs it. The chart records who, what, when, and why. Without that documentation, the hospital can't survive a lawsuit, pass an audit, or keep its accreditation.
@@ -255,6 +257,24 @@ For many use cases, simple solutions are enough:
 A full governance framework (VERITAS, custom, or otherwise) earns its cost when you need integration between these pieces, completeness guarantees, tamper-proofing, and regulatory certification. For internal tools, research, or non-clinical agents, start simple.
 
 **VeritasBench tells you where your gaps are. How you fill them is up to you.**
+
+## Citation
+
+If you use or reference VeritasBench, VERITAS, or ClinicLaw in academic work, please cite:
+
+> Guan, Z. (2026). *VERITAS: A Governance Runtime and Benchmark Framework for AI Agents in Regulated Environments.* Zenodo. [https://doi.org/10.5281/zenodo.19403623](https://doi.org/10.5281/zenodo.19403623)
+
+```bibtex
+@techreport{guan2026veritas,
+  author    = {Ziyuan Guan},
+  title     = {VERITAS: A Governance Runtime and Benchmark Framework
+               for AI Agents in Regulated Environments},
+  year      = {2026},
+  doi       = {10.5281/zenodo.19403623},
+  url       = {https://doi.org/10.5281/zenodo.19403623},
+  publisher = {Zenodo}
+}
+```
 
 ## FAQ
 
