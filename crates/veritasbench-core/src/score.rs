@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
+use schemars::JsonSchema;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct ScenarioScore {
     pub scenario_id: String,
     pub policy_compliance: Option<u32>,
@@ -10,7 +11,7 @@ pub struct ScenarioScore {
     pub latency_ms: u64,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct DimensionScore {
     pub earned: u32,
     pub possible: u32,
@@ -25,20 +26,20 @@ impl DimensionScore {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct ConsistencyResult {
     pub identical: u32,
     pub total: u32,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct LatencyStats {
     pub p50_ms: u64,
     pub p95_ms: u64,
     pub p99_ms: u64,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct BenchmarkReport {
     pub suite: String,
     pub adapter: String,

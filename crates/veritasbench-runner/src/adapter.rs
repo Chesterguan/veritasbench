@@ -8,6 +8,7 @@ use veritasbench_core::result::AdapterResult;
 use veritasbench_core::scenario::Scenario;
 
 /// Output from a single adapter invocation.
+#[derive(Debug)]
 pub struct RunResult {
     pub result: AdapterResult,
     /// Wall-clock time from spawn to stdout parse, in milliseconds.
@@ -67,6 +68,42 @@ pub async fn run_adapter(
         .map_err(|e| VBError::Adapter(format!("failed to parse adapter output: {e}\nstdout: {stdout}")))?;
 
     Ok(RunResult { result, latency_ms })
+}
+
+/// Run an adapter with retry support. Retries on `VBError::Adapter` errors
+/// up to `max_retries` times with a 1-second delay between attempts.
+/// Timeout errors (`VBError::AdapterTimeout`) are NOT retried.
+pub async fn run_adapter_with_retries(
+    adapter_path: &Path,
+    scenario: &Scenario,
+    timeout_ms: u64,
+    max_retries: u32,
+) -> Result<RunResult, VBError> {
+    let mut last_err = None;
+
+    for attempt in 0..=max_retries {
+        match run_adapter(adapter_path, scenario, timeout_ms).await {
+            Ok(result) => return Ok(result),
+            Err(VBError::AdapterTimeout(ms)) => {
+                // Timeouts are not retried — they're too expensive
+                return Err(VBError::AdapterTimeout(ms));
+            }
+            Err(e) => {
+                if attempt < max_retries {
+                    eprintln!(
+                        "    retry {}/{max_retries} for {} ({})",
+                        attempt + 1,
+                        scenario.id,
+                        e
+                    );
+                    tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+                }
+                last_err = Some(e);
+            }
+        }
+    }
+
+    Err(last_err.expect("at least one attempt was made"))
 }
 
 #[cfg(test)]
@@ -163,5 +200,48 @@ mod tests {
         let scenario = sample_scenario();
         let result = run_adapter(&script, &scenario, 200).await;
         assert!(matches!(result, Err(VBError::AdapterTimeout(200))));
+    }
+
+    #[tokio::test]
+    async fn test_retry_on_failure() {
+        // A script that always fails (non-zero exit)
+        use std::io::Write;
+        let dir = std::env::temp_dir();
+        let script = dir.join("failing_adapter.py");
+        let mut f = std::fs::File::create(&script).unwrap();
+        writeln!(f, "import sys").unwrap();
+        writeln!(f, "sys.exit(1)").unwrap();
+        drop(f);
+
+        let scenario = sample_scenario();
+        let result = run_adapter_with_retries(&script, &scenario, 5_000, 2).await;
+        assert!(result.is_err());
+        // Should have attempted 3 times (initial + 2 retries) but we can't easily
+        // verify attempt count without side effects. Just verify it still fails.
+        match result.unwrap_err() {
+            VBError::Adapter(_) => {} // expected
+            other => panic!("expected Adapter error, got {other}"),
+        }
+    }
+
+    #[tokio::test]
+    async fn test_no_retry_on_timeout() {
+        use std::io::Write;
+        let dir = std::env::temp_dir();
+        let script = dir.join("timeout_no_retry_adapter.py");
+        let mut f = std::fs::File::create(&script).unwrap();
+        writeln!(f, "import time, json, sys").unwrap();
+        writeln!(f, "time.sleep(10)").unwrap();
+        writeln!(f, r#"print(json.dumps({{"decision":"deny","audit_entries":[],"execution_halted":false,"human_notified":false,"output_content":null}}))"#).unwrap();
+        drop(f);
+
+        let scenario = sample_scenario();
+        let start = std::time::Instant::now();
+        let result = run_adapter_with_retries(&script, &scenario, 200, 2).await;
+        let elapsed = start.elapsed();
+
+        assert!(matches!(result, Err(VBError::AdapterTimeout(200))));
+        // Should NOT have retried — elapsed should be roughly 200ms, not 600ms+
+        assert!(elapsed.as_millis() < 1000, "timeout should not retry, elapsed: {}ms", elapsed.as_millis());
     }
 }

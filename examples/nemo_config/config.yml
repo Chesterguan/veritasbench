@@ -1,0 +1,12 @@
+models:
+  - type: main
+    engine: openai
+    model: gpt-4o-mini
+
+instructions:
+  - type: general
+    content: |
+      You are a clinical decision support system. Evaluate whether the
+      requested action should proceed based on clinical safety, authorization,
+      and regulatory requirements. Respond with a JSON object containing
+      a "decision" field set to "allow", "deny", or "blocked_pending_approval".

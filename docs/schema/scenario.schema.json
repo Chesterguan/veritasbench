@@ -1,0 +1,347 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Scenario",
+  "type": "object",
+  "required": [
+    "action",
+    "actor",
+    "expected",
+    "id",
+    "scenario_type",
+    "version"
+  ],
+  "properties": {
+    "action": {
+      "$ref": "#/definitions/Action"
+    },
+    "actor": {
+      "$ref": "#/definitions/Actor"
+    },
+    "approval_status": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ApprovalStatus"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "expected": {
+      "$ref": "#/definitions/Expected"
+    },
+    "id": {
+      "type": "string"
+    },
+    "input_content": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "justification": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "prior_state": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/PriorState"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "scenario_type": {
+      "$ref": "#/definitions/ScenarioType"
+    },
+    "version": {
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "Action": {
+      "type": "object",
+      "required": [
+        "target_resource",
+        "verb"
+      ],
+      "properties": {
+        "target_resource": {
+          "type": "string"
+        },
+        "verb": {
+          "type": "string"
+        }
+      }
+    },
+    "ActiveOrder": {
+      "type": "object",
+      "required": [
+        "resource",
+        "status"
+      ],
+      "properties": {
+        "resource": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "Actor": {
+      "type": "object",
+      "required": [
+        "department",
+        "permissions",
+        "role"
+      ],
+      "properties": {
+        "department": {
+          "type": "string"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "Allergy": {
+      "type": "object",
+      "required": [
+        "reaction",
+        "severity",
+        "status",
+        "substance"
+      ],
+      "properties": {
+        "reaction": {
+          "type": "string"
+        },
+        "severity": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "substance": {
+          "type": "string"
+        }
+      }
+    },
+    "ApprovalStatus": {
+      "type": "string",
+      "enum": [
+        "none",
+        "pending",
+        "approved",
+        "denied",
+        "emergency_override",
+        "emergency_standing_order",
+        "standing_order"
+      ]
+    },
+    "Condition": {
+      "type": "object",
+      "required": [
+        "code",
+        "display",
+        "status"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "display": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "Decision": {
+      "type": "string",
+      "enum": [
+        "allow",
+        "deny",
+        "blocked_pending_approval"
+      ]
+    },
+    "Expected": {
+      "type": "object",
+      "required": [
+        "audit_required",
+        "decision"
+      ],
+      "properties": {
+        "audit_required": {
+          "type": "boolean"
+        },
+        "content_clean": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "decision": {
+          "$ref": "#/definitions/Decision"
+        }
+      }
+    },
+    "LabResult": {
+      "type": "object",
+      "required": [
+        "code",
+        "display",
+        "timestamp",
+        "unit",
+        "value"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "display": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "PatientContext": {
+      "type": "object",
+      "properties": {
+        "age": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "gestational_age_weeks": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "pregnant": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "weight_kg": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double"
+        }
+      }
+    },
+    "PriorState": {
+      "type": "object",
+      "properties": {
+        "active_orders": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ActiveOrder"
+          }
+        },
+        "allergies": {
+          "description": "Documented allergies",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Allergy"
+          }
+        },
+        "conditions": {
+          "description": "Active disease conditions (ICD-10 coded)",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Condition"
+          }
+        },
+        "labs": {
+          "description": "Recent lab results (LOINC coded)",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LabResult"
+          }
+        },
+        "patient_context": {
+          "description": "Patient demographic/clinical context (age, weight, pregnancy, etc.)",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/PatientContext"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "recent_actions": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RecentAction"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "RecentAction": {
+      "type": "object",
+      "required": [
+        "action",
+        "resource",
+        "timestamp"
+      ],
+      "properties": {
+        "action": {
+          "type": "string"
+        },
+        "resource": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      }
+    },
+    "ScenarioType": {
+      "type": "string",
+      "enum": [
+        "unauthorized_access",
+        "missing_approval",
+        "missing_justification",
+        "phi_leakage",
+        "unsafe_action_sequence",
+        "emergency_override",
+        "consent_management"
+      ]
+    }
+  }
+}

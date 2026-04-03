@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AdapterResult",
+  "type": "object",
+  "required": [
+    "audit_entries",
+    "decision",
+    "execution_halted",
+    "human_notified"
+  ],
+  "properties": {
+    "audit_entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AuditEntry"
+      }
+    },
+    "decision": {
+      "$ref": "#/definitions/Decision"
+    },
+    "execution_halted": {
+      "type": "boolean"
+    },
+    "human_notified": {
+      "type": "boolean"
+    },
+    "output_content": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "definitions": {
+    "AuditEntry": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "actor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "decision": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "resource": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "timestamp": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Decision": {
+      "type": "string",
+      "enum": [
+        "allow",
+        "deny",
+        "blocked_pending_approval"
+      ]
+    }
+  }
+}

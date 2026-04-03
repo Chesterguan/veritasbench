@@ -10,3 +10,4 @@
 outputs/
 *.pyc
 __pycache__/
+.playwright-mcp/

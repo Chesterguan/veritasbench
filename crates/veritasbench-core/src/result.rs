@@ -1,8 +1,9 @@
 use serde::{Deserialize, Serialize};
+use schemars::JsonSchema;
 
 use crate::scenario::Decision;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct AdapterResult {
     pub decision: Decision,
     pub audit_entries: Vec<AuditEntry>,
@@ -11,7 +12,7 @@ pub struct AdapterResult {
     pub output_content: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct AuditEntry {
     pub timestamp: Option<String>,
     pub actor: Option<String>,

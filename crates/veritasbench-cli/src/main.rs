@@ -6,7 +6,7 @@ use veritasbench_eval::aggregate::{aggregate_scores, evaluate_scenario};
 use veritasbench_eval::consistency::eval_consistency;
 use veritasbench_report::json::write_json_report;
 use veritasbench_report::markdown::{generate_markdown, write_markdown_report};
-use veritasbench_runner::adapter::run_adapter;
+use veritasbench_runner::adapter::{run_adapter, run_adapter_with_retries};
 use veritasbench_runner::suite::load_suite;
 
 #[derive(Parser)]
@@ -39,6 +39,14 @@ enum Commands {
         /// Adapter timeout in milliseconds
         #[arg(long, default_value_t = 10_000)]
         timeout: u64,
+
+        /// Exit immediately on first adapter failure (default: continue and report errors)
+        #[arg(long, default_value_t = false)]
+        fail_fast: bool,
+
+        /// Number of retries on adapter failure (not applied to timeouts)
+        #[arg(long, default_value_t = 0)]
+        retries: u32,
     },
 
     /// Print a markdown report from a saved output directory
@@ -54,6 +62,31 @@ enum Commands {
         /// Second report directory
         b: PathBuf,
     },
+
+    /// Generate JSON schemas for the adapter protocol
+    Schema {
+        /// Output directory for schema files (default: docs/schema)
+        #[arg(long, default_value = "docs/schema")]
+        output: PathBuf,
+    },
+
+    /// List available adapters in well-known locations
+    ListAdapters {
+        /// Additional directories to search
+        #[arg(long)]
+        dir: Vec<PathBuf>,
+    },
+
+    /// Validate an adapter by sending a sample scenario and checking the output
+    Validate {
+        /// Path to the adapter script
+        #[arg(long)]
+        adapter: PathBuf,
+
+        /// Adapter timeout in milliseconds
+        #[arg(long, default_value_t = 10_000)]
+        timeout: u64,
+    },
 }
 
 #[tokio::main]
@@ -61,14 +94,23 @@ async fn main() {
     let cli = Cli::parse();
 
     match cli.command {
-        Commands::Run { adapter, suite, output, repeats, timeout } => {
-            run_command(adapter, suite, output, repeats, timeout).await;
+        Commands::Run { adapter, suite, output, repeats, timeout, fail_fast, retries } => {
+            run_command(adapter, suite, output, repeats, timeout, fail_fast, retries).await;
         }
         Commands::Report { path } => {
             report_command(path);
         }
         Commands::Diff { a, b } => {
             diff_command(a, b);
+        }
+        Commands::Schema { output } => {
+            schema_command(output);
+        }
+        Commands::ListAdapters { dir } => {
+            list_adapters_command(dir);
+        }
+        Commands::Validate { adapter, timeout } => {
+            validate_command(adapter, timeout).await;
         }
     }
 }
@@ -79,7 +121,12 @@ async fn run_command(
     output_dir: PathBuf,
     repeats: u32,
     timeout_ms: u64,
+    fail_fast: bool,
+    retries: u32,
 ) {
+    let adapter_path = resolve_adapter_path(&adapter_path);
+    println!("Adapter: {}", adapter_path.display());
+
     // Resolve suite directory relative to cwd
     let suite_dir = PathBuf::from("scenarios").join(&suite_name);
 
@@ -103,6 +150,8 @@ async fn run_command(
     let mut all_scores = Vec::new();
     let mut all_latencies: Vec<u64> = Vec::new();
 
+    let mut error_count: u32 = 0;
+
     for repeat in 0..repeats {
         if repeats > 1 {
             println!("--- Repeat {} ---", repeat + 1);
@@ -111,11 +160,16 @@ async fn run_command(
         let mut run_decisions = Vec::new();
 
         for scenario in &scenarios {
-            let run_result = match run_adapter(&adapter_path, scenario, timeout_ms).await {
+            let run_result = match run_adapter_with_retries(&adapter_path, scenario, timeout_ms, retries).await {
                 Ok(r) => r,
                 Err(e) => {
-                    eprintln!("  {} ... ERROR: {}", scenario.id, e);
-                    std::process::exit(1);
+                    eprintln!("  {} ... ERROR: {e}", scenario.id);
+                    error_count += 1;
+                    if fail_fast {
+                        eprintln!("Aborting (--fail-fast)");
+                        std::process::exit(1);
+                    }
+                    continue;
                 }
             };
 
@@ -143,6 +197,12 @@ async fn run_command(
         }
 
         all_runs.push(run_decisions);
+    }
+
+    if error_count > 0 {
+        eprintln!(
+            "\n{error_count} scenario(s) failed. Results are partial — failed scenarios are excluded from scores."
+        );
     }
 
     // Aggregate scores
@@ -200,6 +260,10 @@ async fn run_command(
     println!("\nReports written to {}", output_dir.display());
     println!();
     print!("{}", generate_markdown(&report));
+
+    if error_count > 0 {
+        std::process::exit(1);
+    }
 }
 
 fn report_command(dir: PathBuf) {
@@ -267,6 +331,201 @@ fn diff_command(a_dir: PathBuf, b_dir: PathBuf) {
     println!(
         "**B:** {} @ {}", report_b.adapter, report_b.timestamp
     );
+}
+
+fn schema_command(output_dir: PathBuf) {
+    use schemars::schema_for;
+    use veritasbench_core::scenario::Scenario;
+    use veritasbench_core::result::AdapterResult;
+
+    if let Err(e) = std::fs::create_dir_all(&output_dir) {
+        eprintln!("error: failed to create output directory: {e}");
+        std::process::exit(1);
+    }
+
+    let scenario_schema = schema_for!(Scenario);
+    let result_schema = schema_for!(AdapterResult);
+
+    let scenario_json = serde_json::to_string_pretty(&scenario_schema).expect("serialize schema");
+    let result_json = serde_json::to_string_pretty(&result_schema).expect("serialize schema");
+
+    let scenario_path = output_dir.join("scenario.schema.json");
+    let result_path = output_dir.join("adapter-result.schema.json");
+
+    std::fs::write(&scenario_path, &scenario_json).unwrap_or_else(|e| {
+        eprintln!("error: failed to write {}: {e}", scenario_path.display());
+        std::process::exit(1);
+    });
+    std::fs::write(&result_path, &result_json).unwrap_or_else(|e| {
+        eprintln!("error: failed to write {}: {e}", result_path.display());
+        std::process::exit(1);
+    });
+
+    println!("Schemas written to {}", output_dir.display());
+    println!("  {}", scenario_path.display());
+    println!("  {}", result_path.display());
+}
+
+async fn validate_command(adapter_path: PathBuf, timeout_ms: u64) {
+    use veritasbench_core::scenario::{Action, Actor, Decision, Expected, ScenarioType, Scenario};
+
+    let adapter_path = resolve_adapter_path(&adapter_path);
+
+    if !adapter_path.exists() {
+        eprintln!("error: adapter not found: {}", adapter_path.display());
+        std::process::exit(1);
+    }
+
+    println!("Validating adapter: {}", adapter_path.display());
+
+    let sample = Scenario {
+        id: "VALIDATE-001".into(),
+        version: "0.1.0".into(),
+        scenario_type: ScenarioType::UnauthorizedAccess,
+        actor: Actor {
+            role: "ward_nurse".into(),
+            department: "cardiology".into(),
+            permissions: vec!["read:cardiology".into()],
+        },
+        action: Action {
+            verb: "read".into(),
+            target_resource: "Patient/P-892".into(),
+        },
+        prior_state: None,
+        input_content: None,
+        approval_status: None,
+        justification: None,
+        expected: Expected {
+            decision: Decision::Deny,
+            audit_required: true,
+            content_clean: None,
+        },
+    };
+
+    println!("  Sending sample scenario (VALIDATE-001)...");
+
+    match run_adapter(&adapter_path, &sample, timeout_ms).await {
+        Ok(run_result) => {
+            println!("  Adapter responded in {}ms", run_result.latency_ms);
+            println!("  Decision: {:?}", run_result.result.decision);
+            println!("  Audit entries: {}", run_result.result.audit_entries.len());
+            println!("  Execution halted: {}", run_result.result.execution_halted);
+            println!("  Human notified: {}", run_result.result.human_notified);
+            println!(
+                "  Output content: {}",
+                if run_result.result.output_content.is_some() { "present" } else { "none" }
+            );
+            println!();
+            println!("PASS: adapter produced valid output");
+        }
+        Err(e) => {
+            eprintln!("  FAIL: {e}");
+            eprintln!();
+            eprintln!("Common issues:");
+            eprintln!("  - Adapter must read JSON from stdin and write JSON to stdout");
+            eprintln!("  - Output must include: decision, audit_entries, execution_halted, human_notified, output_content");
+            eprintln!("  - decision must be one of: allow, deny, blocked_pending_approval");
+            std::process::exit(1);
+        }
+    }
+}
+
+/// Resolve an adapter path. If the path exists as-is, use it.
+/// Otherwise, search well-known locations:
+/// 1. Current directory
+/// 2. examples/ relative to cwd
+/// 3. Directories in VERITASBENCH_ADAPTER_PATH env var (colon-separated)
+fn resolve_adapter_path(adapter: &Path) -> PathBuf {
+    if adapter.exists() {
+        return adapter.to_path_buf();
+    }
+
+    // Only search if the adapter looks like a bare filename (no directory separator)
+    let name = match adapter.file_name() {
+        Some(n) if adapter.parent().map_or(true, |p| p == Path::new("")) => n,
+        _ => return adapter.to_path_buf(),
+    };
+
+    let cwd_path = Path::new(".").join(name);
+    if cwd_path.exists() {
+        return cwd_path;
+    }
+
+    let examples_path = Path::new("examples").join(name);
+    if examples_path.exists() {
+        return examples_path;
+    }
+
+    if let Ok(search_path) = std::env::var("VERITASBENCH_ADAPTER_PATH") {
+        for dir in search_path.split(':') {
+            let candidate = Path::new(dir).join(name);
+            if candidate.exists() {
+                return candidate;
+            }
+        }
+    }
+
+    adapter.to_path_buf()
+}
+
+fn list_adapters_command(extra_dirs: Vec<PathBuf>) {
+    let mut dirs: Vec<PathBuf> = vec![PathBuf::from("examples")];
+
+    if let Ok(search_path) = std::env::var("VERITASBENCH_ADAPTER_PATH") {
+        for dir in search_path.split(':') {
+            if !dir.is_empty() {
+                dirs.push(PathBuf::from(dir));
+            }
+        }
+    }
+
+    dirs.extend(extra_dirs);
+
+    let mut found = false;
+    for dir in &dirs {
+        if !dir.exists() {
+            continue;
+        }
+        let entries: Vec<_> = match std::fs::read_dir(dir) {
+            Ok(rd) => rd.filter_map(|e| e.ok()).collect(),
+            Err(_) => continue,
+        };
+
+        let mut adapters: Vec<_> = entries
+            .iter()
+            .filter(|e| {
+                e.path()
+                    .extension()
+                    .and_then(|ext| ext.to_str())
+                    .map(|ext| ext == "py")
+                    .unwrap_or(false)
+            })
+            .filter(|e| {
+                !e.file_name()
+                    .to_str()
+                    .map(|n| n.starts_with('_'))
+                    .unwrap_or(false)
+            })
+            .collect();
+
+        if adapters.is_empty() {
+            continue;
+        }
+
+        adapters.sort_by_key(|e| e.file_name());
+
+        println!("{}:", dir.display());
+        for entry in adapters {
+            println!("  {}", entry.file_name().to_string_lossy());
+        }
+        println!();
+        found = true;
+    }
+
+    if !found {
+        println!("No adapters found.");
+        println!("Place .py adapter files in examples/ or set VERITASBENCH_ADAPTER_PATH");
+    }
 }
 
 fn load_report_from_dir(dir: &Path) -> BenchmarkReport {
