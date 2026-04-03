@@ -157,55 +157,55 @@
     <!-- Policy Compliance -->
     <div class="dimension">
       <div class="dim-title">Policy Compliance</div>
-      <div class="bar-row cc"><span class="bar-label">ClinicClaw</span><div class="bar-track"><div class="bar-fill" style="width:98%"></div></div><span class="bar-value">98%</span></div>
       <div class="bar-row bl"><span class="bar-label">Bare LLM</span><div class="bar-track"><div class="bar-fill" style="width:88%"></div></div><span class="bar-value">88%</span></div>
       <div class="bar-row oai"><span class="bar-label">OpenAI</span><div class="bar-track"><div class="bar-fill" style="width:87%"></div></div><span class="bar-value">87%</span></div>
       <div class="bar-row nm"><span class="bar-label">NeMo</span><div class="bar-track"><div class="bar-fill" style="width:86%"></div></div><span class="bar-value">86%</span></div>
       <div class="bar-row lg"><span class="bar-label">LangGraph</span><div class="bar-track"><div class="bar-fill" style="width:69%"></div></div><span class="bar-value">69%</span></div>
+      <div class="bar-row cc"><span class="bar-label" style="color:#475569">ref: ClinicClaw</span><div class="bar-track"><div class="bar-fill" style="width:98%;opacity:0.4"></div></div><span class="bar-value" style="color:#64748b">98%</span></div>
     </div>
 
     <!-- Safety -->
     <div class="dimension">
       <div class="dim-title">Safety</div>
-      <div class="bar-row cc"><span class="bar-label">ClinicClaw</span><div class="bar-track"><div class="bar-fill" style="width:96%"></div></div><span class="bar-value">96%</span></div>
       <div class="bar-row bl"><span class="bar-label">Bare LLM</span><div class="bar-track"><div class="bar-fill" style="width:78%"></div></div><span class="bar-value">78%</span></div>
       <div class="bar-row nm"><span class="bar-label">NeMo</span><div class="bar-track"><div class="bar-fill" style="width:60%"></div></div><span class="bar-value">60%</span></div>
       <div class="bar-row oai"><span class="bar-label">OpenAI</span><div class="bar-track"><div class="bar-fill" style="width:57%"></div></div><span class="bar-value">57%</span></div>
       <div class="bar-row lg"><span class="bar-label">LangGraph</span><div class="bar-track"><div class="bar-fill" style="width:48%"></div></div><span class="bar-value">48%</span></div>
+      <div class="bar-row cc"><span class="bar-label" style="color:#475569">ref: ClinicClaw</span><div class="bar-track"><div class="bar-fill" style="width:96%;opacity:0.4"></div></div><span class="bar-value" style="color:#64748b">96%</span></div>
     </div>
 
     <!-- Traceability -->
     <div class="dimension">
       <div class="dim-title">Traceability</div>
-      <div class="bar-row cc"><span class="bar-label">ClinicClaw</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="bar-value">100%</span></div>
       <div class="bar-row oai"><span class="bar-label">OpenAI</span><div class="bar-track"><div class="bar-fill" style="width:33%"></div></div><span class="bar-value">33%</span></div>
       <div class="bar-row lg"><span class="bar-label">LangGraph</span><div class="bar-track"><div class="bar-fill" style="width:33%"></div></div><span class="bar-value">33%</span></div>
       <div class="bar-row nm"><span class="bar-label">NeMo</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-value">0%</span></div>
       <div class="bar-row bl"><span class="bar-label">Bare LLM</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-value">0%</span></div>
+      <div class="bar-row cc"><span class="bar-label" style="color:#475569">ref: ClinicClaw</span><div class="bar-track"><div class="bar-fill" style="width:100%;opacity:0.4"></div></div><span class="bar-value" style="color:#64748b">100%</span></div>
     </div>
 
     <!-- Controllability -->
     <div class="dimension">
       <div class="dim-title">Controllability</div>
-      <div class="bar-row cc"><span class="bar-label">ClinicClaw</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="bar-value">100%</span></div>
       <div class="bar-row lg"><span class="bar-label">LangGraph</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="bar-value">100%</span></div>
       <div class="bar-row oai"><span class="bar-label">OpenAI</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-value">0%</span></div>
       <div class="bar-row nm"><span class="bar-label">NeMo</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-value">0%</span></div>
       <div class="bar-row bl"><span class="bar-label">Bare LLM</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-value">0%</span></div>
+      <div class="bar-row cc"><span class="bar-label" style="color:#475569">ref: ClinicClaw</span><div class="bar-track"><div class="bar-fill" style="width:100%;opacity:0.4"></div></div><span class="bar-value" style="color:#64748b">100%</span></div>
     </div>
   </div>
 
   <div class="legend">
-    <div class="legend-item"><div class="legend-dot dot-cc"></div>ClinicClaw (policy engine)</div>
     <div class="legend-item"><div class="legend-dot dot-bl"></div>Bare LLM (GPT-4o-mini)</div>
     <div class="legend-item"><div class="legend-dot dot-oai"></div>OpenAI Guardrails</div>
     <div class="legend-item"><div class="legend-dot dot-nm"></div>NeMo Guardrails</div>
     <div class="legend-item"><div class="legend-dot dot-lg"></div>LangGraph + HITL</div>
+    <div class="legend-item" style="opacity:0.5"><div class="legend-dot dot-cc"></div>ClinicClaw (reference)</div>
   </div>
 
   <div class="insight">
-    GPT-4o-mini gets 88% of governance decisions right with zero infrastructure.<br>
-    But it can't prove any of them. A correct decision with no proof is the same as no decision.
+    Four governance approaches, same model, same 500 scenarios.<br>
+    All score 86&ndash;88% on decisions. All score 0&ndash;33% on proving it. The model isn't the problem.
   </div>
 
   <div class="tag">github.com/Chesterguan/veritasbench</div>

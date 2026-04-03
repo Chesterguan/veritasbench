@@ -25,29 +25,31 @@ Plus two operational metrics: **Consistency** (same input = same output?) and **
 
 ![chart](./docs/benchmark-chart.png)
 
-| Dimension | ClinicClaw | Bare LLM | OpenAI Guardrails | NeMo Guardrails | LangGraph HITL |
+| Dimension | Bare LLM | OpenAI Guardrails | NeMo Guardrails | LangGraph HITL | Reference: ClinicClaw |
 |---|---|---|---|---|---|
-| Policy Compliance | 417/425 (**98%**) | 373/425 (88%) | 368/425 (87%) | 365/425 (86%) | 292/424 (69%) |
-| Safety | 217/225 (**96%**) | 175/225 (78%) | 129/225 (57%) | 135/225 (60%) | 108/225 (48%) |
-| Traceability | 1500/1500 (**100%**) | 0/1500 (0%) | 500/1500 (33%) | 0/1500 (0%) | 499/1497 (33%) |
-| Controllability | 270/270 (**100%**) | 0/270 (0%) | 0/270 (0%) | 0/270 (0%) | 270/270 (**100%**) |
-| Latency p50 | **25ms** | 1157ms | 1122ms | 3889ms | 2458ms |
+| Policy Compliance | 373/425 (88%) | 368/425 (87%) | 365/425 (86%) | 292/424 (69%) | 417/425 (98%) |
+| Safety | 175/225 (78%) | 129/225 (57%) | 135/225 (60%) | 108/225 (48%) | 217/225 (96%) |
+| Traceability | 0/1500 (**0%**) | 500/1500 (33%) | 0/1500 (**0%**) | 499/1497 (33%) | 1500/1500 (100%) |
+| Controllability | 0/270 (**0%**) | 0/270 (**0%**) | 0/270 (**0%**) | 270/270 (100%) | 270/270 (100%) |
+| Latency p50 | 1157ms | 1122ms | 3889ms | 2458ms | 25ms |
 
 ### How to read this
 
-**Policy compliance is a distraction.** All LLM-based approaches score 86-88% -- the model is already decent at clinical reasoning. Adding guardrails doesn't improve it. The governance gap is in the bottom two rows.
+**Look at the bottom two rows.** All four LLM-based approaches score 86-88% on policy compliance -- the model is already decent at clinical reasoning. Guardrails don't improve it. The governance gap is in traceability and controllability.
 
-**Traceability is the audit trail.** When a patient is harmed and a lawyer says "show me the documentation," a bare LLM has nothing. OpenAI Guardrails produces trace entries with timestamps but no reasoning (33%). NeMo produces nothing (0%). Only a purpose-built governance system produces complete, structured audit records.
+**Traceability is the audit trail.** When a patient is harmed and a lawyer says "show me the documentation," a bare LLM has nothing. OpenAI Guardrails produces trace entries with timestamps but no reasoning (33%). NeMo produces nothing (0%). Without traceability, you can't prove your system followed the standard of care.
 
-**Controllability is human oversight.** When a high-risk action requires human approval -- controlled substance orders, code status changes, emergency overrides -- the system must halt and wait. LangGraph's interrupt nodes do this (100%). Everything else proceeds without asking (0%).
+**Controllability is human oversight.** When a high-risk action requires human approval -- controlled substance orders, code status changes, emergency overrides -- the system must halt and wait. Only LangGraph's interrupt nodes do this (100%). Everything else proceeds without asking.
 
 **No model improvement fixes this.** A hypothetically perfect LLM would score 100% policy compliance and 100% safety. It would still score **0% traceability and 0% controllability**. Governance is an infrastructure problem, not an intelligence problem.
+
+**88% is not good enough.** 88% means 60 wrong governance decisions out of 500. In healthcare, that's unacceptable. But the deeper problem is: without traceability, you don't even know WHICH 60 were wrong.
 
 ### Methodology
 
 - **Bare LLM, OpenAI Guardrails, NeMo Guardrails, LangGraph HITL**: Real GPT-4o-mini API calls. Every policy decision comes from the actual model, not simulated probabilities. Temperature=0 for reproducibility.
-- **ClinicClaw**: Rule-based policy engine. No LLM calls. Its decisions come from hardcoded clinical rules, not a model. This is intentional -- it represents what a purpose-built governance system looks like.
-- All adapters are included in `examples/` and can be run directly.
+- **ClinicClaw (reference)**: Rule-based policy engine. No LLM calls. Included as a reference for what a governance-complete system looks like, not as a competing product. Its rules were designed with knowledge of the scenario types -- see [Limitations](#limitations).
+- All adapters are included in `examples/` and can be run directly. Think we got your framework wrong? [Contribute a better adapter.](CONTRIBUTING.md)
 
 ## How It Works
 
