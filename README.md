@@ -2,6 +2,8 @@
 
 **A benchmark framework for AI agent governance — not intelligence.**
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19403623.svg)](https://doi.org/10.5281/zenodo.19403623)
+
 Your AI agent passes safety benchmarks. It scores well on task completion. But can you answer these questions?
 
 - When your agent accessed that patient record, **was it authorized to?**
@@ -211,6 +213,24 @@ veritasbench/
     *.py                     # 7 adapter implementations
 ```
 
+## Citation
+
+If you use or reference VeritasBench, VERITAS, or ClinicLaw in academic work, please cite:
+
+> Guan, Z. (2026). *VERITAS: A Governance Runtime and Benchmark Framework for AI Agents in Regulated Environments.* Zenodo. [https://doi.org/10.5281/zenodo.19403623](https://doi.org/10.5281/zenodo.19403623)
+
+```bibtex
+@techreport{guan2026veritas,
+  author    = {Ziyuan Guan},
+  title     = {VERITAS: A Governance Runtime and Benchmark Framework
+               for AI Agents in Regulated Environments},
+  year      = {2026},
+  doi       = {10.5281/zenodo.19403623},
+  url       = {https://doi.org/10.5281/zenodo.19403623},
+  publisher = {Zenodo}
+}
+```
+
 ## FAQ
 
 **Why healthcare?** Healthcare is the highest-stakes domain for AI agent governance — HIPAA, FDA, Joint Commission all require documented authorization, audit trails, and human oversight. If your governance framework satisfies these requirements, it is well-positioned for other regulated domains. Future versions will add finance and legal scenarios.
@@ -237,6 +257,7 @@ veritasbench/
 
 - [ClinicClaw](https://github.com/Chesterguan/cliniclaw) — AI-native Hospital Information System built on the VERITAS trust model (reference adapter scores: policy 98%, safety 96%, traceability 100%, controllability 100% on 500 scenarios)
 - [VERITAS](https://github.com/Chesterguan/veritas) — Trust and governance layer for AI agent systems (the thesis VeritasBench validates)
+- [HAVEN](https://github.com/Chesterguan/HAVEN) — Patient-controlled health data protocol ([DOI: 10.5281/zenodo.18701303](https://doi.org/10.5281/zenodo.18701303))
 
 ## License
 
