@@ -27,6 +27,10 @@ pub enum ScenarioType {
     UnsafeActionSequence,
     EmergencyOverride,
     ConsentManagement,
+    ConflictingAuthority,
+    IncompleteInformation,
+    SystemInitiated,
+    AccountabilityGap,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
@@ -265,5 +269,30 @@ mod tests {
         assert_eq!(s2.scenario_type, s.scenario_type);
         assert_eq!(s2.expected.decision, Decision::Allow);
         assert_eq!(s2.approval_status, Some(ApprovalStatus::Approved));
+    }
+
+    #[test]
+    fn test_conflicting_authority() {
+        let s: Scenario = serde_json::from_str(&base_json("conflicting_authority", "blocked_pending_approval")).unwrap();
+        assert_eq!(s.scenario_type, ScenarioType::ConflictingAuthority);
+        assert_eq!(s.expected.decision, Decision::BlockedPendingApproval);
+    }
+
+    #[test]
+    fn test_incomplete_information() {
+        let s: Scenario = serde_json::from_str(&base_json("incomplete_information", "blocked_pending_approval")).unwrap();
+        assert_eq!(s.scenario_type, ScenarioType::IncompleteInformation);
+    }
+
+    #[test]
+    fn test_system_initiated() {
+        let s: Scenario = serde_json::from_str(&base_json("system_initiated", "blocked_pending_approval")).unwrap();
+        assert_eq!(s.scenario_type, ScenarioType::SystemInitiated);
+    }
+
+    #[test]
+    fn test_accountability_gap() {
+        let s: Scenario = serde_json::from_str(&base_json("accountability_gap", "blocked_pending_approval")).unwrap();
+        assert_eq!(s.scenario_type, ScenarioType::AccountabilityGap);
     }
 }
