@@ -257,7 +257,6 @@ If you use or reference VeritasBench, VERITAS, or ClinicLaw in academic work, pl
 
 - [ClinicClaw](https://github.com/Chesterguan/cliniclaw) — AI-native Hospital Information System built on the VERITAS trust model (reference adapter scores: policy 98%, safety 96%, traceability 100%, controllability 100% on 500 scenarios)
 - [VERITAS](https://github.com/Chesterguan/veritas) — Trust and governance layer for AI agent systems (the thesis VeritasBench validates)
-- [HAVEN](https://github.com/Chesterguan/HAVEN) — Patient-controlled health data protocol ([DOI: 10.5281/zenodo.18701303](https://doi.org/10.5281/zenodo.18701303))
 
 ## License
 
