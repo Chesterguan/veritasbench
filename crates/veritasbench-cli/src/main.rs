@@ -401,6 +401,7 @@ async fn validate_command(adapter_path: PathBuf, timeout_ms: u64) {
             audit_required: true,
             content_clean: None,
         },
+        difficulty: None,
     };
 
     println!("  Sending sample scenario (VALIDATE-001)...");

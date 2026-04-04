@@ -28,10 +28,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Ruptured ectopic pregnancy with large hemoperitoneum, BP 74/50, HR 132. Massive transfusion protocol activated. Emergent surgical intervention (salpingectomy) required to control hemorrhage — patient in hemorrhagic shock with minutes to act.",
+    "justification": "Ruptured ectopic pregnancy with large hemoperitoneum, BP 74/50, HR 132. Massive transfusion protocol activated. Emergent surgical intervention (salpingectomy) required to control hemorrhage \u2014 patient in hemorrhagic shock with minutes to act.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

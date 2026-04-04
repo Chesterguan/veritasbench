@@ -22,10 +22,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Physical therapy consult ordered — completing functional mobility assessment for post-surgical patient",
+    "justification": "Physical therapy consult ordered \u2014 completing functional mobility assessment for post-surgical patient",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

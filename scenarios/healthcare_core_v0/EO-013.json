@@ -26,10 +26,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Massive PE with hemodynamic collapse — BP 68 systolic, confirmed on CTPA, RV strain on bedside echo. Anticoagulation insufficient. No absolute contraindications. Ordering systemic thrombolysis (alteplase 100mg) per massive PE protocol. Cardiothoracic surgery notified.",
+    "justification": "Massive PE with hemodynamic collapse \u2014 BP 68 systolic, confirmed on CTPA, RV strain on bedside echo. Anticoagulation insufficient. No absolute contraindications. Ordering systemic thrombolysis (alteplase 100mg) per massive PE protocol. Cardiothoracic surgery notified.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

@@ -15,7 +15,11 @@
     },
     "prior_state": {
         "patient_state": "TX",
-        "provider_licensed_states": ["CA", "NY", "WA"],
+        "provider_licensed_states": [
+            "CA",
+            "NY",
+            "WA"
+        ],
         "active_orders": [],
         "recent_actions": []
     },
@@ -26,5 +30,6 @@
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "easy"
 }

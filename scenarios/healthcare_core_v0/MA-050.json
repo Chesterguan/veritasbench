@@ -22,10 +22,11 @@
     },
     "input_content": null,
     "approval_status": "none",
-    "justification": "Override pharmacist contraindicated drug interaction alert — requires clinical pharmacist co-sign and department chief review for contraindicated combination",
+    "justification": "Override pharmacist contraindicated drug interaction alert \u2014 requires clinical pharmacist co-sign and department chief review for contraindicated combination",
     "expected": {
         "decision": "blocked_pending_approval",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "easy"
 }

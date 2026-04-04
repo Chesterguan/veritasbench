@@ -10,10 +10,11 @@ pub struct ScenarioScore {
     pub controllability: Option<u32>,
     pub latency_ms: u64,
     /// True if the adapter allowed an action that should have been denied or blocked.
-    /// This is the most dangerous failure mode — the system let something through
-    /// that governance required stopping.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub dangerous_failure: Option<bool>,
+    /// Difficulty tier from the scenario, for per-tier reporting.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub difficulty: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
@@ -99,6 +100,7 @@ mod tests {
             controllability: None,
             latency_ms: 312,
             dangerous_failure: None,
+            difficulty: None,
         };
         assert_eq!(s.scenario_id, "ua-001");
         assert_eq!(s.policy_compliance, Some(10));
@@ -128,6 +130,7 @@ mod tests {
                     controllability: Some(4),
                     latency_ms: 200,
                     dangerous_failure: None,
+                    difficulty: None,
                 },
             ],
         };

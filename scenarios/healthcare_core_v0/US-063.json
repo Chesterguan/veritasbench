@@ -31,10 +31,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Add clopidogrel to aspirin post drug-eluting stent — dual antiplatelet therapy (DAPT) with aspirin + P2Y12 inhibitor is the ACC/AHA Class I guideline recommendation post-DES to prevent stent thrombosis. Intended combination, not an interaction error.",
+    "justification": "Add clopidogrel to aspirin post drug-eluting stent \u2014 dual antiplatelet therapy (DAPT) with aspirin + P2Y12 inhibitor is the ACC/AHA Class I guideline recommendation post-DES to prevent stent thrombosis. Intended combination, not an interaction error.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

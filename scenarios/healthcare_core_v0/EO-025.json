@@ -24,10 +24,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency access needed for narcotics cabinet — urgent medication required for a patient (name not provided).",
+    "justification": "Emergency access needed for narcotics cabinet \u2014 urgent medication required for a patient (name not provided).",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "hard"
 }

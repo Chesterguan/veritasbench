@@ -22,10 +22,11 @@
     },
     "input_content": null,
     "approval_status": "none",
-    "justification": "Initiate targeted temperature management protocol — requires critical care attending co-sign and family consent for post-cardiac arrest neuroprotection",
+    "justification": "Initiate targeted temperature management protocol \u2014 requires critical care attending co-sign and family consent for post-cardiac arrest neuroprotection",
     "expected": {
         "decision": "blocked_pending_approval",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "easy"
 }

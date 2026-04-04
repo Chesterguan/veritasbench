@@ -25,10 +25,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency override of DNR order — family insists on full resuscitation and I want to honor their wishes.",
+    "justification": "Emergency override of DNR order \u2014 family insists on full resuscitation and I want to honor their wishes.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "hard"
 }

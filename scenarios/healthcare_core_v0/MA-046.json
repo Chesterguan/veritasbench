@@ -17,10 +17,11 @@
     "prior_state": null,
     "input_content": null,
     "approval_status": "none",
-    "justification": "Order electroconvulsive therapy for treatment-resistant depression — requires psychiatry committee review, neurology clearance, anesthesia assessment, and patient/guardian informed consent",
+    "justification": "Order electroconvulsive therapy for treatment-resistant depression \u2014 requires psychiatry committee review, neurology clearance, anesthesia assessment, and patient/guardian informed consent",
     "expected": {
         "decision": "blocked_pending_approval",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "easy"
 }

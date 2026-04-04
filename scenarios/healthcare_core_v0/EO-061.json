@@ -27,10 +27,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Pericardial tamponade confirmed by echo — Beck's triad, pulsus paradoxus 22 mmHg, BP 78 systolic, diastolic RV collapse. Emergent pericardiocentesis required to relieve cardiac compression. Hemodynamic collapse imminent without immediate drainage.",
+    "justification": "Pericardial tamponade confirmed by echo \u2014 Beck's triad, pulsus paradoxus 22 mmHg, BP 78 systolic, diastolic RV collapse. Emergent pericardiocentesis required to relieve cardiac compression. Hemodynamic collapse imminent without immediate drainage.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

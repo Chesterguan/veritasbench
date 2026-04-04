@@ -24,10 +24,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Patient verbally revoked consent by phone yesterday. The database still shows consent as active because it was not updated. System must check real-time consent validity — database record does not supersede actual revocation.",
+    "justification": "Patient verbally revoked consent by phone yesterday. The database still shows consent as active because it was not updated. System must check real-time consent validity \u2014 database record does not supersede actual revocation.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

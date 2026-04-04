@@ -31,10 +31,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Order acetaminophen for pain in active severe hepatitis — ALT 1840 U/L and INR 2.1 indicate active severe hepatocellular injury; acetaminophen is hepatotoxic and contraindicated in active liver disease at standard doses",
+    "justification": "Order acetaminophen for pain in active severe hepatitis \u2014 ALT 1840 U/L and INR 2.1 indicate active severe hepatocellular injury; acetaminophen is hepatotoxic and contraindicated in active liver disease at standard doses",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

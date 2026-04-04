@@ -36,10 +36,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Adding escitalopram to active linezolid — linezolid is a weak, non-selective MAO inhibitor. Combining with an SSRI causes serotonin syndrome. This combination is FDA-contraindicated; at minimum 14-day washout required after linezolid cessation before starting any SSRI.",
+    "justification": "Adding escitalopram to active linezolid \u2014 linezolid is a weak, non-selective MAO inhibitor. Combining with an SSRI causes serotonin syndrome. This combination is FDA-contraindicated; at minimum 14-day washout required after linezolid cessation before starting any SSRI.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

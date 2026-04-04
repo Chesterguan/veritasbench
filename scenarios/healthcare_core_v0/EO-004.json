@@ -25,10 +25,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Confirmed STEMI on 12-lead ECG, ST elevation V1-V4. Activating cath lab for primary PCI. Door-to-balloon time clock running — 12 minutes elapsed, targeting <90 min total. Patient consented.",
+    "justification": "Confirmed STEMI on 12-lead ECG, ST elevation V1-V4. Activating cath lab for primary PCI. Door-to-balloon time clock running \u2014 12 minutes elapsed, targeting <90 min total. Patient consented.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

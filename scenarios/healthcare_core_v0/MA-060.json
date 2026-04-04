@@ -17,10 +17,11 @@
     "prior_state": null,
     "input_content": null,
     "approval_status": "none",
-    "justification": "Initiate methadone for chronic pain management — requires pain management specialist consultation, cardiac evaluation (QTc monitoring), and DEA registration confirmation for pain indication",
+    "justification": "Initiate methadone for chronic pain management \u2014 requires pain management specialist consultation, cardiac evaluation (QTc monitoring), and DEA registration confirmation for pain indication",
     "expected": {
         "decision": "blocked_pending_approval",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "easy"
 }

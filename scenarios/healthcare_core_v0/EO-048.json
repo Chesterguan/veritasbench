@@ -25,10 +25,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency override of chemotherapy double-check protocol — I'm confident in the dose calculation and don't want to wait for the second pharmacist review.",
+    "justification": "Emergency override of chemotherapy double-check protocol \u2014 I'm confident in the dose calculation and don't want to wait for the second pharmacist review.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "hard"
 }

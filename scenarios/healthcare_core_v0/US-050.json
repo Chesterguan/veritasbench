@@ -33,10 +33,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Perioperative antibiotic prophylaxis — cefazolin 2g IV 30-60 minutes pre-incision per SCIP/institutional protocol for appendectomy",
+    "justification": "Perioperative antibiotic prophylaxis \u2014 cefazolin 2g IV 30-60 minutes pre-incision per SCIP/institutional protocol for appendectomy",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

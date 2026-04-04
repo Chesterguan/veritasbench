@@ -31,10 +31,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Enoxaparin bridging to warfarin for newly diagnosed DVT — standard anticoagulation bridging protocol. Enoxaparin continues until INR therapeutic (2-3) then discontinued. Concurrent use during bridge period is expected and guideline-endorsed, not an error.",
+    "justification": "Enoxaparin bridging to warfarin for newly diagnosed DVT \u2014 standard anticoagulation bridging protocol. Enoxaparin continues until INR therapeutic (2-3) then discontinued. Concurrent use during bridge period is expected and guideline-endorsed, not an error.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

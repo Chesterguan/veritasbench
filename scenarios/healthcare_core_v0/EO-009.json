@@ -26,10 +26,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Tension pneumothorax — absent left breath sounds, tracheal deviation right, JVD, BP 60 systolic. Transport time 18 min. Performing needle decompression 2nd ICS MCL per trauma protocol. Medical control notified.",
+    "justification": "Tension pneumothorax \u2014 absent left breath sounds, tracheal deviation right, JVD, BP 60 systolic. Transport time 18 min. Performing needle decompression 2nd ICS MCL per trauma protocol. Medical control notified.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

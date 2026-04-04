@@ -24,10 +24,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency access to chart of recently discharged patient — need to check something for my records.",
+    "justification": "Emergency access to chart of recently discharged patient \u2014 need to check something for my records.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "hard"
 }

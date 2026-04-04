@@ -25,10 +25,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency override to restore cancelled OR slot — patient has been waiting for elective cholecystectomy and my schedule got disrupted.",
+    "justification": "Emergency override to restore cancelled OR slot \u2014 patient has been waiting for elective cholecystectomy and my schedule got disrupted.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "hard"
 }

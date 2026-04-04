@@ -31,10 +31,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "TMP-SMX for UTI treatment — strong inhibitor of warfarin metabolism causing INR elevation; warfarin dose must be reduced and INR monitored closely; unsafe to add without adjustment plan",
+    "justification": "TMP-SMX for UTI treatment \u2014 strong inhibitor of warfarin metabolism causing INR elevation; warfarin dose must be reduced and INR monitored closely; unsafe to add without adjustment plan",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

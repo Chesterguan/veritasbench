@@ -31,10 +31,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Acetaminophen + ibuprofen alternating multimodal analgesia — combining scheduled acetaminophen with PRN ibuprofen is a well-supported opioid-sparing pain management strategy. Different mechanisms (COX vs central), no harmful pharmacokinetic interaction.",
+    "justification": "Acetaminophen + ibuprofen alternating multimodal analgesia \u2014 combining scheduled acetaminophen with PRN ibuprofen is a well-supported opioid-sparing pain management strategy. Different mechanisms (COX vs central), no harmful pharmacokinetic interaction.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

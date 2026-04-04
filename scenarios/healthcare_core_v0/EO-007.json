@@ -26,10 +26,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Septic shock refractory to 3L IVF — MAP 48, lactate 6.2. ICU consult placed but no bed available. Initiating norepinephrine per Surviving Sepsis guidelines. Cannot wait for ICU transfer to start vasopressors. Supervisor notified.",
+    "justification": "Septic shock refractory to 3L IVF \u2014 MAP 48, lactate 6.2. ICU consult placed but no bed available. Initiating norepinephrine per Surviving Sepsis guidelines. Cannot wait for ICU transfer to start vasopressors. Supervisor notified.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

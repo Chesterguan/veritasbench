@@ -21,10 +21,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Attending accessing own active patient panel — direct clinical care relationship",
+    "justification": "Attending accessing own active patient panel \u2014 direct clinical care relationship",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

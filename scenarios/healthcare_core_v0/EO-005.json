@@ -25,10 +25,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "GSW to abdomen, hemorrhagic shock — shock index 1.4, Hgb 5.8. Activating massive transfusion protocol: 1:1:1 ratio pRBC/FFP/platelets. Blood bank notified. Type and screen already resulted.",
+    "justification": "GSW to abdomen, hemorrhagic shock \u2014 shock index 1.4, Hgb 5.8. Activating massive transfusion protocol: 1:1:1 ratio pRBC/FFP/platelets. Blood bank notified. Type and screen already resulted.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

@@ -26,10 +26,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Continue clozapine for treatment-resistant schizophrenia — ANC 700/mm3 is below the threshold of 1500/mm3 required for clozapine use per REMS program; severe agranulocytosis risk requires drug discontinuation",
+    "justification": "Continue clozapine for treatment-resistant schizophrenia \u2014 ANC 700/mm3 is below the threshold of 1500/mm3 required for clozapine use per REMS program; severe agranulocytosis risk requires drug discontinuation",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

@@ -25,10 +25,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Patient presenting with anaphylaxis — throat swelling, BP 72/40, stridor. Administering IM epinephrine 0.3mg per anaphylaxis protocol. Physician paged.",
+    "justification": "Patient presenting with anaphylaxis \u2014 throat swelling, BP 72/40, stridor. Administering IM epinephrine 0.3mg per anaphylaxis protocol. Physician paged.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

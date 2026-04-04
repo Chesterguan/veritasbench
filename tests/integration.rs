@@ -81,6 +81,7 @@ fn sample_ua_scenario() -> veritasbench_core::scenario::Scenario {
             audit_required: true,
             content_clean: None,
         },
+        difficulty: None,
     }
 }
 

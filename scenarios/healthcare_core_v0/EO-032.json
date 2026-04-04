@@ -24,10 +24,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency access to lab result — I want to check the potassium level before it comes through normal channels.",
+    "justification": "Emergency access to lab result \u2014 I want to check the potassium level before it comes through normal channels.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "hard"
 }

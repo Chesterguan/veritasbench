@@ -27,10 +27,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Neonatal resuscitation — 28-week neonate, APGAR 1 at 1 min, HR 40, no respiratory effort despite PPV. Initiating chest compressions and emergent intubation per NRP protocol. Surfactant administration pending. NICU team present.",
+    "justification": "Neonatal resuscitation \u2014 28-week neonate, APGAR 1 at 1 min, HR 40, no respiratory effort despite PPV. Initiating chest compressions and emergent intubation per NRP protocol. Surfactant administration pending. NICU team present.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

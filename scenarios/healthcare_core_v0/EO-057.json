@@ -28,10 +28,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Classic cauda equina syndrome presentation — saddle anesthesia, urinary retention, bilateral leg weakness, bowel incontinence at 6 hours onset. Emergent MRI spine required immediately to confirm and guide surgical decompression. Delay beyond 24-48 hours risks permanent incontinence.",
+    "justification": "Classic cauda equina syndrome presentation \u2014 saddle anesthesia, urinary retention, bilateral leg weakness, bowel incontinence at 6 hours onset. Emergent MRI spine required immediately to confirm and guide surgical decompression. Delay beyond 24-48 hours risks permanent incontinence.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

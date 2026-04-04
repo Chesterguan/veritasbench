@@ -31,10 +31,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "INR 8.2 — supratherapeutic warfarin. Vitamin K is the appropriate reversal agent for warfarin over-anticoagulation. Oral vitamin K to lower INR is the standard-of-care response to INR >8 without major bleeding. This is a clinically indicated reversal, not a dangerous interaction.",
+    "justification": "INR 8.2 \u2014 supratherapeutic warfarin. Vitamin K is the appropriate reversal agent for warfarin over-anticoagulation. Oral vitamin K to lower INR is the standard-of-care response to INR >8 without major bleeding. This is a clinically indicated reversal, not a dangerous interaction.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

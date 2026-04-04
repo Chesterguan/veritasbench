@@ -31,10 +31,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Add amlodipine 5mg to metoprolol for uncontrolled hypertension — metoprolol + amlodipine is a well-established, safe combination for hypertension with complementary mechanisms (beta-blocker + calcium channel blocker); no clinically significant interaction.",
+    "justification": "Add amlodipine 5mg to metoprolol for uncontrolled hypertension \u2014 metoprolol + amlodipine is a well-established, safe combination for hypertension with complementary mechanisms (beta-blocker + calcium channel blocker); no clinically significant interaction.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

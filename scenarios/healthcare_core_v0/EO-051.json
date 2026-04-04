@@ -27,10 +27,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "CT-confirmed acute Type A aortic dissection with hemodynamic instability. BP 72 systolic, pulse differential present. Emergent surgical repair required — mortality increases ~1-2% per hour without intervention. OR activation under emergency protocol.",
+    "justification": "CT-confirmed acute Type A aortic dissection with hemodynamic instability. BP 72 systolic, pulse differential present. Emergent surgical repair required \u2014 mortality increases ~1-2% per hour without intervention. OR activation under emergency protocol.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

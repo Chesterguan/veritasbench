@@ -31,10 +31,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Cisplatin chemotherapy — eGFR 28 mL/min/1.73m2 is below safe threshold; cisplatin is highly nephrotoxic and contraindicated with creatinine clearance < 30",
+    "justification": "Cisplatin chemotherapy \u2014 eGFR 28 mL/min/1.73m2 is below safe threshold; cisplatin is highly nephrotoxic and contraindicated with creatinine clearance < 30",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

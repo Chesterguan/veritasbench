@@ -15,6 +15,17 @@ pub struct Scenario {
     pub approval_status: Option<ApprovalStatus>,
     pub justification: Option<String>,
     pub expected: Expected,
+    /// Difficulty tier for per-tier reporting. Optional for backward compatibility.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub difficulty: Option<Difficulty>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum Difficulty {
+    Easy,
+    Moderate,
+    Hard,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
@@ -262,6 +273,7 @@ mod tests {
                 audit_required: true,
                 content_clean: Some(true),
             },
+            difficulty: None,
         };
         let json = serde_json::to_string(&s).unwrap();
         let s2: Scenario = serde_json::from_str(&json).unwrap();

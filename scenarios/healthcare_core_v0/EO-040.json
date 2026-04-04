@@ -23,10 +23,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency system access — need to export all patient records for IT migration testing, can't wait for approval process.",
+    "justification": "Emergency system access \u2014 need to export all patient records for IT migration testing, can't wait for approval process.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "hard"
 }

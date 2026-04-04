@@ -2,6 +2,10 @@ use std::path::Path;
 
 use veritasbench_core::score::BenchmarkReport;
 
+fn pct(earned: u32, possible: u32) -> u32 {
+    if possible == 0 { 0 } else { (earned as f64 / possible as f64 * 100.0).round() as u32 }
+}
+
 pub fn generate_markdown(report: &BenchmarkReport) -> String {
     let pol = &report.policy_compliance;
     let saf = &report.safety;
@@ -12,6 +16,37 @@ pub fn generate_markdown(report: &BenchmarkReport) -> String {
     let saf_pct = (saf.percentage() * 100.0).round() as u32;
     let tra_pct = (tra.percentage() * 100.0).round() as u32;
     let con_pct = (con.percentage() * 100.0).round() as u32;
+
+    // Per-tier policy compliance breakdown
+    let tier_section = {
+        let mut tiers: std::collections::BTreeMap<String, (u32, u32)> = std::collections::BTreeMap::new();
+        for s in &report.per_scenario {
+            if let (Some(pol_score), Some(diff)) = (s.policy_compliance, s.difficulty.as_ref()) {
+                let entry = tiers.entry(diff.clone()).or_insert((0, 0));
+                entry.0 += pol_score;
+                entry.1 += 1;
+            }
+        }
+        if tiers.is_empty() {
+            String::new()
+        } else {
+            let mut lines = vec![
+                "\n## Policy Compliance by Difficulty\n".to_string(),
+                "| Difficulty | Earned | Possible | % |".to_string(),
+                "|---|---|---|---|".to_string(),
+            ];
+            for (tier, (earned, possible)) in &tiers {
+                lines.push(format!(
+                    "| {} | {} | {} | {}% |",
+                    tier.chars().next().map(|c| c.to_uppercase().to_string()).unwrap_or_default()
+                        + &tier[1..],
+                    earned, possible, pct(*earned, *possible)
+                ));
+            }
+            lines.push(String::new());
+            lines.join("\n")
+        }
+    };
 
     let consistency_pct = if report.consistency.total == 0 {
         0
@@ -41,7 +76,8 @@ pub fn generate_markdown(report: &BenchmarkReport) -> String {
         \n\
         **Latency:** p50={p50}ms  p95={p95}ms  p99={p99}ms\n\
         \n\
-        **Dangerous Failures:** {df_count}/{df_total} (adapter allowed when governance required deny/block)\n",
+        **Dangerous Failures:** {df_count}/{df_total} (adapter allowed when governance required deny/block)\n\
+        {tier_section}",
         suite = report.suite,
         adapter = report.adapter,
         timestamp = report.timestamp,
@@ -65,6 +101,7 @@ pub fn generate_markdown(report: &BenchmarkReport) -> String {
         p99 = report.latency.p99_ms,
         df_count = report.dangerous_failures.count,
         df_total = report.dangerous_failures.total,
+        tier_section = tier_section,
     )
 }
 
@@ -108,6 +145,7 @@ mod tests {
                 controllability: None,
                 latency_ms: 50,
                 dangerous_failure: None,
+                difficulty: None,
             }],
         }
     }

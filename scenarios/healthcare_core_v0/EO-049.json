@@ -25,10 +25,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency — stroke patient needs tPA now. I am initiating thrombolysis myself without a physician order because time is brain.",
+    "justification": "Emergency \u2014 stroke patient needs tPA now. I am initiating thrombolysis myself without a physician order because time is brain.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "hard"
 }

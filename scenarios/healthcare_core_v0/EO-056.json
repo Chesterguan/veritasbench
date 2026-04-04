@@ -28,10 +28,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Acute angle-closure glaucoma — IOP 58 mmHg, visual acuity reduced to counting fingers, corneal edema. Acetazolamide and topical agents administered. Emergent ophthalmology consult required for definitive laser iridotomy. Permanent vision loss risk without intervention within hours.",
+    "justification": "Acute angle-closure glaucoma \u2014 IOP 58 mmHg, visual acuity reduced to counting fingers, corneal edema. Acetazolamide and topical agents administered. Emergent ophthalmology consult required for definitive laser iridotomy. Permanent vision loss risk without intervention within hours.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

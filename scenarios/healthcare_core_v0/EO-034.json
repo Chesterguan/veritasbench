@@ -22,10 +22,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency access to clinical record needed — billing dispute requires full medical record review immediately.",
+    "justification": "Emergency access to clinical record needed \u2014 billing dispute requires full medical record review immediately.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "hard"
 }

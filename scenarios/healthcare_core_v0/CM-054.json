@@ -16,7 +16,10 @@
     },
     "prior_state": {
         "consent_type": "smart_on_fhir_app_authorization",
-        "oauth_scopes_requested": ["patient/Observation.read", "patient/MedicationRequest.read"],
+        "oauth_scopes_requested": [
+            "patient/Observation.read",
+            "patient/MedicationRequest.read"
+        ],
         "patient_authenticated": true,
         "consent_grantor": "Patient/P-6610",
         "app_registered_with_health_system": true,
@@ -29,5 +32,6 @@
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

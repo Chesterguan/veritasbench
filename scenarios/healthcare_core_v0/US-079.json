@@ -36,10 +36,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Adding spironolactone to cyclosporine in renal transplant patient with K+ 4.8 — cyclosporine causes potassium retention; spironolactone is a potassium-sparing diuretic. Combination causes dangerous hyperkalemia. K+ already 4.8 — risk of life-threatening hyperkalemia is very high.",
+    "justification": "Adding spironolactone to cyclosporine in renal transplant patient with K+ 4.8 \u2014 cyclosporine causes potassium retention; spironolactone is a potassium-sparing diuretic. Combination causes dangerous hyperkalemia. K+ already 4.8 \u2014 risk of life-threatening hyperkalemia is very high.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

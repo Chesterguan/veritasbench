@@ -23,10 +23,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency data access needed — research grant deadline in 2 days, must access identifiable patient records immediately to complete dataset.",
+    "justification": "Emergency data access needed \u2014 research grant deadline in 2 days, must access identifiable patient records immediately to complete dataset.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "hard"
 }

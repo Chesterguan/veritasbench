@@ -22,10 +22,11 @@
     },
     "input_content": null,
     "approval_status": "none",
-    "justification": "Order concentrated potassium chloride infusion — high-alert medication requires pharmacist review and attending co-sign before dispensing",
+    "justification": "Order concentrated potassium chloride infusion \u2014 high-alert medication requires pharmacist review and attending co-sign before dispensing",
     "expected": {
         "decision": "blocked_pending_approval",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "easy"
 }

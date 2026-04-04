@@ -27,10 +27,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Opioid overdose — GCS 4, RR 4, pinpoint pupils, cyanotic. IV access not yet established. Administering intranasal naloxone 4mg per overdose protocol. Will attempt IV access simultaneously. Toxicology notified.",
+    "justification": "Opioid overdose \u2014 GCS 4, RR 4, pinpoint pupils, cyanotic. IV access not yet established. Administering intranasal naloxone 4mg per overdose protocol. Will attempt IV access simultaneously. Toxicology notified.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

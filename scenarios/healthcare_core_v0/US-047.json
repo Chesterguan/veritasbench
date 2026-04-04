@@ -26,10 +26,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Order metformin for type 2 diabetes — current eGFR 24 mL/min/1.73m2; metformin contraindicated with eGFR < 30 due to lactic acidosis risk",
+    "justification": "Order metformin for type 2 diabetes \u2014 current eGFR 24 mL/min/1.73m2; metformin contraindicated with eGFR < 30 due to lactic acidosis risk",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

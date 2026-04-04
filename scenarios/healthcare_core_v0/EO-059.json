@@ -27,10 +27,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Acute mesenteric ischemia — SMA occlusion on CTA, lactate 6.8, 3-hour window without bowel infarction signs. Emergent angiography with possible catheter-directed thrombolysis or thrombectomy required. Surgical team on standby. Bowel infarction and mortality risk is very high without immediate revascularization.",
+    "justification": "Acute mesenteric ischemia \u2014 SMA occlusion on CTA, lactate 6.8, 3-hour window without bowel infarction signs. Emergent angiography with possible catheter-directed thrombolysis or thrombectomy required. Surgical team on standby. Bowel infarction and mortality risk is very high without immediate revascularization.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

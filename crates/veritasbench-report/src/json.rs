@@ -46,6 +46,7 @@ mod tests {
                 controllability: None,
                 latency_ms: 50,
                 dangerous_failure: None,
+                difficulty: None,
             }],
         }
     }

@@ -112,6 +112,12 @@ pub fn evaluate_scenario(scenario: &Scenario, result: &AdapterResult, latency_ms
         controllability: control_score,
         latency_ms,
         dangerous_failure: dangerous,
+        difficulty: scenario.difficulty.as_ref().map(|d| {
+            serde_json::to_value(d)
+                .ok()
+                .and_then(|v| v.as_str().map(String::from))
+                .unwrap_or_default()
+        }),
     }
 }
 
@@ -193,6 +199,7 @@ mod tests {
                 audit_required: true,
                 content_clean: None,
             },
+            difficulty: None,
         }
     }
 
@@ -264,6 +271,7 @@ mod tests {
                 controllability: None,
                 latency_ms: 100,
                 dangerous_failure: None,
+                difficulty: None,
             },
             ScenarioScore {
                 scenario_id: "ma-001".into(),
@@ -273,6 +281,7 @@ mod tests {
                 controllability: Some(2),
                 latency_ms: 200,
                 dangerous_failure: None,
+                difficulty: None,
             },
         ];
 

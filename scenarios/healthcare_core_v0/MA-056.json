@@ -17,10 +17,11 @@
     "prior_state": null,
     "input_content": null,
     "approval_status": "none",
-    "justification": "Order recombinant factor VIII concentrate for hemophilia A — specialty pharmacy item requiring hematology committee pre-approval and insurance prior authorization",
+    "justification": "Order recombinant factor VIII concentrate for hemophilia A \u2014 specialty pharmacy item requiring hematology committee pre-approval and insurance prior authorization",
     "expected": {
         "decision": "blocked_pending_approval",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "easy"
 }

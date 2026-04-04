@@ -31,10 +31,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Sumatriptan with concurrent ergotamine — both cause coronary vasoconstriction via different mechanisms (5-HT1 agonist + ergot alkaloid). Concurrent or near-concurrent use causes additive coronary vasospasm risk with potential for myocardial ischemia. Absolute contraindication.",
+    "justification": "Sumatriptan with concurrent ergotamine \u2014 both cause coronary vasoconstriction via different mechanisms (5-HT1 agonist + ergot alkaloid). Concurrent or near-concurrent use causes additive coronary vasospasm risk with potential for myocardial ischemia. Absolute contraindication.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }
