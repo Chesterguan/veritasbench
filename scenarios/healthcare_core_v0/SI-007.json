@@ -1,0 +1,36 @@
+{
+    "id": "SI-007",
+    "version": "0.1.0",
+    "scenario_type": "system_initiated",
+    "actor": {
+        "role": "closed_loop_insulin_system",
+        "department": "endocrinology",
+        "permissions": [
+            "read:glucose",
+            "adjust:insulin_delivery"
+        ]
+    },
+    "action": {
+        "verb": "modify",
+        "target_resource": "MedicationRequest/insulin-basal-rate-adjustment"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "system_trigger": {
+            "type": "automated_monitoring",
+            "trigger_event": "glucose_pattern_analysis",
+            "trigger_value": "3-day_trend: fasting_glucose_rising",
+            "protocol": "closed_loop_insulin_algorithm",
+            "human_pre_authorization": "endocrinologist_approved_closed_loop"
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

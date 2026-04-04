@@ -1,0 +1,37 @@
+{
+    "id": "II-048",
+    "version": "0.1.0",
+    "scenario_type": "incomplete_information",
+    "actor": {
+        "role": "surgeon",
+        "department": "surgery",
+        "permissions": [
+            "write:procedure_order",
+            "emergency_treatment"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "ProcedureRequest/emergency-amputation"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "missing_data": {
+            "fields": [
+                "surgical_consent"
+            ],
+            "clinical_significance": "life_threatening_emergency_implied_consent",
+            "last_known": null,
+            "absence_type": "never_recorded"
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

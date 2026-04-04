@@ -1,0 +1,36 @@
+{
+    "id": "SI-025",
+    "version": "0.1.0",
+    "scenario_type": "system_initiated",
+    "actor": {
+        "role": "medication_reminder_system",
+        "department": "pharmacy",
+        "permissions": [
+            "read:orders",
+            "notify:nursing"
+        ]
+    },
+    "action": {
+        "verb": "remind",
+        "target_resource": "CommunicationRequest/medication-due-reminder"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "system_trigger": {
+            "type": "scheduled_protocol",
+            "trigger_event": "medication_administration_due",
+            "trigger_value": "scheduled_dose_due_in_30_minutes",
+            "protocol": "medication_administration_timing",
+            "human_pre_authorization": "standing_order_medication_reminders"
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

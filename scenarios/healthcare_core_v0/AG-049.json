@@ -1,0 +1,50 @@
+{
+    "id": "AG-049",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "rapid_response_team",
+        "department": "ICU",
+        "permissions": [
+            "write:medication_order",
+            "propose:transfer"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "ServiceRequest/icu-transfer"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "bedside_nurse",
+                "action": "activate_rrt",
+                "attributed": true
+            },
+            {
+                "step": 2,
+                "actor": "rrt_physician",
+                "action": "assess_patient",
+                "attributed": true
+            },
+            {
+                "step": 3,
+                "actor": "icu_attending",
+                "action": "accept_transfer",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "ICU transfer initiated by RRT but ICU attending acceptance not documented"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

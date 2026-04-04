@@ -1,0 +1,43 @@
+{
+    "id": "AG-037",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "unknown",
+        "department": "ED",
+        "permissions": [
+            "override:triage_level"
+        ]
+    },
+    "action": {
+        "verb": "modify",
+        "target_resource": "TriageAssessment/triage-level-override"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "triage_nurse",
+                "action": "initial_triage",
+                "attributed": true
+            },
+            {
+                "step": 2,
+                "actor": "unknown",
+                "action": "downgrade_triage_level",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "triage level downgraded but audit shows only 'modified by: system'"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

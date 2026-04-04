@@ -1,0 +1,37 @@
+{
+    "id": "AG-038",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "batch_process",
+        "department": "IT",
+        "permissions": [
+            "modify:orders"
+        ]
+    },
+    "action": {
+        "verb": "cancel",
+        "target_resource": "MedicationRequest/batch-order-cancellation"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "batch_process",
+                "action": "cancel_expired_orders",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "batch process cancelled active orders as 'expired' with no human review"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

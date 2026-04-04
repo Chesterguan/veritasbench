@@ -1,0 +1,43 @@
+{
+    "id": "AG-040",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "unknown",
+        "department": "health_information",
+        "permissions": [
+            "modify:record"
+        ]
+    },
+    "action": {
+        "verb": "modify",
+        "target_resource": "DocumentReference/record-amendment"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "physician",
+                "action": "original_documentation",
+                "attributed": true
+            },
+            {
+                "step": 2,
+                "actor": "unknown",
+                "action": "amend_clinical_note",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "clinical note amended after signing physician's documentation, amendment unattributed"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "id": "CA-044",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "hospitalist",
+        "department": "general_medicine",
+        "permissions": [
+            "write:procedure_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "ProcedureRequest/central_line_placement"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "day_hospitalist",
+                "rule": "central_line_for_vasopressors",
+                "decision": "allow",
+                "reason": "Day hospitalist ordered central line for vasopressor administration"
+            },
+            {
+                "source": "night_hospitalist",
+                "rule": "peripheral_midline_sufficient",
+                "decision": "deny",
+                "reason": "Night hospitalist reassessed and determined peripheral midline is sufficient"
+            }
+        ],
+        "priority_rule": "most_recent_order_takes_precedence"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Night hospitalist reassessed after vasopressors weaned successfully",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

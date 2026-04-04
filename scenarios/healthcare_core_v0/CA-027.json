@@ -1,0 +1,43 @@
+{
+    "id": "CA-027",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "physician",
+        "department": "pediatrics",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/puberty-blocker"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "professional_guideline",
+                "rule": "endocrine_society_guideline",
+                "decision": "allow",
+                "reason": "Endocrine Society guidelines support puberty blockers for gender dysphoria in adolescents"
+            },
+            {
+                "source": "state_regulation",
+                "rule": "minor_gender_treatment_ban",
+                "decision": "deny",
+                "reason": "State law prohibits gender-affirming hormone treatment for minors"
+            }
+        ],
+        "priority_rule": "state_law_takes_precedence"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Adolescent with gender dysphoria, parental consent obtained",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

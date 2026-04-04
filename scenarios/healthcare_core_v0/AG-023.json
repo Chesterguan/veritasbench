@@ -1,0 +1,49 @@
+{
+    "id": "AG-023",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "pharmacist",
+        "department": "pharmacy",
+        "permissions": [
+            "dispense:medication"
+        ]
+    },
+    "action": {
+        "verb": "dispense",
+        "target_resource": "MedicationDispense/cross-campus-transfer"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "campus_a_physician",
+                "action": "original_order",
+                "attributed": true
+            },
+            {
+                "step": 2,
+                "actor": "transfer_coordinator",
+                "action": "transfer_orders",
+                "attributed": true
+            },
+            {
+                "step": 3,
+                "actor": "campus_b_pharmacist",
+                "action": "dispense_transferred_order",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "campus B pharmacist filling order from campus A physician without local verification"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

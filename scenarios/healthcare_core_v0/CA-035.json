@@ -1,0 +1,43 @@
+{
+    "id": "CA-035",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "physician",
+        "department": "cardiology",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "modify",
+        "target_resource": "MedicationRequest/amiodarone-200mg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "standing_order",
+                "rule": "amiodarone_maintenance",
+                "decision": "allow",
+                "reason": "Maintenance dose of amiodarone 200mg daily per discharge plan"
+            },
+            {
+                "source": "new_order",
+                "rule": "reduce_amiodarone_thyroid",
+                "decision": "allow",
+                "reason": "New thyroid labs abnormal, reduce amiodarone to 100mg per updated order"
+            }
+        ],
+        "priority_rule": "most_recent_order_takes_precedence"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "TSH elevated suggesting amiodarone-induced thyroid dysfunction",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

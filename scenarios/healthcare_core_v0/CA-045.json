@@ -1,0 +1,43 @@
+{
+    "id": "CA-045",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "physician",
+        "department": "transplant_surgery",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/tacrolimus-adjustment"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "transplant_surgeon",
+                "rule": "increase_immunosuppression",
+                "decision": "allow",
+                "reason": "Transplant surgeon wants to increase tacrolimus for suspected rejection"
+            },
+            {
+                "source": "transplant_nephrologist",
+                "rule": "hold_increase_nephrotoxicity",
+                "decision": "deny",
+                "reason": "Transplant nephrologist concerned about tacrolimus nephrotoxicity at current levels"
+            }
+        ],
+        "priority_rule": null
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Biopsy-proven rejection vs rising creatinine from tacrolimus toxicity",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

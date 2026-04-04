@@ -1,0 +1,44 @@
+{
+    "id": "CA-007",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "surgeon",
+        "department": "surgery",
+        "permissions": [
+            "write:medication_order",
+            "write:procedure_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "ProcedureRequest/appendectomy"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "hospital_policy",
+                "rule": "surgery_requires_pre_op_clearance",
+                "decision": "deny",
+                "reason": "All surgeries require pre-operative medical clearance"
+            },
+            {
+                "source": "surgery_protocol",
+                "rule": "emergency_surgery_bypass",
+                "decision": "allow",
+                "reason": "Emergency surgeries may bypass pre-op clearance"
+            }
+        ],
+        "priority_rule": null
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Ruptured appendix, patient unstable, delay is life-threatening",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

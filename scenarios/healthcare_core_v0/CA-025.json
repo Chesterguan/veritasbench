@@ -1,0 +1,43 @@
+{
+    "id": "CA-025",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "pharmacist",
+        "department": "pharmacy",
+        "permissions": [
+            "dispense:medication"
+        ]
+    },
+    "action": {
+        "verb": "dispense",
+        "target_resource": "MedicationDispense/ivermectin-off-label"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "state_regulation",
+                "rule": "pharmacist_right_to_refuse",
+                "decision": "deny",
+                "reason": "Pharmacists may refuse to fill prescriptions they deem clinically inappropriate"
+            },
+            {
+                "source": "hospital_policy",
+                "rule": "fill_all_valid_prescriptions",
+                "decision": "allow",
+                "reason": "Pharmacy must fill all valid prescriptions from credentialed providers"
+            }
+        ],
+        "priority_rule": "professional_judgment_overrides"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Off-label use without supporting evidence, pharmacist exercises professional judgment",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

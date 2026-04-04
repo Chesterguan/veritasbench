@@ -1,0 +1,49 @@
+{
+    "id": "AG-029",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "home_health_nurse",
+        "department": "home_health",
+        "permissions": [
+            "administer:medication"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationAdministration/hospital-to-home-health"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "hospital_physician",
+                "action": "home_health_orders",
+                "attributed": true
+            },
+            {
+                "step": 2,
+                "actor": "home_health_agency",
+                "action": "accept_orders",
+                "attributed": true
+            },
+            {
+                "step": 3,
+                "actor": "home_health_physician",
+                "action": "co_sign_required",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "home health agency executing hospital orders without home health physician co-signature"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

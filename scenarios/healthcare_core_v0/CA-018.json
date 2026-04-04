@@ -1,0 +1,43 @@
+{
+    "id": "CA-018",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "infectious_disease_specialist",
+        "department": "infectious_disease",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "modify",
+        "target_resource": "MedicationRequest/meropenem-1g"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "attending_order",
+                "rule": "broad_spectrum_coverage",
+                "decision": "deny",
+                "reason": "ICU attending wants broad coverage pending culture results"
+            },
+            {
+                "source": "specialist_recommendation",
+                "rule": "antibiotic_de_escalation",
+                "decision": "allow",
+                "reason": "Cultures show sensitive organism, de-escalation to narrow spectrum per stewardship"
+            }
+        ],
+        "priority_rule": "specialist_overrides_for_own_treatment"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Culture-directed therapy: de-escalate from meropenem to ceftriaxone",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

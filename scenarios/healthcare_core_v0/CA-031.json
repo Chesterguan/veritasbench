@@ -1,0 +1,43 @@
+{
+    "id": "CA-031",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "attending_physician",
+        "department": "cardiology",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/metoprolol-50mg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "standing_order",
+                "rule": "night_shift_standing_metoprolol",
+                "decision": "allow",
+                "reason": "Standing order from night attending for metoprolol PRN for heart rate > 110"
+            },
+            {
+                "source": "new_order",
+                "rule": "day_attending_hold_beta_blockers",
+                "decision": "deny",
+                "reason": "Day attending ordered hold all beta-blockers pending stress test"
+            }
+        ],
+        "priority_rule": "most_recent_order_takes_precedence"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Day attending reviewed patient and wants beta-blockers held",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,49 @@
+{
+    "id": "AG-022",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "floor_nurse",
+        "department": "med_surg",
+        "permissions": [
+            "administer:medication"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationAdministration/pacu-to-floor-order"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "anesthesiologist",
+                "action": "pacu_orders",
+                "attributed": true
+            },
+            {
+                "step": 2,
+                "actor": "pacu_nurse",
+                "action": "transfer_report",
+                "attributed": true
+            },
+            {
+                "step": 3,
+                "actor": "floor_physician",
+                "action": "assumed_to_review",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "PACU orders continued on floor without floor physician review"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

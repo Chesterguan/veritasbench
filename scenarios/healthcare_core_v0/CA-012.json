@@ -1,0 +1,43 @@
+{
+    "id": "CA-012",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "oncologist",
+        "department": "oncology",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/dexamethasone-40mg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "attending_order",
+                "rule": "steroid_taper_only",
+                "decision": "deny",
+                "reason": "Primary physician ordered steroid taper, not pulse dose"
+            },
+            {
+                "source": "specialist_recommendation",
+                "rule": "chemo_premedication",
+                "decision": "allow",
+                "reason": "High-dose dexamethasone required as chemotherapy premedication"
+            }
+        ],
+        "priority_rule": "specialist_overrides_for_own_treatment"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Chemotherapy cycle requires pulse-dose steroid premedication",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

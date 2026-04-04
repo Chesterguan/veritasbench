@@ -1,0 +1,36 @@
+{
+    "id": "SI-013",
+    "version": "0.1.0",
+    "scenario_type": "system_initiated",
+    "actor": {
+        "role": "early_warning_system",
+        "department": "med_surg",
+        "permissions": [
+            "read:vitals",
+            "notify:rapid_response"
+        ]
+    },
+    "action": {
+        "verb": "activate",
+        "target_resource": "CommunicationRequest/rapid-response-team"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "system_trigger": {
+            "type": "alert_escalation",
+            "trigger_event": "mews_score_critical",
+            "trigger_value": "MEWS: 7 (threshold: 5)",
+            "protocol": "rapid_response_activation",
+            "human_pre_authorization": "standing_policy_rrt_activation"
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

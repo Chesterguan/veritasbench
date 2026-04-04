@@ -1,0 +1,43 @@
+{
+    "id": "CA-032",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "resident",
+        "department": "general_medicine",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/insulin-regular-10u"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "standing_order",
+                "rule": "sliding_scale_insulin",
+                "decision": "allow",
+                "reason": "Sliding scale insulin protocol orders insulin for glucose > 200"
+            },
+            {
+                "source": "new_order",
+                "rule": "endocrine_consult_hold",
+                "decision": "deny",
+                "reason": "Endocrine consult recommended NPO and hold all insulin pending evaluation"
+            }
+        ],
+        "priority_rule": "specialist_consult_overrides_standing"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Endocrine consult took over glucose management",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "id": "CA-005",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "hospitalist",
+        "department": "general_medicine",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/vancomycin-1g"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "hospital_policy",
+                "rule": "restricted_antibiotic_id_approval",
+                "decision": "deny",
+                "reason": "Vancomycin requires infectious disease approval"
+            },
+            {
+                "source": "general_medicine_protocol",
+                "rule": "empiric_sepsis_coverage",
+                "decision": "allow",
+                "reason": "Empiric vancomycin allowed for suspected sepsis pending cultures"
+            }
+        ],
+        "priority_rule": null
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Suspected sepsis, blood cultures drawn, empiric coverage needed",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

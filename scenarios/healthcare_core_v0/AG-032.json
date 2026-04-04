@@ -1,0 +1,43 @@
+{
+    "id": "AG-032",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "unknown",
+        "department": "nursing",
+        "permissions": [
+            "override:pyxis"
+        ]
+    },
+    "action": {
+        "verb": "dispense",
+        "target_resource": "MedicationDispense/pyxis-override"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "physician",
+                "action": "verbal_order",
+                "attributed": true
+            },
+            {
+                "step": 2,
+                "actor": "unknown",
+                "action": "pyxis_override_dispense",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "medication dispensed via Pyxis override but badge scan failed, no individual attribution"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

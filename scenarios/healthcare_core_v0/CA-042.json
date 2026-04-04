@@ -1,0 +1,43 @@
+{
+    "id": "CA-042",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "physician",
+        "department": "surgery",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/enoxaparin-40mg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "surgical_team",
+                "rule": "no_anticoagulation_post_op_day_0",
+                "decision": "deny",
+                "reason": "Surgical team says no anticoagulation on POD 0"
+            },
+            {
+                "source": "medicine_team",
+                "rule": "dvt_prophylaxis_within_24h",
+                "decision": "allow",
+                "reason": "Medicine co-management team recommends DVT prophylaxis within 24 hours"
+            }
+        ],
+        "priority_rule": null
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Co-managed patient, surgery and medicine disagree on timing",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

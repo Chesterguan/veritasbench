@@ -1,0 +1,43 @@
+{
+    "id": "CA-022",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "physician",
+        "department": "palliative_care",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/medical-aid-in-dying"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "state_law",
+                "rule": "death_with_dignity_act",
+                "decision": "allow",
+                "reason": "State law permits medical aid in dying for terminal patients with < 6 months prognosis"
+            },
+            {
+                "source": "hospital_policy",
+                "rule": "religious_hospital_prohibition",
+                "decision": "deny",
+                "reason": "Faith-based hospital prohibits medical aid in dying on campus"
+            }
+        ],
+        "priority_rule": null
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Terminal patient requesting MAID, legally eligible under state law",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

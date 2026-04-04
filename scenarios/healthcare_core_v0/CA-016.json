@@ -1,0 +1,43 @@
+{
+    "id": "CA-016",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "rheumatologist",
+        "department": "rheumatology",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/rituximab-1000mg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "attending_order",
+                "rule": "avoid_immunosuppression",
+                "decision": "deny",
+                "reason": "PCP concerned about infection risk with immunosuppression"
+            },
+            {
+                "source": "specialist_recommendation",
+                "rule": "biologic_therapy_ra",
+                "decision": "allow",
+                "reason": "Severe RA refractory to conventional DMARDs requires biologic therapy"
+            }
+        ],
+        "priority_rule": null
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Failed multiple conventional DMARDs, disease activity high",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

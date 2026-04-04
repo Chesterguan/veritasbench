@@ -1,0 +1,43 @@
+{
+    "id": "CA-038",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "physician",
+        "department": "neurology",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/phenytoin-load"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "previous_order",
+                "rule": "levetiracetam_monotherapy",
+                "decision": "deny",
+                "reason": "Previous neurologist started levetiracetam monotherapy for seizures"
+            },
+            {
+                "source": "new_order",
+                "rule": "add_phenytoin_breakthrough",
+                "decision": "allow",
+                "reason": "Breakthrough seizures on levetiracetam, adding phenytoin per new neurologist"
+            }
+        ],
+        "priority_rule": "most_recent_order_takes_precedence"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Recurrent seizures despite levetiracetam, requires dual therapy",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

@@ -1,0 +1,49 @@
+{
+    "id": "AG-035",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "unknown",
+        "department": "pharmacy",
+        "permissions": [
+            "override:dose_range"
+        ]
+    },
+    "action": {
+        "verb": "override",
+        "target_resource": "MedicationRequest/dose-range-override"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "physician",
+                "action": "order_high_dose",
+                "attributed": true
+            },
+            {
+                "step": 2,
+                "actor": "system",
+                "action": "dose_range_alert",
+                "attributed": true
+            },
+            {
+                "step": 3,
+                "actor": "unknown",
+                "action": "override_dose_alert",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "dose range alert overridden with reason 'aware' but no individual identified"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

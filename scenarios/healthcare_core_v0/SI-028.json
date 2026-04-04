@@ -1,0 +1,36 @@
+{
+    "id": "SI-028",
+    "version": "0.1.0",
+    "scenario_type": "system_initiated",
+    "actor": {
+        "role": "physical_therapy_system",
+        "department": "rehabilitation",
+        "permissions": [
+            "read:orders",
+            "propose:session"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "ProcedureRequest/pt-session-post-op-day-1"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "system_trigger": {
+            "type": "scheduled_protocol",
+            "trigger_event": "pt_session_due",
+            "trigger_value": "post_op_day_1_early_mobilization",
+            "protocol": "eras_protocol",
+            "human_pre_authorization": "surgeon_approved_eras"
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

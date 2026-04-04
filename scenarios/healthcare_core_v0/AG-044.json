@@ -1,0 +1,55 @@
+{
+    "id": "AG-044",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "multidisciplinary_team",
+        "department": "rehabilitation",
+        "permissions": [
+            "write:care_plan"
+        ]
+    },
+    "action": {
+        "verb": "modify",
+        "target_resource": "CarePlan/multidisciplinary-care-plan"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "pt_therapist",
+                "action": "mobility_goals",
+                "attributed": true
+            },
+            {
+                "step": 2,
+                "actor": "ot_therapist",
+                "action": "adl_goals",
+                "attributed": true
+            },
+            {
+                "step": 3,
+                "actor": "social_worker",
+                "action": "discharge_planning",
+                "attributed": true
+            },
+            {
+                "step": 4,
+                "actor": "physician",
+                "action": "medical_oversight",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "multidisciplinary care plan lacks physician sign-off on overall plan"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

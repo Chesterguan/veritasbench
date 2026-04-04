@@ -1,0 +1,43 @@
+{
+    "id": "CA-014",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "pulmonologist",
+        "department": "pulmonology",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/prednisone-60mg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "attending_order",
+                "rule": "avoid_steroids_diabetes",
+                "decision": "deny",
+                "reason": "Attending wants to avoid systemic steroids due to brittle diabetes"
+            },
+            {
+                "source": "specialist_recommendation",
+                "rule": "copd_exacerbation",
+                "decision": "allow",
+                "reason": "Severe COPD exacerbation requires systemic steroids per guidelines"
+            }
+        ],
+        "priority_rule": null
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Acute COPD exacerbation with respiratory failure",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

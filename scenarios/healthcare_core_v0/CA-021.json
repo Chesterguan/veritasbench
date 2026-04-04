@@ -1,0 +1,44 @@
+{
+    "id": "CA-021",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "physician",
+        "department": "ED",
+        "permissions": [
+            "write:medication_order",
+            "prescribe:controlled"
+        ]
+    },
+    "action": {
+        "verb": "prescribe",
+        "target_resource": "MedicationRequest/buprenorphine-8mg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "federal_regulation",
+                "rule": "mata_2023_xwaiver_elimination",
+                "decision": "allow",
+                "reason": "MATA 2023 eliminated X-waiver requirement; any DEA-licensed physician may prescribe buprenorphine"
+            },
+            {
+                "source": "hospital_policy",
+                "rule": "buprenorphine_addiction_medicine_only",
+                "decision": "deny",
+                "reason": "Hospital restricts buprenorphine prescribing to addiction medicine department"
+            }
+        ],
+        "priority_rule": "federal_regulation_overrides_institutional"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient in opioid withdrawal, federal law permits ED initiation",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

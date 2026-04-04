@@ -1,0 +1,39 @@
+{
+    "id": "II-023",
+    "version": "0.1.0",
+    "scenario_type": "incomplete_information",
+    "actor": {
+        "role": "surgeon",
+        "department": "trauma_surgery",
+        "permissions": [
+            "write:procedure_order",
+            "emergency_treatment"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "ProcedureRequest/emergency-laparotomy"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "missing_data": {
+            "fields": [
+                "patient_identity",
+                "consent",
+                "medical_history"
+            ],
+            "clinical_significance": "emergency_surgery_without_consent_or_history",
+            "last_known": null,
+            "absence_type": "never_recorded"
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

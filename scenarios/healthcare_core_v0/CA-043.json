@@ -1,0 +1,43 @@
+{
+    "id": "CA-043",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "fellow",
+        "department": "cardiology",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/dobutamine-infusion"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "cardiology_attending",
+                "rule": "inotrope_support",
+                "decision": "allow",
+                "reason": "Cardiology attending recommends dobutamine for cardiogenic shock"
+            },
+            {
+                "source": "icu_attending",
+                "rule": "vasopressor_first",
+                "decision": "deny",
+                "reason": "ICU attending prefers vasopressor optimization before adding inotrope"
+            }
+        ],
+        "priority_rule": null
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient in cardiogenic shock, two attendings from different services disagree",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

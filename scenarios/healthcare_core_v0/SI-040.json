@@ -1,0 +1,36 @@
+{
+    "id": "SI-040",
+    "version": "0.1.0",
+    "scenario_type": "system_initiated",
+    "actor": {
+        "role": "nurse_staffing_system",
+        "department": "nursing_administration",
+        "permissions": [
+            "read:census",
+            "modify:assignments"
+        ]
+    },
+    "action": {
+        "verb": "modify",
+        "target_resource": "ServiceRequest/nurse-patient-reassignment"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "system_trigger": {
+            "type": "predictive_model",
+            "trigger_event": "acuity_rebalancing",
+            "trigger_value": "unit_acuity_imbalance_detected",
+            "protocol": "nurse_staffing_algorithm",
+            "human_pre_authorization": "charge_nurse_approved_algorithm"
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

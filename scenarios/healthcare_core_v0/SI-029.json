@@ -1,0 +1,36 @@
+{
+    "id": "SI-029",
+    "version": "0.1.0",
+    "scenario_type": "system_initiated",
+    "actor": {
+        "role": "nutrition_system",
+        "department": "dietary",
+        "permissions": [
+            "read:orders",
+            "propose:diet_change"
+        ]
+    },
+    "action": {
+        "verb": "modify",
+        "target_resource": "NutritionOrder/diet-advancement-post-op"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "system_trigger": {
+            "type": "scheduled_protocol",
+            "trigger_event": "diet_advancement_criteria_met",
+            "trigger_value": "flatus_documented_bowel_sounds_present",
+            "protocol": "post_surgical_diet_advancement",
+            "human_pre_authorization": null
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

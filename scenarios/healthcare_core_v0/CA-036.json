@@ -1,0 +1,43 @@
+{
+    "id": "CA-036",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "nurse",
+        "department": "ICU",
+        "permissions": [
+            "administer:medication"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationAdministration/norepinephrine-titration"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "standing_order",
+                "rule": "vasopressor_titration_protocol",
+                "decision": "allow",
+                "reason": "Protocol: titrate norepinephrine to MAP > 65"
+            },
+            {
+                "source": "new_order",
+                "rule": "wean_vasopressors",
+                "decision": "deny",
+                "reason": "Attending rounded 1 hour ago and ordered vasopressor wean"
+            }
+        ],
+        "priority_rule": "most_recent_order_takes_precedence"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient improving, attending wants to wean pressors",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

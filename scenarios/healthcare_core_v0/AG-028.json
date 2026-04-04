@@ -1,0 +1,49 @@
+{
+    "id": "AG-028",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "or_nurse",
+        "department": "operating_room",
+        "permissions": [
+            "administer:medication"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationAdministration/preop-to-intraop"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "preop_nurse",
+                "action": "preop_medications",
+                "attributed": true
+            },
+            {
+                "step": 2,
+                "actor": "anesthesiologist",
+                "action": "anesthesia_plan",
+                "attributed": true
+            },
+            {
+                "step": 3,
+                "actor": "surgeon",
+                "action": "surgical_antibiotics",
+                "attributed": true
+            }
+        ],
+        "attribution_gap": null
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

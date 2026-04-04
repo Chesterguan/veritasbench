@@ -1,0 +1,44 @@
+{
+    "id": "CA-006",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "emergency_physician",
+        "department": "ED",
+        "permissions": [
+            "write:medication_order",
+            "override:ed_protocol"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/tpa-100mg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "hospital_policy",
+                "rule": "tpa_requires_neuro_consult",
+                "decision": "deny",
+                "reason": "tPA administration requires neurology consultation"
+            },
+            {
+                "source": "ed_protocol",
+                "rule": "stroke_code_tpa",
+                "decision": "allow",
+                "reason": "ED authorized to administer tPA within 3-hour window without neuro consult"
+            }
+        ],
+        "priority_rule": "department_protocol_overrides_in_emergency"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Acute ischemic stroke, within treatment window, neurology not available",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

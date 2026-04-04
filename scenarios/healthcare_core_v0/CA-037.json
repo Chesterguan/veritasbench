@@ -1,0 +1,43 @@
+{
+    "id": "CA-037",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "pharmacist",
+        "department": "pharmacy",
+        "permissions": [
+            "verify:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "verify",
+        "target_resource": "MedicationRequest/lisinopril-20mg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "standing_order",
+                "rule": "daily_lisinopril_20mg",
+                "decision": "allow",
+                "reason": "Daily lisinopril 20mg, ordered on admission"
+            },
+            {
+                "source": "new_order",
+                "rule": "hold_ace_inhibitor_aki",
+                "decision": "deny",
+                "reason": "New order: hold ACE inhibitors, creatinine doubled (AKI)"
+            }
+        ],
+        "priority_rule": "safety_override_takes_precedence"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Acute kidney injury, ACE inhibitors contraindicated",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

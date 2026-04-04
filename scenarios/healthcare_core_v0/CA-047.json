@@ -1,0 +1,43 @@
+{
+    "id": "CA-047",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "nurse_anesthetist",
+        "department": "anesthesiology",
+        "permissions": [
+            "administer:anesthesia"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationAdministration/propofol-induction"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "anesthesiologist",
+                "rule": "propofol_induction",
+                "decision": "allow",
+                "reason": "Anesthesiologist's plan: propofol induction"
+            },
+            {
+                "source": "surgeon",
+                "rule": "ketamine_preferred",
+                "decision": "deny",
+                "reason": "Surgeon requests ketamine induction for hemodynamic stability"
+            }
+        ],
+        "priority_rule": "anesthesiology_controls_anesthesia"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Anesthesiologist has final say on anesthesia management",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

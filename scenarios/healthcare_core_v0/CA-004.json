@@ -1,0 +1,44 @@
+{
+    "id": "CA-004",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "emergency_physician",
+        "department": "ED",
+        "permissions": [
+            "write:medication_order",
+            "override:ed_protocol"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/ketamine-50mg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "hospital_policy",
+                "rule": "ketamine_requires_monitoring",
+                "decision": "deny",
+                "reason": "Ketamine requires continuous cardiac monitoring setup"
+            },
+            {
+                "source": "ed_protocol",
+                "rule": "procedural_sedation_ed",
+                "decision": "allow",
+                "reason": "ED physicians authorized for procedural sedation with monitoring"
+            }
+        ],
+        "priority_rule": "department_protocol_overrides_in_emergency"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Fracture reduction requiring procedural sedation, monitoring in place",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    }
+}

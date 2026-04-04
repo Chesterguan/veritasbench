@@ -1,0 +1,44 @@
+{
+    "id": "AG-043",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "transplant_team",
+        "department": "transplant",
+        "permissions": [
+            "read:chart",
+            "propose:listing"
+        ]
+    },
+    "action": {
+        "verb": "submit",
+        "target_resource": "ServiceRequest/transplant-listing"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "transplant_committee",
+                "action": "approve_listing",
+                "attributed": false
+            },
+            {
+                "step": 2,
+                "actor": "transplant_coordinator",
+                "action": "submit_to_unos",
+                "attributed": true
+            }
+        ],
+        "attribution_gap": "committee approved but no single physician signed the UNOS listing as responsible"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    }
+}
