@@ -92,12 +92,12 @@ def build_context(scenario: dict) -> str:
     return "\n".join(parts) if parts else "No additional context."
 
 
-def judge_scenario(client: OpenAI, model: str, scenario: dict) -> dict:
+def _build_prompt(scenario: dict) -> str:
     actor = scenario.get("actor", {})
     action = scenario.get("action", {})
     expected = scenario.get("expected", {})
 
-    prompt = JUDGE_PROMPT.format(
+    return JUDGE_PROMPT.format(
         role=actor.get("role", "unknown"),
         department=actor.get("department", "unknown"),
         verb=action.get("verb", "unknown"),
@@ -108,26 +108,51 @@ def judge_scenario(client: OpenAI, model: str, scenario: dict) -> dict:
         expected_decision=expected.get("decision", "unknown"),
     )
 
+
+def _parse_verdict(text: str) -> str:
+    first_line = text.split("\n")[0].upper()
+    if "AGREE" in first_line and "DISAGREE" not in first_line:
+        return "agree"
+    elif "DISAGREE" in first_line:
+        return "disagree"
+    elif "UNCERTAIN" in first_line:
+        return "uncertain"
+    return "unparseable"
+
+
+def _call_openai(client: OpenAI, model: str, prompt: str) -> str:
+    response = client.chat.completions.create(
+        model=model,
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=200,
+        temperature=0,
+    )
+    return response.choices[0].message.content.strip()
+
+
+def _call_gemini(model: str, prompt: str) -> str:
+    """Call Gemini via REST API."""
+    import urllib.request
+    api_key = os.environ.get("GEMINI_API_KEY", "")
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+    payload = json.dumps({
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {"maxOutputTokens": 200, "temperature": 0},
+    }).encode()
+    req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        data = json.loads(resp.read())
+    return data["candidates"][0]["content"]["parts"][0]["text"].strip()
+
+
+def judge_scenario(client: OpenAI, model: str, scenario: dict) -> dict:
+    prompt = _build_prompt(scenario)
     try:
-        response = client.chat.completions.create(
-            model=model,
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=200,
-            temperature=0,
-        )
-        text = response.choices[0].message.content.strip()
-
-        # Parse verdict
-        first_line = text.split("\n")[0].upper()
-        if "AGREE" in first_line and "DISAGREE" not in first_line:
-            verdict = "agree"
-        elif "DISAGREE" in first_line:
-            verdict = "disagree"
-        elif "UNCERTAIN" in first_line:
-            verdict = "uncertain"
+        if model.startswith("gemini"):
+            text = _call_gemini(model, prompt)
         else:
-            verdict = "unparseable"
-
+            text = _call_openai(client, model, prompt)
+        verdict = _parse_verdict(text)
         return {"verdict": verdict, "raw": text}
     except Exception as e:
         return {"verdict": "error", "raw": str(e)}
@@ -136,7 +161,7 @@ def judge_scenario(client: OpenAI, model: str, scenario: dict) -> dict:
 def main():
     parser = argparse.ArgumentParser(description="LLM-as-Judge scenario validation")
     parser.add_argument("--sample", type=int, default=0, help="Validate N random scenarios (0=all)")
-    parser.add_argument("--models", default="gpt-4o-mini,gpt-4o", help="Comma-separated model list")
+    parser.add_argument("--models", default="gpt-4o-mini,gpt-4o,gemini-2.5-flash", help="Comma-separated model list")
     parser.add_argument("--resume", action="store_true", help="Resume from existing results file")
     args = parser.parse_args()
 
