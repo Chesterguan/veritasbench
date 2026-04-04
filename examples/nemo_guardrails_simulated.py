@@ -56,6 +56,11 @@ _DENY_PROBABILITY = {
     "emergency_override": 0.55,
     # NeMo rails occasionally catch consent scope violations
     "consent_management": 0.60,
+    # System-level types — Colang rails detect some patterns but no governance
+    "conflicting_authority": 0.50,
+    "incomplete_information": 0.35,
+    "system_initiated": 0.15,
+    "accountability_gap": 0.15,
 }
 
 

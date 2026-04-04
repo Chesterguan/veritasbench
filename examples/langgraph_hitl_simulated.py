@@ -59,6 +59,11 @@ _DENY_PROBABILITY = {
     "emergency_override": 0.40,
     # LLM has some consent awareness
     "consent_management": 0.45,
+    # System-level types — LangGraph has HITL interrupt but no policy engine
+    "conflicting_authority": 0.45,
+    "incomplete_information": 0.40,
+    "system_initiated": 0.50,
+    "accountability_gap": 0.20,
 }
 
 
