@@ -26,12 +26,35 @@ pub async fn run_adapter(
     scenario: &Scenario,
     timeout_ms: u64,
 ) -> Result<RunResult, VBError> {
+    run_adapter_inner(adapter_path, scenario, timeout_ms, false).await
+}
+
+/// Run adapter in blind mode: strips both `expected` and `scenario_type` from input.
+/// Forces the adapter to detect governance problems from clinical context alone.
+pub async fn run_adapter_blind(
+    adapter_path: &Path,
+    scenario: &Scenario,
+    timeout_ms: u64,
+) -> Result<RunResult, VBError> {
+    run_adapter_inner(adapter_path, scenario, timeout_ms, true).await
+}
+
+async fn run_adapter_inner(
+    adapter_path: &Path,
+    scenario: &Scenario,
+    timeout_ms: u64,
+    blind: bool,
+) -> Result<RunResult, VBError> {
     // Strip `expected` before sending to the adapter — prevents adapters from
     // reading the ground truth and parroting it back. The runner keeps the full
     // scenario for scoring; the adapter only sees the inputs.
     let mut redacted = serde_json::to_value(scenario)?;
     if let Some(obj) = redacted.as_object_mut() {
         obj.remove("expected");
+        obj.remove("difficulty");
+        if blind {
+            obj.remove("scenario_type");
+        }
     }
     let scenario_json = serde_json::to_string(&redacted)?;
 
@@ -80,16 +103,36 @@ pub async fn run_adapter(
 /// Run an adapter with retry support. Retries on `VBError::Adapter` errors
 /// up to `max_retries` times with a 1-second delay between attempts.
 /// Timeout errors (`VBError::AdapterTimeout`) are NOT retried.
+/// If `blind` is true, `scenario_type` is also stripped from input.
 pub async fn run_adapter_with_retries(
     adapter_path: &Path,
     scenario: &Scenario,
     timeout_ms: u64,
     max_retries: u32,
 ) -> Result<RunResult, VBError> {
+    run_adapter_with_retries_inner(adapter_path, scenario, timeout_ms, max_retries, false).await
+}
+
+pub async fn run_adapter_with_retries_blind(
+    adapter_path: &Path,
+    scenario: &Scenario,
+    timeout_ms: u64,
+    max_retries: u32,
+) -> Result<RunResult, VBError> {
+    run_adapter_with_retries_inner(adapter_path, scenario, timeout_ms, max_retries, true).await
+}
+
+async fn run_adapter_with_retries_inner(
+    adapter_path: &Path,
+    scenario: &Scenario,
+    timeout_ms: u64,
+    max_retries: u32,
+    blind: bool,
+) -> Result<RunResult, VBError> {
     let mut last_err = None;
 
     for attempt in 0..=max_retries {
-        match run_adapter(adapter_path, scenario, timeout_ms).await {
+        match run_adapter_inner(adapter_path, scenario, timeout_ms, blind).await {
             Ok(result) => return Ok(result),
             Err(VBError::AdapterTimeout(ms)) => {
                 // Timeouts are not retried — they're too expensive
@@ -152,6 +195,7 @@ mod tests {
                 audit_required: true,
                 content_clean: None,
             },
+            difficulty: None,
         }
     }
 

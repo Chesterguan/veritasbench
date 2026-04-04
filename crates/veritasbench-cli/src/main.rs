@@ -6,7 +6,7 @@ use veritasbench_eval::aggregate::{aggregate_scores, evaluate_scenario};
 use veritasbench_eval::consistency::eval_consistency;
 use veritasbench_report::json::write_json_report;
 use veritasbench_report::markdown::{generate_markdown, write_markdown_report};
-use veritasbench_runner::adapter::{run_adapter, run_adapter_with_retries};
+use veritasbench_runner::adapter::{run_adapter, run_adapter_with_retries, run_adapter_with_retries_blind};
 use veritasbench_runner::suite::load_suite;
 
 #[derive(Parser)]
@@ -47,6 +47,10 @@ enum Commands {
         /// Number of retries on adapter failure (not applied to timeouts)
         #[arg(long, default_value_t = 0)]
         retries: u32,
+
+        /// Blind mode: strip scenario_type from adapter input, forcing detection from context
+        #[arg(long, default_value_t = false)]
+        blind: bool,
     },
 
     /// Print a markdown report from a saved output directory
@@ -94,8 +98,8 @@ async fn main() {
     let cli = Cli::parse();
 
     match cli.command {
-        Commands::Run { adapter, suite, output, repeats, timeout, fail_fast, retries } => {
-            run_command(adapter, suite, output, repeats, timeout, fail_fast, retries).await;
+        Commands::Run { adapter, suite, output, repeats, timeout, fail_fast, retries, blind } => {
+            run_command(adapter, suite, output, repeats, timeout, fail_fast, retries, blind).await;
         }
         Commands::Report { path } => {
             report_command(path);
@@ -123,6 +127,7 @@ async fn run_command(
     timeout_ms: u64,
     fail_fast: bool,
     retries: u32,
+    blind: bool,
 ) {
     let adapter_path = resolve_adapter_path(&adapter_path);
     println!("Adapter: {}", adapter_path.display());
@@ -143,6 +148,9 @@ async fn run_command(
         std::process::exit(1);
     }
 
+    if blind {
+        println!("BLIND MODE: scenario_type stripped from adapter input");
+    }
     println!("Running {} scenarios x {repeats} repeats", scenarios.len());
 
     // runs[repeat_index] = vec of decisions per scenario (for consistency)
@@ -160,7 +168,11 @@ async fn run_command(
         let mut run_decisions = Vec::new();
 
         for scenario in &scenarios {
-            let run_result = match run_adapter_with_retries(&adapter_path, scenario, timeout_ms, retries).await {
+            let run_result = match if blind {
+                run_adapter_with_retries_blind(&adapter_path, scenario, timeout_ms, retries).await
+            } else {
+                run_adapter_with_retries(&adapter_path, scenario, timeout_ms, retries).await
+            } {
                 Ok(r) => r,
                 Err(e) => {
                     eprintln!("  {} ... ERROR: {e}", scenario.id);
