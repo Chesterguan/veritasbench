@@ -110,12 +110,16 @@ def _build_prompt(scenario: dict) -> str:
 
 
 def _parse_verdict(text: str) -> str:
-    first_line = text.split("\n")[0].upper()
-    if "AGREE" in first_line and "DISAGREE" not in first_line:
+    import re
+    first_line = text.split("\n")[0].strip()
+    # Check the first word (verdict) — handles cases where explanation
+    # contains "disagreement" etc.
+    first_word = re.split(r'[\s—\-:,]', first_line)[0].upper()
+    if first_word == "AGREE":
         return "agree"
-    elif "DISAGREE" in first_line:
+    elif first_word == "DISAGREE":
         return "disagree"
-    elif "UNCERTAIN" in first_line:
+    elif first_word == "UNCERTAIN":
         return "uncertain"
     return "unparseable"
 
@@ -133,6 +137,7 @@ def _call_openai(client: OpenAI, model: str, prompt: str) -> str:
 def _call_gemini(model: str, prompt: str) -> str:
     """Call Gemini via REST API."""
     import urllib.request
+    import ssl
     api_key = os.environ.get("GEMINI_API_KEY", "")
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
     payload = json.dumps({
@@ -140,7 +145,15 @@ def _call_gemini(model: str, prompt: str) -> str:
         "generationConfig": {"maxOutputTokens": 200, "temperature": 0},
     }).encode()
     req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=30) as resp:
+    # Create SSL context that works on macOS Python 3.9
+    ctx = ssl.create_default_context()
+    try:
+        import certifi
+        ctx.load_verify_locations(certifi.where())
+    except ImportError:
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+    with urllib.request.urlopen(req, timeout=30, context=ctx) as resp:
         data = json.loads(resp.read())
     return data["candidates"][0]["content"]["parts"][0]["text"].strip()
 
