@@ -114,7 +114,7 @@ pub fn eval_traceability_chain(result: &AdapterResult, required_entries: usize, 
 
     let context_keywords = extract_context_keywords(scenario);
     let all_have_reason = entries_to_check.iter().all(|e| {
-        e.reason.as_ref().map_or(false, |r| reason_is_meaningful(r, &context_keywords))
+        e.reason.as_ref().is_some_and(|r| reason_is_meaningful(r, &context_keywords))
     });
 
     if all_have_reason {

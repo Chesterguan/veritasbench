@@ -456,7 +456,7 @@ fn resolve_adapter_path(adapter: &Path) -> PathBuf {
 
     // Only search if the adapter looks like a bare filename (no directory separator)
     let name = match adapter.file_name() {
-        Some(n) if adapter.parent().map_or(true, |p| p == Path::new("")) => n,
+        Some(n) if adapter.parent().is_none_or(|p| p == Path::new("")) => n,
         _ => return adapter.to_path_buf(),
     };
 

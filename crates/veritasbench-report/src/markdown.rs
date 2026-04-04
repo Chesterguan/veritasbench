@@ -84,7 +84,7 @@ pub fn generate_markdown(report: &BenchmarkReport) -> String {
                 let saf_s = if d[3] > 0 { format!("{}%", pct(d[2], d[3])) } else { "-".into() };
                 let tra_s = if d[5] > 0 { format!("{}%", pct(d[4], d[5])) } else { "-".into() };
                 let con_s = if d[7] > 0 { format!("{}%", pct(d[6], d[7])) } else { "-".into() };
-                lines.push(format!("| {} | {} | {} | {} | {} |", name, pol_s, saf_s, tra_s, con_s));
+                lines.push(format!("| {name} | {pol_s} | {saf_s} | {tra_s} | {con_s} |"));
             }
             lines.push(String::new());
             lines.join("\n")
