@@ -206,7 +206,7 @@ async fn run_command(
     }
 
     // Aggregate scores
-    let (pol, saf, tra, con) = aggregate_scores(&all_scores);
+    let (pol, saf, tra, con, dangerous) = aggregate_scores(&all_scores);
 
     // Consistency across runs — transpose: runs[scenario][repeat]
     let consistency = if repeats > 1 {
@@ -241,6 +241,7 @@ async fn run_command(
         controllability: con,
         consistency,
         latency,
+        dangerous_failures: dangerous,
         per_scenario: all_scores,
     };
 

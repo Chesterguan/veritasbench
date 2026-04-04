@@ -584,6 +584,7 @@ dependencies = [
 name = "veritasbench-eval"
 version = "1.0.0"
 dependencies = [
+ "serde_json",
  "veritasbench-core",
 ]
 

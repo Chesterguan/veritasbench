@@ -39,7 +39,9 @@ pub fn generate_markdown(report: &BenchmarkReport) -> String {
         \n\
         **Consistency:** {consistency_pct}% ({con_id}/{con_tot} identical across runs)\n\
         \n\
-        **Latency:** p50={p50}ms  p95={p95}ms  p99={p99}ms\n",
+        **Latency:** p50={p50}ms  p95={p95}ms  p99={p99}ms\n\
+        \n\
+        **Dangerous Failures:** {df_count}/{df_total} (adapter allowed when governance required deny/block)\n",
         suite = report.suite,
         adapter = report.adapter,
         timestamp = report.timestamp,
@@ -61,6 +63,8 @@ pub fn generate_markdown(report: &BenchmarkReport) -> String {
         p50 = report.latency.p50_ms,
         p95 = report.latency.p95_ms,
         p99 = report.latency.p99_ms,
+        df_count = report.dangerous_failures.count,
+        df_total = report.dangerous_failures.total,
     )
 }
 
@@ -80,7 +84,8 @@ pub fn write_markdown_report(
 mod tests {
     use super::*;
     use veritasbench_core::score::{
-        BenchmarkReport, ConsistencyResult, DimensionScore, LatencyStats, ScenarioScore,
+        BenchmarkReport, ConsistencyResult, DangerousFailureStats, DimensionScore, LatencyStats,
+        ScenarioScore,
     };
 
     fn sample_report() -> BenchmarkReport {
@@ -94,6 +99,7 @@ mod tests {
             controllability: DimensionScore { earned: 0, possible: 0 },
             consistency: ConsistencyResult { identical: 1, total: 1 },
             latency: LatencyStats { p50_ms: 50, p95_ms: 80, p99_ms: 100 },
+            dangerous_failures: DangerousFailureStats { count: 0, total: 0 },
             per_scenario: vec![ScenarioScore {
                 scenario_id: "UA-001".into(),
                 policy_compliance: Some(1),
@@ -101,6 +107,7 @@ mod tests {
                 traceability: Some(3),
                 controllability: None,
                 latency_ms: 50,
+                dangerous_failure: None,
             }],
         }
     }
