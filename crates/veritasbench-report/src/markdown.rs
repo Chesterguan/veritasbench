@@ -48,6 +48,49 @@ pub fn generate_markdown(report: &BenchmarkReport) -> String {
         }
     };
 
+    // Per-scenario-type breakdown (all 4 dimensions)
+    let type_section = {
+        // Map type prefix -> (pol_earned, pol_possible, saf_earned, saf_possible, tra_earned, tra_possible, con_earned, con_possible)
+        let mut types: std::collections::BTreeMap<String, [u32; 8]> = std::collections::BTreeMap::new();
+        let type_names: std::collections::HashMap<&str, &str> = [
+            ("UA", "Unauthorized Access"), ("MA", "Missing Approval"),
+            ("MJ", "Missing Justification"), ("PL", "PHI Leakage"),
+            ("US", "Unsafe Action Sequence"), ("EO", "Emergency Override"),
+            ("CM", "Consent Management"), ("CA", "Conflicting Authority"),
+            ("II", "Incomplete Information"), ("SI", "System-Initiated"),
+            ("AG", "Accountability Gap"),
+        ].iter().cloned().collect();
+
+        for s in &report.per_scenario {
+            let prefix = s.scenario_id.split('-').next().unwrap_or("??");
+            let name = type_names.get(prefix).unwrap_or(&prefix).to_string();
+            let entry = types.entry(name).or_insert([0; 8]);
+            if let Some(v) = s.policy_compliance { entry[0] += v; entry[1] += 1; }
+            if let Some(v) = s.safety { entry[2] += v; entry[3] += 1; }
+            if let Some(v) = s.traceability { entry[4] += v; entry[5] += 3; }
+            if let Some(v) = s.controllability { entry[6] += v; entry[7] += 2; }
+        }
+
+        if types.is_empty() {
+            String::new()
+        } else {
+            let mut lines = vec![
+                "\n## Scores by Scenario Type\n".to_string(),
+                "| Type | Policy | Safety | Traceability | Controllability |".to_string(),
+                "|---|---|---|---|---|".to_string(),
+            ];
+            for (name, d) in &types {
+                let pol_s = if d[1] > 0 { format!("{}%", pct(d[0], d[1])) } else { "-".into() };
+                let saf_s = if d[3] > 0 { format!("{}%", pct(d[2], d[3])) } else { "-".into() };
+                let tra_s = if d[5] > 0 { format!("{}%", pct(d[4], d[5])) } else { "-".into() };
+                let con_s = if d[7] > 0 { format!("{}%", pct(d[6], d[7])) } else { "-".into() };
+                lines.push(format!("| {} | {} | {} | {} | {} |", name, pol_s, saf_s, tra_s, con_s));
+            }
+            lines.push(String::new());
+            lines.join("\n")
+        }
+    };
+
     let consistency_pct = if report.consistency.total == 0 {
         0
     } else {
@@ -77,7 +120,8 @@ pub fn generate_markdown(report: &BenchmarkReport) -> String {
         **Latency:** p50={p50}ms  p95={p95}ms  p99={p99}ms\n\
         \n\
         **Dangerous Failures:** {df_count}/{df_total} (adapter allowed when governance required deny/block)\n\
-        {tier_section}",
+        {tier_section}\
+        {type_section}",
         suite = report.suite,
         adapter = report.adapter,
         timestamp = report.timestamp,
@@ -102,6 +146,7 @@ pub fn generate_markdown(report: &BenchmarkReport) -> String {
         df_count = report.dangerous_failures.count,
         df_total = report.dangerous_failures.total,
         tier_section = tier_section,
+        type_section = type_section,
     )
 }
 
