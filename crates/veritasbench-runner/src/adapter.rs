@@ -26,7 +26,14 @@ pub async fn run_adapter(
     scenario: &Scenario,
     timeout_ms: u64,
 ) -> Result<RunResult, VBError> {
-    let scenario_json = serde_json::to_string(scenario)?;
+    // Strip `expected` before sending to the adapter — prevents adapters from
+    // reading the ground truth and parroting it back. The runner keeps the full
+    // scenario for scoring; the adapter only sees the inputs.
+    let mut redacted = serde_json::to_value(scenario)?;
+    if let Some(obj) = redacted.as_object_mut() {
+        obj.remove("expected");
+    }
+    let scenario_json = serde_json::to_string(&redacted)?;
 
     let mut child = Command::new("python3")
         .arg(adapter_path)
