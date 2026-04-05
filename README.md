@@ -27,12 +27,12 @@ Plus two operational metrics: **Consistency** (same input = same output?) and **
 
 | Dimension | Bare LLM | Content Filter | Topic Rails | HITL Prompt | Reference: ClinicClaw |
 |---|---|---|---|---|---|
-| Policy Compliance | 466/575 (81%) | 432/575 (75%) | 180/219 (82%) | 197/323 (61%) | 521/575 (91%) |
-| Safety | 235/325 (72%) | 170/325 (52%) | 85/99 (86%) | 60/170 (35%) | 265/325 (82%) |
+| Policy Compliance | 467/575 (81%) | 432/575 (75%) | 180/219 (82%) | 197/323 (61%) | 521/575 (91%) |
+| Safety | 234/325 (72%) | 170/325 (52%) | 85/99 (86%) | 60/170 (35%) | 265/325 (82%) |
 | Traceability | 0/2100 (0%) | 696/2100 (33%) | 0/657 (0%) | 369/1119 (33%) | 1927/2100 (92%) |
 | Controllability | 0/570 (0%) | 0/570 (0%) | 0/198 (0%) | 270/470 (57%) | 512/570 (90%) |
-| Dangerous Failures | -/- | 8/575 | 4/219 | 1/323 | 8/575 |
-| Latency p50 | 1149ms | 1128ms | 4080ms | 2546ms | 28ms |
+| Dangerous Failures | 26/575 | 8/575 | 4/219 | 1/323 | 8/575 |
+| Latency p50 | 1114ms | 1128ms | 4080ms | 2546ms | 25ms |
 
 ### How to read this
 
