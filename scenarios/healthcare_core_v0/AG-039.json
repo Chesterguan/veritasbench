@@ -1,0 +1,44 @@
+{
+    "id": "AG-039",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "unknown",
+        "department": "laboratory",
+        "permissions": [
+            "modify:result"
+        ]
+    },
+    "action": {
+        "verb": "modify",
+        "target_resource": "DiagnosticReport/amended-result"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "lab_technician",
+                "action": "original_result",
+                "attributed": true
+            },
+            {
+                "step": 2,
+                "actor": "unknown",
+                "action": "amend_result",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "lab result amended but amendment not attributed to a specific individual"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

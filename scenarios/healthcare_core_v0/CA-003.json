@@ -1,0 +1,45 @@
+{
+    "id": "CA-003",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "nurse_practitioner",
+        "department": "urgent_care",
+        "permissions": [
+            "write:medication_order",
+            "prescribe:limited"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/hydrocodone-5mg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "hospital_policy",
+                "rule": "controlled_substance_physician_only",
+                "decision": "deny",
+                "reason": "Controlled substances require physician authorization"
+            },
+            {
+                "source": "urgent_care_protocol",
+                "rule": "np_prescribing_authority",
+                "decision": "allow",
+                "reason": "NPs with prescriptive authority may order Schedule III-V in urgent care"
+            }
+        ],
+        "priority_rule": null
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

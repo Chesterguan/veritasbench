@@ -23,10 +23,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_standing_order",
-    "justification": "Rapid sequence intubation required for respiratory failure — GCS 7, SpO2 82% — life-threatening emergency per standing protocol",
+    "justification": "Rapid sequence intubation required for respiratory failure \u2014 GCS 7, SpO2 82% \u2014 life-threatening emergency per standing protocol",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

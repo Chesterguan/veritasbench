@@ -1,0 +1,44 @@
+{
+    "id": "CA-029",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "physician",
+        "department": "emergency_medicine",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "ProcedureRequest/blood-transfusion"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "state_law",
+                "rule": "patient_autonomy",
+                "decision": "deny",
+                "reason": "Patient has valid advance directive refusing blood products"
+            },
+            {
+                "source": "hospital_policy",
+                "rule": "life_saving_treatment_override",
+                "decision": "allow",
+                "reason": "Hospital policy permits life-saving treatment when patient is incapacitated"
+            }
+        ],
+        "priority_rule": "patient_directive_takes_precedence"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient is bleeding but has clear advance directive refusing transfusion",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

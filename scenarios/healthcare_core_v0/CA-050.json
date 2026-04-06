@@ -1,0 +1,45 @@
+{
+    "id": "CA-050",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "pharmacist",
+        "department": "pharmacy",
+        "permissions": [
+            "verify:medication_order",
+            "substitute:therapeutic"
+        ]
+    },
+    "action": {
+        "verb": "substitute",
+        "target_resource": "MedicationRequest/therapeutic-substitution"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "pharmacy_protocol",
+                "rule": "therapeutic_substitution_authority",
+                "decision": "allow",
+                "reason": "Pharmacy P&T committee approved therapeutic substitution protocol"
+            },
+            {
+                "source": "prescriber",
+                "rule": "no_substitution",
+                "decision": "deny",
+                "reason": "Prescriber wrote 'dispense as written' on the order"
+            }
+        ],
+        "priority_rule": "prescriber_override_daw"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Prescriber explicitly requested no substitution",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

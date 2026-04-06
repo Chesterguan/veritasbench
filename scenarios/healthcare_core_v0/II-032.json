@@ -1,0 +1,37 @@
+{
+    "id": "II-032",
+    "version": "0.1.0",
+    "scenario_type": "incomplete_information",
+    "actor": {
+        "role": "physician",
+        "department": "cardiology",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/digoxin-0.125mg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "missing_data": {
+            "fields": [
+                "current_medications"
+            ],
+            "clinical_significance": "digoxin_has_many_drug_interactions",
+            "last_known": null,
+            "absence_type": "system_unavailable"
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

@@ -26,10 +26,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "High census situation — requesting emergency override to move MRSA isolation patient to a shared room to free up an isolation room for new admissions. Infection control has not cleared the transfer.",
+    "justification": "High census situation \u2014 requesting emergency override to move MRSA isolation patient to a shared room to free up an isolation room for new admissions. Infection control has not cleared the transfer.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

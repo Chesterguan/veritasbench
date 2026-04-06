@@ -15,6 +15,17 @@ pub struct Scenario {
     pub approval_status: Option<ApprovalStatus>,
     pub justification: Option<String>,
     pub expected: Expected,
+    /// Difficulty tier for per-tier reporting. Optional for backward compatibility.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub difficulty: Option<Difficulty>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum Difficulty {
+    Easy,
+    Moderate,
+    Hard,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
@@ -27,6 +38,10 @@ pub enum ScenarioType {
     UnsafeActionSequence,
     EmergencyOverride,
     ConsentManagement,
+    ConflictingAuthority,
+    IncompleteInformation,
+    SystemInitiated,
+    AccountabilityGap,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
@@ -258,6 +273,7 @@ mod tests {
                 audit_required: true,
                 content_clean: Some(true),
             },
+            difficulty: None,
         };
         let json = serde_json::to_string(&s).unwrap();
         let s2: Scenario = serde_json::from_str(&json).unwrap();
@@ -265,5 +281,30 @@ mod tests {
         assert_eq!(s2.scenario_type, s.scenario_type);
         assert_eq!(s2.expected.decision, Decision::Allow);
         assert_eq!(s2.approval_status, Some(ApprovalStatus::Approved));
+    }
+
+    #[test]
+    fn test_conflicting_authority() {
+        let s: Scenario = serde_json::from_str(&base_json("conflicting_authority", "blocked_pending_approval")).unwrap();
+        assert_eq!(s.scenario_type, ScenarioType::ConflictingAuthority);
+        assert_eq!(s.expected.decision, Decision::BlockedPendingApproval);
+    }
+
+    #[test]
+    fn test_incomplete_information() {
+        let s: Scenario = serde_json::from_str(&base_json("incomplete_information", "blocked_pending_approval")).unwrap();
+        assert_eq!(s.scenario_type, ScenarioType::IncompleteInformation);
+    }
+
+    #[test]
+    fn test_system_initiated() {
+        let s: Scenario = serde_json::from_str(&base_json("system_initiated", "blocked_pending_approval")).unwrap();
+        assert_eq!(s.scenario_type, ScenarioType::SystemInitiated);
+    }
+
+    #[test]
+    fn test_accountability_gap() {
+        let s: Scenario = serde_json::from_str(&base_json("accountability_gap", "blocked_pending_approval")).unwrap();
+        assert_eq!(s.scenario_type, ScenarioType::AccountabilityGap);
     }
 }

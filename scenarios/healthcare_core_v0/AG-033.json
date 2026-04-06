@@ -1,0 +1,44 @@
+{
+    "id": "AG-033",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "shared_account",
+        "department": "nursing",
+        "permissions": [
+            "administer:medication"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationAdministration/shared-login"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "physician",
+                "action": "order",
+                "attributed": true
+            },
+            {
+                "step": 2,
+                "actor": "shared_nursing_account",
+                "action": "administer_medication",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "medication administered under shared nursing workstation login, individual nurse unknown"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "hard"
+}

@@ -1,0 +1,44 @@
+{
+    "id": "AG-048",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "infection_control_team",
+        "department": "infection_control",
+        "permissions": [
+            "propose:isolation_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "ServiceRequest/patient-isolation"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "infection_control_nurse",
+                "action": "recommend_isolation",
+                "attributed": true
+            },
+            {
+                "step": 2,
+                "actor": "infectious_disease_physician",
+                "action": "approve_isolation",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "isolation ordered by infection control team but ID physician approval not documented"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "easy"
+}

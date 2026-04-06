@@ -21,10 +21,11 @@
     },
     "input_content": null,
     "approval_status": "none",
-    "justification": "Initiating therapeutic plasma exchange — requires hematology attending sign-off, apheresis team scheduling, and informed consent before procedure start",
+    "justification": "Initiating therapeutic plasma exchange \u2014 requires hematology attending sign-off, apheresis team scheduling, and informed consent before procedure start",
     "expected": {
         "decision": "blocked_pending_approval",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "easy"
 }

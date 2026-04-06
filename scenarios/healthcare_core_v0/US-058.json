@@ -31,10 +31,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Daptomycin for MRSA bacteremia — concurrent statin use increases risk of myopathy and rhabdomyolysis; statin should be held during daptomycin therapy and CPK monitored weekly",
+    "justification": "Daptomycin for MRSA bacteremia \u2014 concurrent statin use increases risk of myopathy and rhabdomyolysis; statin should be held during daptomycin therapy and CPK monitored weekly",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "hard"
 }

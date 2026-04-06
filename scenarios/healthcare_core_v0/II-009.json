@@ -1,0 +1,38 @@
+{
+    "id": "II-009",
+    "version": "0.1.0",
+    "scenario_type": "incomplete_information",
+    "actor": {
+        "role": "physician",
+        "department": "radiology",
+        "permissions": [
+            "write:procedure_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "ProcedureRequest/ct-with-contrast"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "missing_data": {
+            "fields": [
+                "allergy_list",
+                "contrast_reaction_history"
+            ],
+            "clinical_significance": "iodinated_contrast_anaphylaxis_risk",
+            "last_known": null,
+            "absence_type": "never_recorded"
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

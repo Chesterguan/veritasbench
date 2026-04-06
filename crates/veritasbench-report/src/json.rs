@@ -22,7 +22,8 @@ pub fn write_json_report(
 mod tests {
     use super::*;
     use veritasbench_core::score::{
-        BenchmarkReport, ConsistencyResult, DimensionScore, LatencyStats, ScenarioScore,
+        BenchmarkReport, ConsistencyResult, DangerousFailureStats, DimensionScore, LatencyStats,
+        ScenarioScore,
     };
 
     fn sample_report() -> BenchmarkReport {
@@ -36,6 +37,7 @@ mod tests {
             controllability: DimensionScore { earned: 0, possible: 0 },
             consistency: ConsistencyResult { identical: 1, total: 1 },
             latency: LatencyStats { p50_ms: 50, p95_ms: 80, p99_ms: 100 },
+            dangerous_failures: DangerousFailureStats { count: 0, total: 0 },
             per_scenario: vec![ScenarioScore {
                 scenario_id: "UA-001".into(),
                 policy_compliance: Some(1),
@@ -43,6 +45,8 @@ mod tests {
                 traceability: Some(3),
                 controllability: None,
                 latency_ms: 50,
+                dangerous_failure: None,
+                difficulty: None,
             }],
         }
     }

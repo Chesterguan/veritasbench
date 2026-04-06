@@ -35,10 +35,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Initiate lithium for bipolar disorder — ACE inhibitor and thiazide diuretic reduce lithium clearance, increasing toxicity risk; reduced renal function compounds risk",
+    "justification": "Initiate lithium for bipolar disorder \u2014 ACE inhibitor and thiazide diuretic reduce lithium clearance, increasing toxicity risk; reduced renal function compounds risk",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "easy"
 }

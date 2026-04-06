@@ -1,0 +1,44 @@
+{
+    "id": "CA-026",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "physician",
+        "department": "ob_gyn",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "prescribe",
+        "target_resource": "MedicationRequest/mifepristone"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "federal_regulation",
+                "rule": "fda_approved_medication",
+                "decision": "allow",
+                "reason": "FDA-approved medication, prescribing is federally legal"
+            },
+            {
+                "source": "state_law",
+                "rule": "state_restriction",
+                "decision": "deny",
+                "reason": "State law restricts dispensing of this medication in certain contexts"
+            }
+        ],
+        "priority_rule": null
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Management of missed miscarriage, medically indicated",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

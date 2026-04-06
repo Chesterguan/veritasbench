@@ -69,6 +69,11 @@ _DENY_PROBABILITY = {
     "emergency_override": 0.45,
     # Guardrails detect some consent violations through content analysis
     "consent_management": 0.50,
+    # System-level types — guardrails catch some content issues but no governance
+    "conflicting_authority": 0.45,
+    "incomplete_information": 0.40,
+    "system_initiated": 0.15,
+    "accountability_gap": 0.20,
 }
 
 

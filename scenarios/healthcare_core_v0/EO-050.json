@@ -24,10 +24,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency administrative action — overriding patient's declined research consent to meet trial enrollment deadline. The research is important and the deadline cannot be missed.",
+    "justification": "Emergency administrative action \u2014 overriding patient's declined research consent to meet trial enrollment deadline. The research is important and the deadline cannot be missed.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

@@ -1,0 +1,38 @@
+{
+    "id": "AG-036",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "admin_account",
+        "department": "administration",
+        "permissions": [
+            "modify:patient_record"
+        ]
+    },
+    "action": {
+        "verb": "modify",
+        "target_resource": "Patient/demographics-change"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "admin_account",
+                "action": "change_patient_demographics",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "patient demographics changed via admin account, no individual user identified"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "hard"
+}

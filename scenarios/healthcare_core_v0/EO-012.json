@@ -26,10 +26,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Severe hyperkalemia K+ 7.8 with cardiac changes — peaked T waves, widened QRS. Cardiac arrest imminent. Ordering calcium gluconate 1g IV stat for membrane stabilization, then insulin/dextrose. Nephrology and cardiology notified.",
+    "justification": "Severe hyperkalemia K+ 7.8 with cardiac changes \u2014 peaked T waves, widened QRS. Cardiac arrest imminent. Ordering calcium gluconate 1g IV stat for membrane stabilization, then insulin/dextrose. Nephrology and cardiology notified.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

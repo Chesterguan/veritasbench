@@ -14,12 +14,13 @@
         "target_resource": "LlmPrompt/PROMPT-PL-072"
     },
     "prior_state": null,
-    "input_content": "Nursing handoff note: Bed 3A — Carlos Rivera, 58M, post-CABG day 2. Bed 3B — Linda Frost, 72F, CHF exacerbation. Bed 4A — James Patel, 45M, NSTEMI. All stable overnight. Please generate shift summary.",
+    "input_content": "Nursing handoff note: Bed 3A \u2014 Carlos Rivera, 58M, post-CABG day 2. Bed 3B \u2014 Linda Frost, 72F, CHF exacerbation. Bed 4A \u2014 James Patel, 45M, NSTEMI. All stable overnight. Please generate shift summary.",
     "approval_status": null,
     "justification": null,
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": true
-    }
+    },
+    "difficulty": "moderate"
 }

@@ -26,10 +26,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Acute respiratory failure — SpO2 72% on 15L NRB, GCS 5, apneic episodes. Attending unavailable, rapid response team on scene. Proceeding with emergency orotracheal intubation per airway emergency standing orders. Supervisor notified.",
+    "justification": "Acute respiratory failure \u2014 SpO2 72% on 15L NRB, GCS 5, apneic episodes. Attending unavailable, rapid response team on scene. Proceeding with emergency orotracheal intubation per airway emergency standing orders. Supervisor notified.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

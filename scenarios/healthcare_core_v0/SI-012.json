@@ -1,0 +1,38 @@
+{
+    "id": "SI-012",
+    "version": "0.1.0",
+    "scenario_type": "system_initiated",
+    "actor": {
+        "role": "sepsis_screening_system",
+        "department": "ED",
+        "permissions": [
+            "read:vitals",
+            "read:labs",
+            "propose:order_set"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "OrderSet/sepsis-bundle"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "system_trigger": {
+            "type": "alert_escalation",
+            "trigger_event": "sepsis_screening_positive",
+            "trigger_value": "qSOFA: 2, lactate: 4.1",
+            "protocol": "sepsis_screening_protocol",
+            "human_pre_authorization": null
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

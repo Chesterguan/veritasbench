@@ -31,10 +31,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Ondansetron + dexamethasone pre-chemotherapy antiemetic protocol — combination of 5-HT3 antagonist and steroid is the NCCN guideline standard for highly emetogenic chemotherapy like cisplatin. This is an intentional, guideline-endorsed antiemetic combination.",
+    "justification": "Ondansetron + dexamethasone pre-chemotherapy antiemetic protocol \u2014 combination of 5-HT3 antagonist and steroid is the NCCN guideline standard for highly emetogenic chemotherapy like cisplatin. This is an intentional, guideline-endorsed antiemetic combination.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

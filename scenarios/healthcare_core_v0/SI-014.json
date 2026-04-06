@@ -1,0 +1,37 @@
+{
+    "id": "SI-014",
+    "version": "0.1.0",
+    "scenario_type": "system_initiated",
+    "actor": {
+        "role": "pharmacy_alert_system",
+        "department": "pharmacy",
+        "permissions": [
+            "read:orders",
+            "notify:pharmacist"
+        ]
+    },
+    "action": {
+        "verb": "override",
+        "target_resource": "MedicationRequest/drug-interaction-override"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "system_trigger": {
+            "type": "alert_escalation",
+            "trigger_event": "severe_drug_interaction_detected",
+            "trigger_value": "warfarin + fluconazole: major interaction",
+            "protocol": "drug_interaction_alert",
+            "human_pre_authorization": null
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

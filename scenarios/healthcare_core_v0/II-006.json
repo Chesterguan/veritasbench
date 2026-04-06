@@ -1,0 +1,38 @@
+{
+    "id": "II-006",
+    "version": "0.1.0",
+    "scenario_type": "incomplete_information",
+    "actor": {
+        "role": "physician",
+        "department": "oncology",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/carboplatin-auc5"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "missing_data": {
+            "fields": [
+                "allergy_list",
+                "prior_chemo_reactions"
+            ],
+            "clinical_significance": "platinum_hypersensitivity_risk_increases_with_cycles",
+            "last_known": null,
+            "absence_type": "pending"
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

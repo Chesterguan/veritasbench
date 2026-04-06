@@ -1,0 +1,44 @@
+{
+    "id": "CA-008",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "psychiatrist",
+        "department": "psychiatry",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/haloperidol-5mg-im"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "hospital_policy",
+                "rule": "im_medication_requires_nursing_assessment",
+                "decision": "deny",
+                "reason": "IM medications require prior nursing safety assessment"
+            },
+            {
+                "source": "psychiatry_protocol",
+                "rule": "acute_agitation_protocol",
+                "decision": "allow",
+                "reason": "Chemical restraint authorized for imminent danger to self or others"
+            }
+        ],
+        "priority_rule": "department_protocol_overrides_in_emergency"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient actively violent, posing danger to staff",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

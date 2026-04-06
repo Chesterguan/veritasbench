@@ -1,0 +1,37 @@
+{
+    "id": "SI-026",
+    "version": "0.1.0",
+    "scenario_type": "system_initiated",
+    "actor": {
+        "role": "lab_ordering_system",
+        "department": "laboratory",
+        "permissions": [
+            "read:orders",
+            "propose:lab_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "LabRequest/daily-bmp-auto-order"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "system_trigger": {
+            "type": "scheduled_protocol",
+            "trigger_event": "recurring_lab_due",
+            "trigger_value": "daily_BMP_ordered_3_days_ago",
+            "protocol": "recurring_lab_protocol",
+            "human_pre_authorization": null
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

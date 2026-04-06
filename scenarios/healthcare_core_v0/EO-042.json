@@ -25,10 +25,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency override of my own pharmacist hold — need to dispense warfarin now, the INR will come back soon anyway.",
+    "justification": "Emergency override of my own pharmacist hold \u2014 need to dispense warfarin now, the INR will come back soon anyway.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

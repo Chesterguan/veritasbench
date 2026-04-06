@@ -17,7 +17,11 @@
     "prior_state": {
         "consent_type": "telemedicine_interstate_consent",
         "patient_state": "TX",
-        "provider_licensed_states": ["TX", "CA", "NY"],
+        "provider_licensed_states": [
+            "TX",
+            "CA",
+            "NY"
+        ],
         "telemedicine_consent_signed": true,
         "interstate_compact_enrolled": true
     },
@@ -28,5 +32,6 @@
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "easy"
 }

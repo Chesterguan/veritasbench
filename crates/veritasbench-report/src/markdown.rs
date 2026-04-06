@@ -2,6 +2,10 @@ use std::path::Path;
 
 use veritasbench_core::score::BenchmarkReport;
 
+fn pct(earned: u32, possible: u32) -> u32 {
+    if possible == 0 { 0 } else { (earned as f64 / possible as f64 * 100.0).round() as u32 }
+}
+
 pub fn generate_markdown(report: &BenchmarkReport) -> String {
     let pol = &report.policy_compliance;
     let saf = &report.safety;
@@ -12,6 +16,80 @@ pub fn generate_markdown(report: &BenchmarkReport) -> String {
     let saf_pct = (saf.percentage() * 100.0).round() as u32;
     let tra_pct = (tra.percentage() * 100.0).round() as u32;
     let con_pct = (con.percentage() * 100.0).round() as u32;
+
+    // Per-tier policy compliance breakdown
+    let tier_section = {
+        let mut tiers: std::collections::BTreeMap<String, (u32, u32)> = std::collections::BTreeMap::new();
+        for s in &report.per_scenario {
+            if let (Some(pol_score), Some(diff)) = (s.policy_compliance, s.difficulty.as_ref()) {
+                let entry = tiers.entry(diff.clone()).or_insert((0, 0));
+                entry.0 += pol_score;
+                entry.1 += 1;
+            }
+        }
+        if tiers.is_empty() {
+            String::new()
+        } else {
+            let mut lines = vec![
+                "\n## Policy Compliance by Difficulty\n".to_string(),
+                "| Difficulty | Earned | Possible | % |".to_string(),
+                "|---|---|---|---|".to_string(),
+            ];
+            for (tier, (earned, possible)) in &tiers {
+                lines.push(format!(
+                    "| {} | {} | {} | {}% |",
+                    tier.chars().next().map(|c| c.to_uppercase().to_string()).unwrap_or_default()
+                        + &tier[1..],
+                    earned, possible, pct(*earned, *possible)
+                ));
+            }
+            lines.push(String::new());
+            lines.join("\n")
+        }
+    };
+
+    // Per-scenario-type breakdown (all 4 dimensions)
+    let type_section = {
+        // Map type prefix -> (pol_earned, pol_possible, saf_earned, saf_possible, tra_earned, tra_possible, con_earned, con_possible)
+        let mut types: std::collections::BTreeMap<String, [u32; 8]> = std::collections::BTreeMap::new();
+        let type_names: std::collections::HashMap<&str, &str> = [
+            ("UA", "Unauthorized Access"), ("MA", "Missing Approval"),
+            ("MJ", "Missing Justification"), ("PL", "PHI Leakage"),
+            ("US", "Unsafe Action Sequence"), ("EO", "Emergency Override"),
+            ("CM", "Consent Management"), ("CA", "Conflicting Authority"),
+            ("II", "Incomplete Information"), ("SI", "System-Initiated"),
+            ("AG", "Accountability Gap"),
+        ].iter().cloned().collect();
+
+        for s in &report.per_scenario {
+            let prefix = s.scenario_id.split('-').next().unwrap_or("??");
+            let name = type_names.get(prefix).unwrap_or(&prefix).to_string();
+            let entry = types.entry(name).or_insert([0; 8]);
+            if let Some(v) = s.policy_compliance { entry[0] += v; entry[1] += 1; }
+            if let Some(v) = s.safety { entry[2] += v; entry[3] += 1; }
+            if let Some(v) = s.traceability { entry[4] += v; entry[5] += 3; }
+            if let Some(v) = s.controllability { entry[6] += v; entry[7] += 2; }
+        }
+
+        if types.is_empty() {
+            String::new()
+        } else {
+            let mut lines = vec![
+                "\n## Scores by Scenario Type\n".to_string(),
+                "| Type | Policy | Safety | Traceability | Controllability |".to_string(),
+                "|---|---|---|---|---|".to_string(),
+            ];
+            for (name, d) in &types {
+                let pol_s = if d[1] > 0 { format!("{}%", pct(d[0], d[1])) } else { "-".into() };
+                let saf_s = if d[3] > 0 { format!("{}%", pct(d[2], d[3])) } else { "-".into() };
+                let tra_s = if d[5] > 0 { format!("{}%", pct(d[4], d[5])) } else { "-".into() };
+                let con_s = if d[7] > 0 { format!("{}%", pct(d[6], d[7])) } else { "-".into() };
+                lines.push(format!("| {name} | {pol_s} | {saf_s} | {tra_s} | {con_s} |"));
+            }
+            lines.push(String::new());
+            lines.join("\n")
+        }
+    };
 
     let consistency_pct = if report.consistency.total == 0 {
         0
@@ -39,7 +117,11 @@ pub fn generate_markdown(report: &BenchmarkReport) -> String {
         \n\
         **Consistency:** {consistency_pct}% ({con_id}/{con_tot} identical across runs)\n\
         \n\
-        **Latency:** p50={p50}ms  p95={p95}ms  p99={p99}ms\n",
+        **Latency:** p50={p50}ms  p95={p95}ms  p99={p99}ms\n\
+        \n\
+        **Dangerous Failures:** {df_count}/{df_total} (adapter allowed when governance required deny/block)\n\
+        {tier_section}\
+        {type_section}",
         suite = report.suite,
         adapter = report.adapter,
         timestamp = report.timestamp,
@@ -61,6 +143,10 @@ pub fn generate_markdown(report: &BenchmarkReport) -> String {
         p50 = report.latency.p50_ms,
         p95 = report.latency.p95_ms,
         p99 = report.latency.p99_ms,
+        df_count = report.dangerous_failures.count,
+        df_total = report.dangerous_failures.total,
+        tier_section = tier_section,
+        type_section = type_section,
     )
 }
 
@@ -80,7 +166,8 @@ pub fn write_markdown_report(
 mod tests {
     use super::*;
     use veritasbench_core::score::{
-        BenchmarkReport, ConsistencyResult, DimensionScore, LatencyStats, ScenarioScore,
+        BenchmarkReport, ConsistencyResult, DangerousFailureStats, DimensionScore, LatencyStats,
+        ScenarioScore,
     };
 
     fn sample_report() -> BenchmarkReport {
@@ -94,6 +181,7 @@ mod tests {
             controllability: DimensionScore { earned: 0, possible: 0 },
             consistency: ConsistencyResult { identical: 1, total: 1 },
             latency: LatencyStats { p50_ms: 50, p95_ms: 80, p99_ms: 100 },
+            dangerous_failures: DangerousFailureStats { count: 0, total: 0 },
             per_scenario: vec![ScenarioScore {
                 scenario_id: "UA-001".into(),
                 policy_compliance: Some(1),
@@ -101,6 +189,8 @@ mod tests {
                 traceability: Some(3),
                 controllability: None,
                 latency_ms: 50,
+                dangerous_failure: None,
+                difficulty: None,
             }],
         }
     }

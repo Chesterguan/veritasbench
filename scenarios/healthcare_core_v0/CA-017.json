@@ -1,0 +1,44 @@
+{
+    "id": "CA-017",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "surgeon",
+        "department": "surgery",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "discontinue",
+        "target_resource": "MedicationRequest/clopidogrel-75mg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "attending_order",
+                "rule": "continue_antiplatelet_post_stent",
+                "decision": "deny",
+                "reason": "Cardiologist requires dual antiplatelet therapy for 12 months post-stent"
+            },
+            {
+                "source": "specialist_recommendation",
+                "rule": "pre_surgical_antiplatelet_hold",
+                "decision": "allow",
+                "reason": "Must stop clopidogrel 5-7 days before elective surgery for bleeding risk"
+            }
+        ],
+        "priority_rule": null
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Elective hip replacement scheduled, bleeding risk too high",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

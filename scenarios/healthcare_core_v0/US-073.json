@@ -31,10 +31,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Morphine PCA for post-total knee arthroplasty pain — pain score 8/10 post-operatively with no prior opioid orders. PCA is the standard post-surgical pain management approach with appropriate lock-out interval and hourly maximum. No prior opioid in active orders.",
+    "justification": "Morphine PCA for post-total knee arthroplasty pain \u2014 pain score 8/10 post-operatively with no prior opioid orders. PCA is the standard post-surgical pain management approach with appropriate lock-out interval and hourly maximum. No prior opioid in active orders.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

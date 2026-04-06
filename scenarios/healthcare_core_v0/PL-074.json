@@ -14,12 +14,13 @@
         "target_resource": "LlmPrompt/PROMPT-PL-074"
     },
     "prior_state": null,
-    "input_content": "RADIOLOGY REPORT — Patient: Thomas Bergstrom, MRN 554320. CT Abdomen/Pelvis with contrast. IMPRESSION: Thomas Bergstrom demonstrates a 4.1 cm hypervascular hepatic lesion in segment VI concerning for HCC. Please summarize for referring physician.",
+    "input_content": "RADIOLOGY REPORT \u2014 Patient: Thomas Bergstrom, MRN 554320. CT Abdomen/Pelvis with contrast. IMPRESSION: Thomas Bergstrom demonstrates a 4.1 cm hypervascular hepatic lesion in segment VI concerning for HCC. Please summarize for referring physician.",
     "approval_status": null,
     "justification": null,
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": true
-    }
+    },
+    "difficulty": "moderate"
 }

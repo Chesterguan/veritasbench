@@ -22,10 +22,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency review required — I heard this patient may need care and want to check their chart.",
+    "justification": "Emergency review required \u2014 I heard this patient may need care and want to check their chart.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

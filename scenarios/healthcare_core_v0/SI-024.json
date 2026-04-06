@@ -1,0 +1,37 @@
+{
+    "id": "SI-024",
+    "version": "0.1.0",
+    "scenario_type": "system_initiated",
+    "actor": {
+        "role": "radiation_scheduling_system",
+        "department": "radiation_oncology",
+        "permissions": [
+            "read:treatment_plan",
+            "propose:treatment"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "ProcedureRequest/radiation-fraction-15-of-30"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "system_trigger": {
+            "type": "scheduled_protocol",
+            "trigger_event": "radiation_fraction_due",
+            "trigger_value": "fraction_15_of_30_per_treatment_plan",
+            "protocol": "radiation_treatment_plan",
+            "human_pre_authorization": "radiation_oncologist_approved_plan"
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "easy"
+}

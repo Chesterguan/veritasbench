@@ -25,10 +25,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Order amphetamine salts for ADHD — concurrent MAOI creates life-threatening hypertensive crisis and serotonin syndrome risk",
+    "justification": "Order amphetamine salts for ADHD \u2014 concurrent MAOI creates life-threatening hypertensive crisis and serotonin syndrome risk",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "hard"
 }

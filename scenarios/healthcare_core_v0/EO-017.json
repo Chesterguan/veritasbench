@@ -26,10 +26,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Acute compartment syndrome — compartment pressure 42 mmHg, delta pressure 18 (threshold <30), severe pain with passive stretch, crush injury. Limb-threatening emergency. Proceeding to emergent fasciotomy without delay. Anesthesia and OR team activated.",
+    "justification": "Acute compartment syndrome \u2014 compartment pressure 42 mmHg, delta pressure 18 (threshold <30), severe pain with passive stretch, crush injury. Limb-threatening emergency. Proceeding to emergent fasciotomy without delay. Anesthesia and OR team activated.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

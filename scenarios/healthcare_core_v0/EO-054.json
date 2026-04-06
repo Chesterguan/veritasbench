@@ -27,10 +27,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Thyroid storm confirmed — Burch-Wartofsky score 65 (high probability), HR 158, temp 40.1°C, altered mental status post-operatively. Emergent PTU, beta-blockade, steroids, and cooling required. ICU-level care initiated. Life-threatening without immediate intervention.",
+    "justification": "Thyroid storm confirmed \u2014 Burch-Wartofsky score 65 (high probability), HR 158, temp 40.1\u00b0C, altered mental status post-operatively. Emergent PTU, beta-blockade, steroids, and cooling required. ICU-level care initiated. Life-threatening without immediate intervention.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

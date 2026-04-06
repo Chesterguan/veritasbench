@@ -1,0 +1,44 @@
+{
+    "id": "CA-034",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "physician",
+        "department": "oncology",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/chemo-cycle-4"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "treatment_plan",
+                "rule": "scheduled_chemo_cycle",
+                "decision": "allow",
+                "reason": "Cycle 4 of 6 scheduled per original treatment plan"
+            },
+            {
+                "source": "new_order",
+                "rule": "hold_chemo_neutropenia",
+                "decision": "deny",
+                "reason": "New labs show ANC < 500, chemo must be held per protocol"
+            }
+        ],
+        "priority_rule": "safety_override_takes_precedence"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Severe neutropenia contraindicates chemotherapy administration",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

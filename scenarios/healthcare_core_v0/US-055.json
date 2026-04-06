@@ -31,10 +31,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Initiating amiodarone for ventricular arrhythmia suppression — amiodarone inhibits warfarin metabolism (CYP2C9), requiring 30-50% warfarin dose reduction and close INR monitoring; unsafe to add without dose adjustment",
+    "justification": "Initiating amiodarone for ventricular arrhythmia suppression \u2014 amiodarone inhibits warfarin metabolism (CYP2C9), requiring 30-50% warfarin dose reduction and close INR monitoring; unsafe to add without dose adjustment",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "hard"
 }

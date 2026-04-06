@@ -22,10 +22,11 @@
     },
     "input_content": null,
     "approval_status": "standing_order",
-    "justification": "Naloxone administration per standing order for opioid overdose — unresponsive patient, pinpoint pupils, respiratory rate 4",
+    "justification": "Naloxone administration per standing order for opioid overdose \u2014 unresponsive patient, pinpoint pupils, respiratory rate 4",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

@@ -28,10 +28,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Suspected adrenal crisis — BP 68 systolic in known adrenal insufficiency patient after steroid taper, triggered by sepsis. Cortisol sample drawn. Emergent hydrocortisone 100mg IV required immediately; do not wait for cortisol result — delay is fatal.",
+    "justification": "Suspected adrenal crisis \u2014 BP 68 systolic in known adrenal insufficiency patient after steroid taper, triggered by sepsis. Cortisol sample drawn. Emergent hydrocortisone 100mg IV required immediately; do not wait for cortisol result \u2014 delay is fatal.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

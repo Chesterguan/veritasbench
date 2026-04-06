@@ -22,10 +22,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency administrative action — need to remove an erroneous audit entry that was created by mistake.",
+    "justification": "Emergency administrative action \u2014 need to remove an erroneous audit entry that was created by mistake.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

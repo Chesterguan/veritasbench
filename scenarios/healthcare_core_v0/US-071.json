@@ -31,10 +31,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Adding lacosamide to levetiracetam for inadequately controlled focal epilepsy — dual therapy with LEV + LCM is an established, guideline-supported combination. Different mechanisms (synaptic vesicle modulation vs sodium channel slow inactivation), no pharmacokinetic interaction.",
+    "justification": "Adding lacosamide to levetiracetam for inadequately controlled focal epilepsy \u2014 dual therapy with LEV + LCM is an established, guideline-supported combination. Different mechanisms (synaptic vesicle modulation vs sodium channel slow inactivation), no pharmacokinetic interaction.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

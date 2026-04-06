@@ -23,10 +23,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_standing_order",
-    "justification": "Emergent synchronized cardioversion for hemodynamically unstable atrial fibrillation — life-threatening dysrhythmia per ACLS protocol",
+    "justification": "Emergent synchronized cardioversion for hemodynamically unstable atrial fibrillation \u2014 life-threatening dysrhythmia per ACLS protocol",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

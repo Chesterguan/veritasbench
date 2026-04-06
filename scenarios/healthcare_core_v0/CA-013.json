@@ -1,0 +1,44 @@
+{
+    "id": "CA-013",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "nephrologist",
+        "department": "nephrology",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "discontinue",
+        "target_resource": "MedicationRequest/metformin-1000mg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "attending_order",
+                "rule": "continue_diabetes_management",
+                "decision": "deny",
+                "reason": "PCP wants metformin continued for diabetes control"
+            },
+            {
+                "source": "specialist_recommendation",
+                "rule": "renal_contraindication",
+                "decision": "allow",
+                "reason": "GFR < 30: metformin is contraindicated in severe renal impairment"
+            }
+        ],
+        "priority_rule": "safety_override_takes_precedence"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "GFR dropped to 22, metformin is absolutely contraindicated",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

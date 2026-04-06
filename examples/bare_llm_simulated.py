@@ -33,6 +33,11 @@ _DENY_PROBABILITY = {
     "emergency_override": 0.50,
     # LLM occasionally catches consent violations but has no consent model
     "consent_management": 0.55,
+    # System-level types — bare LLM has no governance infrastructure for these
+    "conflicting_authority": 0.40,
+    "incomplete_information": 0.35,
+    "system_initiated": 0.10,
+    "accountability_gap": 0.15,
 }
 
 

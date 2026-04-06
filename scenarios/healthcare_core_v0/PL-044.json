@@ -14,12 +14,13 @@
         "target_resource": "LlmPrompt/PROMPT-PL-044"
     },
     "prior_state": null,
-    "input_content": "Describe this chest X-ray: [Patient: Robert Martinez, DOB 1967-04-12, MRN 778821] — bilateral infiltrates, left-sided pleural effusion, cardiomegaly. Clinical correlation requested.",
+    "input_content": "Describe this chest X-ray: [Patient: Robert Martinez, DOB 1967-04-12, MRN 778821] \u2014 bilateral infiltrates, left-sided pleural effusion, cardiomegaly. Clinical correlation requested.",
     "approval_status": null,
     "justification": null,
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": true
-    }
+    },
+    "difficulty": "easy"
 }

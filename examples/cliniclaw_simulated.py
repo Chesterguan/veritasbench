@@ -1745,6 +1745,320 @@ def _check_unsafe_action_sequence(scenario: dict) -> Optional[dict]:
     return None
 
 
+def _check_conflicting_authority(scenario: dict) -> Optional[dict]:
+    """
+    Allow if a priority_rule resolves the conflict; block if genuine ambiguity.
+
+    Reads prior_state.conflicting_policies (list of policy dicts with 'decision'
+    and 'source') and prior_state.priority_rule (string naming the winning
+    policy source, or None).
+    """
+    actor = scenario.get("actor") or {}
+    action = scenario.get("action") or {}
+    target = action.get("target_resource", "unknown")
+    verb = action.get("verb", "unknown")
+    actor_id = _actor_id(actor)
+
+    prior_state = scenario.get("prior_state") or {}
+    conflicting_policies: list = prior_state.get("conflicting_policies") or []
+    priority_rule = prior_state.get("priority_rule")
+
+    if priority_rule is not None:
+        # A priority rule exists — find the policy whose source matches the rule
+        # and use its decision.
+        winning_policy = None
+        for policy in conflicting_policies:
+            if isinstance(policy, dict) and policy.get("source") == priority_rule:
+                winning_policy = policy
+                break
+
+        if winning_policy is not None:
+            decision = winning_policy.get("decision", "deny")
+            reason = (
+                f"conflicting authority resolved via priority rule '{priority_rule}': "
+                f"policy from source '{winning_policy.get('source')}' wins — "
+                f"rule: {winning_policy.get('rule', 'unknown')}, "
+                f"reason: {winning_policy.get('reason', 'none')}"
+            )
+        else:
+            # Priority rule specified but no matching policy found — treat as ambiguous
+            decision = "blocked_pending_approval"
+            reason = (
+                f"conflicting authority: priority rule '{priority_rule}' specified but "
+                "no matching policy source found; escalating for human review"
+            )
+
+        return {
+            "decision": decision,
+            "audit_entries": [_audit(actor_id, f"{verb} {target}", target, decision, reason)],
+            "execution_halted": decision == "blocked_pending_approval",
+            "human_notified": decision == "blocked_pending_approval",
+            "output_content": None,
+        }
+
+    # No priority rule — genuine ambiguity, must escalate
+    policy_sources = [p.get("source", "unknown") for p in conflicting_policies if isinstance(p, dict)]
+    reason = (
+        f"conflicting authority: {len(conflicting_policies)} policies conflict "
+        f"({', '.join(policy_sources)}) with no priority rule — "
+        "execution halted pending human resolution"
+    )
+    return {
+        "decision": "blocked_pending_approval",
+        "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "blocked_pending_approval", reason)],
+        "execution_halted": True,
+        "human_notified": True,
+        "output_content": None,
+    }
+
+
+# High-risk drug keywords for incomplete_information severity assessment
+_HIGH_RISK_DRUG_KEYWORDS = {
+    "nephrotoxic", "gentamicin", "vancomycin", "amphotericin", "cisplatin",
+    "teratogenic", "methotrexate", "thalidomide", "isotretinoin", "warfarin",
+    "digoxin", "lithium", "theophylline", "phenytoin",  # narrow therapeutic index
+    "alteplase", "tenecteplase", "streptokinase", "tpa",  # thrombolytics
+    "heparin", "enoxaparin", "rivaroxaban", "apixaban",
+}
+
+
+def _check_incomplete_information(scenario: dict) -> Optional[dict]:
+    """
+    Block or deny based on what information is missing and why.
+
+    Reads prior_state.missing_data (dict with 'absence_type' and
+    'clinical_significance') and actor permissions for emergency context.
+    """
+    actor = scenario.get("actor") or {}
+    action = scenario.get("action") or {}
+    target = action.get("target_resource", "unknown")
+    verb = action.get("verb", "unknown")
+    actor_id = _actor_id(actor)
+    permissions: list = actor.get("permissions") or []
+
+    prior_state = scenario.get("prior_state") or {}
+    missing_data: dict = prior_state.get("missing_data") or {}
+    absence_type: str = missing_data.get("absence_type", "")
+    clinical_significance: str = (missing_data.get("clinical_significance") or "").lower()
+
+    # Emergency context: allow despite gaps
+    if "emergency_treatment" in permissions:
+        reason = (
+            "incomplete information: actor has 'emergency_treatment' permission — "
+            f"proceeding despite {absence_type or 'missing'} data; "
+            "emergency override applied"
+        )
+        return {
+            "decision": "allow",
+            "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "allow", reason)],
+            "execution_halted": False,
+            "human_notified": False,
+            "output_content": None,
+        }
+
+    if absence_type == "never_recorded":
+        # Determine risk level from clinical significance text
+        is_high_risk = any(kw in clinical_significance for kw in _HIGH_RISK_DRUG_KEYWORDS)
+        if is_high_risk:
+            reason = (
+                f"incomplete information: required data was never recorded and clinical "
+                f"significance indicates high-risk context ({clinical_significance[:120]}) — "
+                "action denied for patient safety"
+            )
+            return {
+                "decision": "deny",
+                "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "deny", reason)],
+                "execution_halted": True,
+                "human_notified": True,
+                "output_content": None,
+            }
+        else:
+            reason = (
+                "incomplete information: required data was never recorded — "
+                "action blocked pending collection of missing data"
+            )
+            return {
+                "decision": "blocked_pending_approval",
+                "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "blocked_pending_approval", reason)],
+                "execution_halted": True,
+                "human_notified": True,
+                "output_content": None,
+            }
+
+    if absence_type == "expired":
+        # Moderate risk — data existed but aged out; allow unless critical
+        is_critical = "critical" in clinical_significance
+        if is_critical:
+            reason = (
+                "incomplete information: required data has expired and is clinically critical — "
+                "action blocked pending data refresh"
+            )
+            return {
+                "decision": "blocked_pending_approval",
+                "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "blocked_pending_approval", reason)],
+                "execution_halted": True,
+                "human_notified": True,
+                "output_content": None,
+            }
+        reason = (
+            "incomplete information: required data has expired — "
+            "proceeding with caution; expired data logged for review"
+        )
+        return {
+            "decision": "allow",
+            "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "allow", reason)],
+            "execution_halted": False,
+            "human_notified": False,
+            "output_content": None,
+        }
+
+    if absence_type in ("pending", "system_unavailable"):
+        reason = (
+            f"incomplete information: required data is {absence_type} — "
+            "action blocked pending data availability"
+        )
+        return {
+            "decision": "blocked_pending_approval",
+            "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "blocked_pending_approval", reason)],
+            "execution_halted": True,
+            "human_notified": True,
+            "output_content": None,
+        }
+
+    # Unknown absence type — block by default
+    reason = (
+        f"incomplete information: absence_type '{absence_type}' is unrecognized — "
+        "action blocked pending clarification"
+    )
+    return {
+        "decision": "blocked_pending_approval",
+        "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "blocked_pending_approval", reason)],
+        "execution_halted": True,
+        "human_notified": True,
+        "output_content": None,
+    }
+
+
+def _check_system_initiated(scenario: dict) -> Optional[dict]:
+    """
+    Allow system-initiated actions only when human pre-authorization is on record.
+
+    Reads prior_state.system_trigger (dict with 'human_pre_authorization').
+    If human_pre_authorization is present (not None), the automated action was
+    sanctioned; allow it. Otherwise block pending human authorization.
+    """
+    actor = scenario.get("actor") or {}
+    action = scenario.get("action") or {}
+    target = action.get("target_resource", "unknown")
+    verb = action.get("verb", "unknown")
+    actor_id = _actor_id(actor)
+
+    prior_state = scenario.get("prior_state") or {}
+    system_trigger: dict = prior_state.get("system_trigger") or {}
+    human_pre_authorization = system_trigger.get("human_pre_authorization")
+
+    trigger_source = system_trigger.get("source", "automated system")
+    trigger_rule = system_trigger.get("rule", "unknown rule")
+
+    if human_pre_authorization is not None:
+        reason = (
+            f"system-initiated action: trigger from '{trigger_source}' (rule: {trigger_rule}) — "
+            f"human pre-authorization on record: '{human_pre_authorization}'; action permitted"
+        )
+        return {
+            "decision": "allow",
+            "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "allow", reason)],
+            "execution_halted": False,
+            "human_notified": False,
+            "output_content": None,
+        }
+
+    reason = (
+        f"system-initiated action: trigger from '{trigger_source}' (rule: {trigger_rule}) — "
+        "no human pre-authorization on record; action blocked pending human authorization"
+    )
+    return {
+        "decision": "blocked_pending_approval",
+        "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "blocked_pending_approval", reason)],
+        "execution_halted": True,
+        "human_notified": True,
+        "output_content": None,
+    }
+
+
+def _check_accountability_gap(scenario: dict) -> Optional[dict]:
+    """
+    Deny or block actions whose decision chain has unattributed (AI-only) steps.
+
+    Reads prior_state.decision_chain (list of step dicts with 'attributed': bool)
+    and prior_state.attribution_gap (any truthy value signals a gap was detected).
+
+    - No gap (attribution_gap is None/empty): allow — chain is fully attributed.
+    - Some steps unattributed: block pending approval.
+    - All steps unattributed (fully AI-driven chain): deny.
+    """
+    actor = scenario.get("actor") or {}
+    action = scenario.get("action") or {}
+    target = action.get("target_resource", "unknown")
+    verb = action.get("verb", "unknown")
+    actor_id = _actor_id(actor)
+
+    prior_state = scenario.get("prior_state") or {}
+    decision_chain: list = prior_state.get("decision_chain") or []
+    attribution_gap = prior_state.get("attribution_gap")
+
+    # Build a chain summary for the audit log
+    chain_summary = "; ".join(
+        f"step {i + 1} ({'attributed' if s.get('attributed') else 'unattributed'}): "
+        f"{s.get('actor', 'unknown')} — {s.get('action', 'unknown')}"
+        for i, s in enumerate(decision_chain)
+        if isinstance(s, dict)
+    ) or "no chain recorded"
+
+    if not attribution_gap:
+        reason = (
+            f"accountability chain verified: all steps attributed — {chain_summary}"
+        )
+        return {
+            "decision": "allow",
+            "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "allow", reason)],
+            "execution_halted": False,
+            "human_notified": False,
+            "output_content": None,
+        }
+
+    # Assess attribution completeness
+    chain_steps = [s for s in decision_chain if isinstance(s, dict)]
+    unattributed_steps = [s for s in chain_steps if not s.get("attributed", True)]
+    all_unattributed = len(chain_steps) > 0 and len(unattributed_steps) == len(chain_steps)
+
+    if all_unattributed:
+        reason = (
+            f"accountability gap: ALL {len(chain_steps)} decision steps are unattributed "
+            f"(fully AI-driven chain) — action denied; human accountability required. "
+            f"Chain: {chain_summary}"
+        )
+        return {
+            "decision": "deny",
+            "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "deny", reason)],
+            "execution_halted": True,
+            "human_notified": True,
+            "output_content": None,
+        }
+
+    reason = (
+        f"accountability gap: {len(unattributed_steps)} of {len(chain_steps)} steps are unattributed — "
+        f"action blocked pending accountability review. Chain: {chain_summary}"
+    )
+    return {
+        "decision": "blocked_pending_approval",
+        "audit_entries": [_audit(actor_id, f"{verb} {target}", target, "blocked_pending_approval", reason)],
+        "execution_halted": True,
+        "human_notified": True,
+        "output_content": None,
+    }
+
+
 def handle(scenario: dict) -> dict:
     stype = scenario.get("scenario_type", "")
 
@@ -1776,6 +2090,26 @@ def handle(scenario: dict) -> dict:
 
     if stype == "consent_management":
         result = _check_consent_management(scenario)
+        if result:
+            return result
+
+    if stype == "conflicting_authority":
+        result = _check_conflicting_authority(scenario)
+        if result:
+            return result
+
+    if stype == "incomplete_information":
+        result = _check_incomplete_information(scenario)
+        if result:
+            return result
+
+    if stype == "system_initiated":
+        result = _check_system_initiated(scenario)
+        if result:
+            return result
+
+    if stype == "accountability_gap":
+        result = _check_accountability_gap(scenario)
         if result:
             return result
 

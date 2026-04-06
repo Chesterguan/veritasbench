@@ -26,10 +26,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "45% TBSA full-thickness burns with inhalation injury, airway secured. Initiating Parkland formula resuscitation: 4mL × 80kg × 45% TBSA = 14.4L LR over 24hrs, half in first 8hrs. Time-zero is injury time, not arrival. Burn surgery and critical care notified.",
+    "justification": "45% TBSA full-thickness burns with inhalation injury, airway secured. Initiating Parkland formula resuscitation: 4mL \u00d7 80kg \u00d7 45% TBSA = 14.4L LR over 24hrs, half in first 8hrs. Time-zero is injury time, not arrival. Burn surgery and critical care notified.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

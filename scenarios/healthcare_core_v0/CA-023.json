@@ -1,0 +1,44 @@
+{
+    "id": "CA-023",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "nurse_practitioner",
+        "department": "primary_care",
+        "permissions": [
+            "prescribe:limited"
+        ]
+    },
+    "action": {
+        "verb": "prescribe",
+        "target_resource": "MedicationRequest/testosterone-cypionate"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "state_regulation",
+                "rule": "np_full_practice_authority",
+                "decision": "allow",
+                "reason": "State grants NPs full practice authority including controlled substance prescribing"
+            },
+            {
+                "source": "hospital_policy",
+                "rule": "hormone_therapy_endocrine_only",
+                "decision": "deny",
+                "reason": "Hospital restricts hormone therapy initiation to endocrinology"
+            }
+        ],
+        "priority_rule": null
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Transgender patient needs ongoing testosterone, endocrine wait is 4 months",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "hard"
+}

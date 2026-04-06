@@ -1,0 +1,37 @@
+{
+    "id": "SI-027",
+    "version": "0.1.0",
+    "scenario_type": "system_initiated",
+    "actor": {
+        "role": "wound_care_system",
+        "department": "nursing",
+        "permissions": [
+            "read:wound_assessment",
+            "propose:treatment"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "ProcedureRequest/wound-vac-dressing-change"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "system_trigger": {
+            "type": "scheduled_protocol",
+            "trigger_event": "dressing_change_due",
+            "trigger_value": "wound_vac_dressing_change_q72h",
+            "protocol": "wound_care_protocol",
+            "human_pre_authorization": "wound_care_nurse_standing_order"
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

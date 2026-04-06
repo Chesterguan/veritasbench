@@ -1,0 +1,50 @@
+{
+    "id": "AG-050",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "antibiotic_stewardship_team",
+        "department": "infectious_disease",
+        "permissions": [
+            "propose:medication_change"
+        ]
+    },
+    "action": {
+        "verb": "modify",
+        "target_resource": "MedicationRequest/antibiotic-stewardship-change"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "stewardship_pharmacist",
+                "action": "recommend_de_escalation",
+                "attributed": true
+            },
+            {
+                "step": 2,
+                "actor": "id_physician",
+                "action": "approve_change",
+                "attributed": true
+            },
+            {
+                "step": 3,
+                "actor": "primary_team",
+                "action": "implement_change",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "primary team expected to implement stewardship recommendation but no order entered"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

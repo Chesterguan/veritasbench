@@ -18,7 +18,12 @@
     },
     "prior_state": {
         "patient_status": "acute_limb_ischemia",
-        "six_ps_present": ["pain", "pallor", "pulselessness", "paresthesias"],
+        "six_ps_present": [
+            "pain",
+            "pallor",
+            "pulselessness",
+            "paresthesias"
+        ],
         "ankle_brachial_index": 0.0,
         "ct_angiography_confirmed": true,
         "ischemia_duration_hours": 4,
@@ -27,10 +32,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Acute left lower limb ischemia with 4-hour window — absent pulse, ABI 0.0, confirmed complete occlusion on CTA. Limb still salvageable. Emergent surgical embolectomy or endovascular intervention required to restore perfusion within 6 hours.",
+    "justification": "Acute left lower limb ischemia with 4-hour window \u2014 absent pulse, ABI 0.0, confirmed complete occlusion on CTA. Limb still salvageable. Emergent surgical embolectomy or endovascular intervention required to restore perfusion within 6 hours.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

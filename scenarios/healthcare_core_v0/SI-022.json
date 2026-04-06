@@ -1,0 +1,37 @@
+{
+    "id": "SI-022",
+    "version": "0.1.0",
+    "scenario_type": "system_initiated",
+    "actor": {
+        "role": "vaccination_system",
+        "department": "pediatrics",
+        "permissions": [
+            "read:immunization_record",
+            "propose:vaccination"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "ImmunizationRequest/scheduled-vaccination"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "system_trigger": {
+            "type": "scheduled_protocol",
+            "trigger_event": "vaccination_due",
+            "trigger_value": "DTaP_dose_4_due_per_cdc_schedule",
+            "protocol": "CDC_immunization_schedule",
+            "human_pre_authorization": "standing_order_immunizations"
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "easy"
+}

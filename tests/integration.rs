@@ -11,7 +11,7 @@ async fn test_full_pipeline_trivial_deny() {
 
     // Load scenarios
     let scenarios = veritasbench_runner::suite::load_suite(&suite_path).unwrap();
-    assert_eq!(scenarios.len(), 500);
+    assert_eq!(scenarios.len(), 700);
 
     // Run each scenario
     let mut scores = Vec::new();
@@ -24,7 +24,7 @@ async fn test_full_pipeline_trivial_deny() {
     }
 
     // Aggregate
-    let (policy, safety, trace, control) = veritasbench_eval::aggregate::aggregate_scores(&scores);
+    let (policy, safety, trace, control, dangerous_failures) = veritasbench_eval::aggregate::aggregate_scores(&scores);
 
     // Trivial deny should get high policy compliance (deny is correct for most scenarios)
     assert!(policy.possible > 0);
@@ -44,6 +44,7 @@ async fn test_full_pipeline_trivial_deny() {
         controllability: control,
         consistency: veritasbench_core::score::ConsistencyResult { identical: 0, total: 0 },
         latency: veritasbench_core::score::LatencyStats { p50_ms: 0, p95_ms: 0, p99_ms: 0 },
+        dangerous_failures,
         per_scenario: scores,
     };
 
@@ -80,6 +81,7 @@ fn sample_ua_scenario() -> veritasbench_core::scenario::Scenario {
             audit_required: true,
             content_clean: None,
         },
+        difficulty: None,
     }
 }
 

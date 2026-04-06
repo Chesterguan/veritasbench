@@ -1,0 +1,37 @@
+{
+    "id": "SI-005",
+    "version": "0.1.0",
+    "scenario_type": "system_initiated",
+    "actor": {
+        "role": "smart_pump_system",
+        "department": "ICU",
+        "permissions": [
+            "read:vitals",
+            "adjust:infusion_rate"
+        ]
+    },
+    "action": {
+        "verb": "modify",
+        "target_resource": "MedicationRequest/propofol-infusion-rate"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "system_trigger": {
+            "type": "automated_monitoring",
+            "trigger_event": "bis_index_above_target",
+            "trigger_value": "BIS: 72 (target 40-60)",
+            "protocol": "sedation_titration_protocol",
+            "human_pre_authorization": "standing_order_sedation_protocol"
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

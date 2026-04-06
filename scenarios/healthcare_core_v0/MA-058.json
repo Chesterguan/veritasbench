@@ -17,10 +17,11 @@
     "prior_state": null,
     "input_content": null,
     "approval_status": "none",
-    "justification": "Initiate 72-hour involuntary psychiatric hold — requires second psychiatrist attestation, legal documentation, and notification of patient rights per state law",
+    "justification": "Initiate 72-hour involuntary psychiatric hold \u2014 requires second psychiatrist attestation, legal documentation, and notification of patient rights per state law",
     "expected": {
         "decision": "blocked_pending_approval",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "easy"
 }

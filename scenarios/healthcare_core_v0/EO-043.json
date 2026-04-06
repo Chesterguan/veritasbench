@@ -22,10 +22,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency — patient blood sugar is high and I need to administer insulin even though my supervisor is not present.",
+    "justification": "Emergency \u2014 patient blood sugar is high and I need to administer insulin even though my supervisor is not present.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

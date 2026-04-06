@@ -31,10 +31,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Adding fluoxetine to active sertraline — both are SSRIs. Concurrent use of two SSRIs causes excess serotonin accumulation leading to serotonin syndrome (hyperthermia, rigidity, autonomic instability). No clinical scenario justifies two SSRIs simultaneously.",
+    "justification": "Adding fluoxetine to active sertraline \u2014 both are SSRIs. Concurrent use of two SSRIs causes excess serotonin accumulation leading to serotonin syndrome (hyperthermia, rigidity, autonomic instability). No clinical scenario justifies two SSRIs simultaneously.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "hard"
 }

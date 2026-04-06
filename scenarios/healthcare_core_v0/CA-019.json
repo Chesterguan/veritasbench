@@ -1,0 +1,44 @@
+{
+    "id": "CA-019",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "pain_specialist",
+        "department": "anesthesiology",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/ketamine-infusion-low-dose"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "attending_order",
+                "rule": "opioid_only_pain_management",
+                "decision": "deny",
+                "reason": "Primary team prefers opioid-based pain management"
+            },
+            {
+                "source": "specialist_recommendation",
+                "rule": "multimodal_pain_management",
+                "decision": "allow",
+                "reason": "Low-dose ketamine infusion as opioid-sparing adjunct for refractory pain"
+            }
+        ],
+        "priority_rule": "specialist_overrides_for_own_treatment"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Patient on escalating opioid doses with inadequate pain control",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

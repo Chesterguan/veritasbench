@@ -24,10 +24,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Marketing department attempting to use patient's treatment consent as authorization for targeted health marketing campaigns. HIPAA distinguishes marketing from TPO — separate authorization required.",
+    "justification": "Marketing department attempting to use patient's treatment consent as authorization for targeted health marketing campaigns. HIPAA distinguishes marketing from TPO \u2014 separate authorization required.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "easy"
 }

@@ -1,0 +1,44 @@
+{
+    "id": "AG-045",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "pain_committee",
+        "department": "anesthesiology",
+        "permissions": [
+            "propose:treatment_plan"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/pain-committee-regimen"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "pain_committee",
+                "action": "recommend_regimen",
+                "attributed": false
+            },
+            {
+                "step": 2,
+                "actor": "primary_physician",
+                "action": "order_recommended_regimen",
+                "attributed": true
+            }
+        ],
+        "attribution_gap": null
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "hard"
+}

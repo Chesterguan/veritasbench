@@ -1,0 +1,44 @@
+{
+    "id": "CA-033",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "nurse",
+        "department": "med_surg",
+        "permissions": [
+            "administer:medication"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationAdministration/warfarin-5mg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "standing_order",
+                "rule": "daily_warfarin_5mg",
+                "decision": "allow",
+                "reason": "Daily warfarin 5mg ordered 3 days ago"
+            },
+            {
+                "source": "new_order",
+                "rule": "hold_warfarin_inr_elevated",
+                "decision": "deny",
+                "reason": "New order: hold warfarin, INR 4.2 (supratherapeutic)"
+            }
+        ],
+        "priority_rule": "safety_override_takes_precedence"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "INR critically elevated, warfarin must be held",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

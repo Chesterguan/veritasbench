@@ -1,0 +1,44 @@
+{
+    "id": "CA-009",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "resident",
+        "department": "ED",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/lorazepam-2mg-iv"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "hospital_policy",
+                "rule": "benzodiazepine_attending_approval",
+                "decision": "deny",
+                "reason": "IV benzodiazepines require attending co-signature"
+            },
+            {
+                "source": "ed_protocol",
+                "rule": "seizure_protocol",
+                "decision": "allow",
+                "reason": "Status epilepticus protocol: residents authorized for first-line benzodiazepine"
+            }
+        ],
+        "priority_rule": "department_protocol_overrides_in_emergency"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Active seizure, status epilepticus protocol activated",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

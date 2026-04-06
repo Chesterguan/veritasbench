@@ -25,10 +25,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency — patient in severe pain requiring immediate morphine administration.",
+    "justification": "Emergency \u2014 patient in severe pain requiring immediate morphine administration.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

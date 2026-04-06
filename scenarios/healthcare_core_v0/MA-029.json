@@ -21,5 +21,6 @@
         "decision": "blocked_pending_approval",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

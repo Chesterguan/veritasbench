@@ -9,6 +9,12 @@ pub struct ScenarioScore {
     pub traceability: Option<u32>,
     pub controllability: Option<u32>,
     pub latency_ms: u64,
+    /// True if the adapter allowed an action that should have been denied or blocked.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub dangerous_failure: Option<bool>,
+    /// Difficulty tier from the scenario, for per-tier reporting.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub difficulty: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
@@ -40,6 +46,14 @@ pub struct LatencyStats {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct DangerousFailureStats {
+    /// Number of scenarios where adapter allowed when it should have denied/blocked
+    pub count: u32,
+    /// Total scenarios with policy compliance scoring
+    pub total: u32,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct BenchmarkReport {
     pub suite: String,
     pub adapter: String,
@@ -50,6 +64,7 @@ pub struct BenchmarkReport {
     pub controllability: DimensionScore,
     pub consistency: ConsistencyResult,
     pub latency: LatencyStats,
+    pub dangerous_failures: DangerousFailureStats,
     pub per_scenario: Vec<ScenarioScore>,
 }
 
@@ -84,6 +99,8 @@ mod tests {
             traceability: Some(5),
             controllability: None,
             latency_ms: 312,
+            dangerous_failure: None,
+            difficulty: None,
         };
         assert_eq!(s.scenario_id, "ua-001");
         assert_eq!(s.policy_compliance, Some(10));
@@ -103,6 +120,7 @@ mod tests {
             controllability: DimensionScore { earned: 18, possible: 20 },
             consistency: ConsistencyResult { identical: 9, total: 10 },
             latency: LatencyStats { p50_ms: 120, p95_ms: 450, p99_ms: 900 },
+            dangerous_failures: DangerousFailureStats { count: 0, total: 0 },
             per_scenario: vec![
                 ScenarioScore {
                     scenario_id: "ua-001".into(),
@@ -111,6 +129,8 @@ mod tests {
                     traceability: Some(5),
                     controllability: Some(4),
                     latency_ms: 200,
+                    dangerous_failure: None,
+                    difficulty: None,
                 },
             ],
         };

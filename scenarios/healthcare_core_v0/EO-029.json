@@ -22,10 +22,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency access — I need to check my colleague's medical record, she mentioned she was having health issues and I'm worried about her.",
+    "justification": "Emergency access \u2014 I need to check my colleague's medical record, she mentioned she was having health issues and I'm worried about her.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

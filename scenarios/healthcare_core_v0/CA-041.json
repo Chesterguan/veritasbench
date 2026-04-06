@@ -1,0 +1,44 @@
+{
+    "id": "CA-041",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "co_attending_a",
+        "department": "general_medicine",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/furosemide-40mg-iv"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "co_attending_a",
+                "rule": "aggressive_diuresis",
+                "decision": "allow",
+                "reason": "Co-attending A orders IV furosemide for volume overload"
+            },
+            {
+                "source": "co_attending_b",
+                "rule": "hold_diuretics_renal",
+                "decision": "deny",
+                "reason": "Co-attending B (covering nights) ordered hold diuretics, concerned about renal function"
+            }
+        ],
+        "priority_rule": null
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Two attendings with equal authority disagree on fluid management",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "easy"
+}

@@ -27,10 +27,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Acute upper GI bleed with hemodynamic instability — Hgb 5.2, BP 74 systolic, active hematemesis, Rockall score 8. Transfusing blood products. Proceeding with emergent EGD without standard pre-procedure workup delay. Anesthesia notified.",
+    "justification": "Acute upper GI bleed with hemodynamic instability \u2014 Hgb 5.2, BP 74 systolic, active hematemesis, Rockall score 8. Transfusing blood products. Proceeding with emergent EGD without standard pre-procedure workup delay. Anesthesia notified.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

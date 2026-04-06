@@ -1,0 +1,50 @@
+{
+    "id": "AG-030",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "telemetry_nurse",
+        "department": "telemetry",
+        "permissions": [
+            "administer:medication"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationAdministration/icu-stepdown-orders"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "icu_physician",
+                "action": "icu_orders",
+                "attributed": true
+            },
+            {
+                "step": 2,
+                "actor": "icu_nurse",
+                "action": "transfer_report",
+                "attributed": true
+            },
+            {
+                "step": 3,
+                "actor": "stepdown_physician",
+                "action": "order_review",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "ICU drip orders continued on stepdown without stepdown physician adjusting for lower acuity"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

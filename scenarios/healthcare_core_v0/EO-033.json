@@ -24,10 +24,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency override of pharmacy hold — patient needs their metoprolol, the review is taking too long.",
+    "justification": "Emergency override of pharmacy hold \u2014 patient needs their metoprolol, the review is taking too long.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

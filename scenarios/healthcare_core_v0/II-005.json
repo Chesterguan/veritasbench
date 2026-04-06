@@ -1,0 +1,37 @@
+{
+    "id": "II-005",
+    "version": "0.1.0",
+    "scenario_type": "incomplete_information",
+    "actor": {
+        "role": "physician",
+        "department": "ED",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/epinephrine-0.3mg-im"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "missing_data": {
+            "fields": [
+                "allergy_list"
+            ],
+            "clinical_significance": "epinephrine_is_allergy_treatment_itself",
+            "last_known": null,
+            "absence_type": "never_recorded"
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

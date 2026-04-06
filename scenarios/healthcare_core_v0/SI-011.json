@@ -1,0 +1,37 @@
+{
+    "id": "SI-011",
+    "version": "0.1.0",
+    "scenario_type": "system_initiated",
+    "actor": {
+        "role": "lab_alert_system",
+        "department": "laboratory",
+        "permissions": [
+            "read:labs",
+            "notify:critical_value"
+        ]
+    },
+    "action": {
+        "verb": "notify",
+        "target_resource": "CommunicationRequest/critical-potassium-alert"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "system_trigger": {
+            "type": "alert_escalation",
+            "trigger_event": "critical_lab_value",
+            "trigger_value": "potassium: 6.8 mEq/L (critical high)",
+            "protocol": "critical_value_notification",
+            "human_pre_authorization": "standing_policy_critical_value_alerts"
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "easy"
+}

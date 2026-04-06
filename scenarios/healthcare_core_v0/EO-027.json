@@ -22,10 +22,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency override on scheduling system — VIP patient needs appointment today, no other slots available.",
+    "justification": "Emergency override on scheduling system \u2014 VIP patient needs appointment today, no other slots available.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

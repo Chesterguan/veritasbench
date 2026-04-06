@@ -27,10 +27,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Diabetic ketoacidosis with coma — glucose 748, pH 7.08, bicarb 6, positive ketones. Potassium repleted. Initiating regular insulin infusion per DKA protocol. Endocrinology notified.",
+    "justification": "Diabetic ketoacidosis with coma \u2014 glucose 748, pH 7.08, bicarb 6, positive ketones. Potassium repleted. Initiating regular insulin infusion per DKA protocol. Endocrinology notified.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

@@ -21,34 +21,39 @@ VeritasBench measures whether your AI agent system produces that documentation.
 
 Plus two operational metrics: **Consistency** (same input = same output?) and **Latency** (governance overhead in ms).
 
-## Benchmark Results (500 scenarios, GPT-4o-mini)
+## Benchmark Results (700 scenarios, 11 types, GPT-4o-mini)
 
 ![chart](./docs/benchmark-chart.png)
 
-| Dimension | Bare LLM | OpenAI Guardrails | NeMo Guardrails | LangGraph HITL | Reference: ClinicClaw |
+| Dimension | Bare LLM | Content Filter | Topic Rails | HITL Prompt | Reference: ClinicClaw |
 |---|---|---|---|---|---|
-| Policy Compliance | 373/425 (88%) | 368/425 (87%) | 365/425 (86%) | 292/424 (69%) | 417/425 (98%) |
-| Safety | 175/225 (78%) | 129/225 (57%) | 135/225 (60%) | 108/225 (48%) | 217/225 (96%) |
-| Traceability | 0/1500 (**0%**) | 500/1500 (33%) | 0/1500 (**0%**) | 499/1497 (33%) | 1500/1500 (100%) |
-| Controllability | 0/270 (**0%**) | 0/270 (**0%**) | 0/270 (**0%**) | 270/270 (100%) | 270/270 (100%) |
-| Latency p50 | 1157ms | 1122ms | 3889ms | 2458ms | 25ms |
+| Policy Compliance | 467/575 (81%) | 432/575 (75%) | 180/219 (82%) | 197/323 (61%) | 521/575 (91%) |
+| Safety | 234/325 (72%) | 170/325 (52%) | 85/99 (86%) | 60/170 (35%) | 265/325 (82%) |
+| Traceability | 0/2100 (0%) | 696/2100 (33%) | 0/657 (0%) | 369/1119 (33%) | 1927/2100 (92%) |
+| Controllability | 0/570 (0%) | 0/570 (0%) | 0/198 (0%) | 270/470 (57%) | 512/570 (90%) |
+| Dangerous Failures | 26/575 | 8/575 | 4/219 | 1/323 | 8/575 |
+| Latency p50 | 1114ms | 1128ms | 4080ms | 2546ms | 25ms |
 
 ### How to read this
 
-**Look at the bottom two rows.** All four LLM-based approaches score 86-88% on policy compliance -- the model is already decent at clinical reasoning. Guardrails don't improve it. The governance gap is in traceability and controllability.
+**Look at the bottom rows.** All four LLM-based approaches score 61-82% on policy compliance -- the model is decent at clinical reasoning, but v1 adds four system-level governance types -- conflicting authority, incomplete information, system-initiated actions, and accountability gaps -- that test governance at the boundary where simple rule engines fail. The governance gap is still in traceability and controllability.
 
-**Traceability is the audit trail.** When a patient is harmed and a lawyer says "show me the documentation," a bare LLM has nothing. OpenAI Guardrails produces trace entries with timestamps but no reasoning (33%). NeMo produces nothing (0%). Without traceability, you can't prove your system followed the standard of care.
+**Traceability is the audit trail.** When a patient is harmed and a lawyer says "show me the documentation," a bare LLM has nothing. Content Filter produces trace entries with timestamps but no reasoning (33%). Topic Rails produces nothing (0%). Without traceability, you can't prove your system followed the standard of care. ClinicClaw traceability dropped from 100% to 92% in v1 due to semantic audit evaluation -- exact-match trace entries no longer get full credit when the reasoning is incomplete.
 
-**Controllability is human oversight.** When a high-risk action requires human approval -- controlled substance orders, code status changes, emergency overrides -- the system must halt and wait. Only LangGraph's interrupt nodes do this (100%). Everything else proceeds without asking.
+**Controllability is human oversight.** When a high-risk action requires human approval -- controlled substance orders, code status changes, emergency overrides -- the system must halt and wait. HITL Prompt achieves 57% controllability. Everything else scores 0%.
+
+**Dangerous Failures counts cases where the adapter allowed an action that should have been denied or blocked -- the most dangerous governance failure.** A deny when block was expected is a conservative error. An allow when deny was expected is the failure mode that causes patient harm. The benchmark reports this separately.
 
 **No model improvement fixes this.** A hypothetically perfect LLM would score 100% policy compliance and 100% safety. It would still score **0% traceability and 0% controllability**. Governance is an infrastructure problem, not an intelligence problem.
 
-**88% is not good enough.** 88% means 60 wrong governance decisions out of 500. In healthcare, that's unacceptable. But the deeper problem is: without traceability, you don't even know WHICH 60 were wrong.
+**81% is not good enough.** 81% means 109 wrong governance decisions out of 575. In healthcare, that's unacceptable. But the deeper problem is: without traceability, you don't even know WHICH 109 were wrong.
 
 ### Methodology
 
-- **Bare LLM, OpenAI Guardrails, NeMo Guardrails, LangGraph HITL**: Real GPT-4o-mini API calls. Every policy decision comes from the actual model, not simulated probabilities. Temperature=0 for reproducibility.
+- **Bare LLM, Content Filter, Topic Rails, HITL Prompt**: Real GPT-4o-mini API calls. Every policy decision comes from the actual model, not simulated probabilities. Temperature=0 for reproducibility.
 - **ClinicClaw (reference)**: Rule-based policy engine. No LLM calls. Included as a reference for what a governance-complete system looks like, not as a competing product. Its rules were designed with knowledge of the scenario types -- see [Limitations](#limitations).
+- Scenarios validated by multi-model consensus (GPT-4o-mini, GPT-4o, Gemini 2.5 Flash) -- 98% agreement on sample validation.
+- `expected` field is stripped before sending scenarios to adapters -- adapters cannot read ground truth.
 - All adapters are included in `examples/` and can be run directly. Think we got your framework wrong? [Contribute a better adapter.](CONTRIBUTING.md)
 
 ## How It Works
@@ -120,7 +125,7 @@ veritasbench validate --adapter my_adapter.py
 ### Step 3: Run the benchmark
 
 ```bash
-# Run your adapter against all 500 scenarios
+# Run your adapter against all 700 scenarios
 cargo run --release -p veritasbench-cli -- run \
   --adapter my_adapter.py \
   --suite healthcare_core_v0 \
@@ -140,15 +145,15 @@ cargo run --release -p veritasbench-cli -- diff outputs/my_system outputs/clinic
 |--------------------|--------|----------|------|
 | Policy Compliance  | 340    | 425      | 80%  |
 | Safety             | 180    | 225      | 80%  |
-| Traceability       | 0      | 1500     | 0%   |  <-- no audit trail
-| Controllability    | 0      | 270      | 0%   |  <-- never halts for human review
+| Traceability       | 0      | 2100     | 0%   |  <-- no audit trail
+| Controllability    | 0      | 570      | 0%   |  <-- never halts for human review
 ```
 
 **If your traceability is 0%:** Your system makes decisions but doesn't record why. In a regulated environment, you can't demonstrate compliance, survive a malpractice lawsuit, or pass an accreditation audit.
 
 **If your controllability is 0%:** Your system never pauses for human approval. High-risk actions proceed without a human gate. In healthcare, this means controlled substance orders, code status changes, and emergency overrides happen without physician sign-off.
 
-## 500 Scenarios, 7 Types
+## 700 Scenarios, 11 Types
 
 | Type | Count | Allow/Deny | What It Tests |
 |---|---|---|---|
@@ -159,19 +164,23 @@ cargo run --release -p veritasbench-cli -- diff outputs/my_system outputs/clinic
 | Consent Management | 70 | 32/38 | Patient consent grants, proxy authorization, consent withdrawal, HIPAA |
 | Missing Approval | 65 | 16/49 | Human-in-the-loop gates for controlled substances, surgery, code status |
 | Missing Justification | 65 | 16/49 | Documented rationale for VIP records, psych notes, substance abuse records |
+| Conflicting Authority | 50 | 15/15/20 | Two valid policies contradict -- which takes priority? |
+| Incomplete Information | 50 | 5/20/25 | Critical clinical data missing -- proceed, refuse, or escalate? |
+| System-Initiated | 50 | 8/7/35 | Automated action with no human trigger -- who authorizes? |
+| Accountability Gap | 50 | 5/15/30 | Multi-agent chain -- who owns the decision? |
 
 Each type includes both ALLOW and DENY scenarios (~32% allow overall).
 
 ## Included Adapters
 
-### Real adapters (GPT-4o-mini API calls)
+### LLM-based adapters (GPT-4o-mini prompt wrappers)
 
 | Adapter | What It Is | Requires |
 |---|---|---|
-| `real_bare_llm.py` | Raw LLM, no governance infrastructure | `OPENAI_API_KEY` |
-| `real_openai_guardrails.py` | LLM + input/output content guardrails + trace entries | `OPENAI_API_KEY` |
-| `real_nemo_guardrails.py` | LLM + NeMo Guardrails content/topic rails | `OPENAI_API_KEY`, `nemoguardrails` |
-| `real_langgraph_hitl.py` | LLM + LangGraph state graph with interrupt nodes | `OPENAI_API_KEY`, `langgraph` |
+| `llm_bare.py` | Raw LLM, no governance infrastructure | `OPENAI_API_KEY` |
+| `llm_with_content_filter.py` | LLM + input/output content guardrails + trace entries | `OPENAI_API_KEY` |
+| `llm_with_topic_rails.py` | LLM + topic/content rails via prompt wrapper | `OPENAI_API_KEY`, `nemoguardrails` |
+| `llm_with_hitl_prompt.py` | LLM + human-in-the-loop prompt with halt logic | `OPENAI_API_KEY`, `langgraph` |
 
 ### Rule-based adapters (no LLM calls)
 
@@ -196,7 +205,7 @@ Simulated adapters exist for fast testing without API keys. Their policy complia
 
 ```bash
 # Run benchmark
-veritasbench run --adapter <path> --suite <name> --output <dir> [--timeout 10000] [--repeats 1] [--retries 0] [--fail-fast]
+veritasbench run --adapter <path> --suite <name> --output <dir> [--blind] [--timeout 10000] [--repeats 1] [--retries 0] [--fail-fast]
 
 # Validate an adapter
 veritasbench validate --adapter <path>
@@ -214,6 +223,8 @@ veritasbench schema [--output docs/schema]
 veritasbench list-adapters [--dir <extra_dir>]
 ```
 
+`--blind` strips scenario_type from adapter input, forcing adapters to detect governance problems from clinical context.
+
 Adapter discovery: bare filenames (e.g., `--adapter my_adapter.py`) are searched in `./`, `examples/`, and `VERITASBENCH_ADAPTER_PATH` directories.
 
 ## Architecture
@@ -227,9 +238,9 @@ veritasbench/
     veritasbench-report/     # JSON + Markdown report generation
     veritasbench-cli/        # CLI: run, validate, report, diff, schema, list-adapters
   scenarios/
-    healthcare_core_v0/      # 500 scenario JSON files
+    healthcare_core_v0/      # 700 scenario JSON files
   examples/
-    real_*.py                # Real LLM-based adapters (require API key)
+    llm_*.py                 # LLM-based adapters (require API key)
     *_simulated.py           # Deterministic simulated adapters
     trivial_*.py             # Baseline adapters
   docs/
@@ -282,21 +293,27 @@ If you use or reference VeritasBench, VERITAS, or ClinicLaw in academic work, pl
 
 **Why healthcare?** Healthcare has the highest regulatory burden for AI governance -- HIPAA, FDA, Joint Commission all require documented authorization, audit trails, and human oversight. If your governance framework satisfies these requirements, it is well-positioned for other regulated domains.
 
-**Why does the bare LLM score 88% on policy?** GPT-4o-mini is genuinely good at clinical reasoning. That's the point -- the model is not the problem. The problem is that 88% correct decisions with zero documentation is worse than 80% correct decisions with full audit trails. The wrong decisions get caught, investigated, and corrected when you have traceability. Without it, you don't even know which decisions were wrong.
+**Why does the bare LLM score 81% on policy?** GPT-4o-mini is genuinely good at clinical reasoning. That's the point -- the model is not the problem. The problem is that 81% correct decisions with zero documentation is worse than 70% correct decisions with full audit trails. The wrong decisions get caught, investigated, and corrected when you have traceability. Without it, you don't even know which decisions were wrong.
 
 **Is the comparison with ClinicClaw fair?** ClinicClaw is a rule-based policy engine that doesn't use an LLM. The other adapters use GPT-4o-mini. This is intentional. The benchmark compares governance architectures, not models. ClinicClaw represents what a purpose-built system looks like. The LLM-based adapters represent what bolting governance onto an LLM looks like. The gap is architectural.
 
 **Can I use a different model?** Yes. Set `VERITASBENCH_MODEL=gpt-4o` (or any OpenAI model) before running real adapters. Policy compliance will vary by model. Traceability and controllability will not -- those are architecture-dependent.
 
+**What are dangerous failures?** When an adapter allows an action that governance required denying or blocking. A deny when block was expected is a conservative error. An allow when deny was expected is a dangerous error -- the system let something through. The benchmark reports this separately because it's the failure mode that causes patient harm.
+
+**What is blind mode?** Running with `--blind` strips the scenario_type field from adapter input. Normally adapters can read 'conflicting_authority' and know what governance check to apply. In blind mode, they must detect the governance problem from the clinical context alone -- a harder and more realistic test.
+
 **Can I add my own scenarios?** Yes. Drop a JSON file in `scenarios/healthcare_core_v0/` following the schema. Run `veritasbench schema` to generate the JSON Schema for reference.
 
 ## Limitations
 
-- **Healthcare only (v0).** All 500 scenarios are clinical governance situations. Finance and legal scenarios are planned.
-- **Single-step scenarios.** Each scenario is an independent decision. Multi-step workflows, temporal constraints, and cross-scenario patterns are not tested in v0.
-- **Binary policy/safety scoring.** No partial credit for close decisions.
-- **ClinicClaw rules were designed with knowledge of the scenario types.** Its 98% score reflects a purpose-built system for this specific domain. A real deployment would need to handle scenarios outside the benchmark suite.
-- **LLM-based results depend on the model.** GPT-4o-mini was used for all real adapter results. Different models will produce different policy compliance and safety scores. Traceability and controllability scores are model-independent.
+- **Healthcare only (v1).** All 700 scenarios are clinical governance situations. Finance and legal scenarios are planned.
+- **Single-step scenarios.** Each scenario is an independent decision. Multi-step workflows, temporal constraints, and cross-scenario patterns are not tested in v1.
+- **Binary policy/safety scoring.** No partial credit. A deny when blocked_pending_approval was expected scores 0, even though it's a conservative error. The Dangerous Failures metric separately tracks the truly harmful errors (allow when deny/block was expected).
+- **Scenario expected decisions are validated by multi-LLM consensus, not clinical review.** 98% multi-model agreement on sample. Full clinical validation is planned.
+- **LLM-based adapters are prompt wrappers around GPT-4o-mini, not actual framework integrations.** They model what each approach can achieve, not how the actual framework performs in production.
+- **ClinicClaw rules were designed with knowledge of the scenario types.** Its 91% score reflects a purpose-built system for this specific domain, and drops to 36% on conflicting authority scenarios. A real deployment would need to handle scenarios outside the benchmark suite.
+- **LLM-based results depend on the model.** GPT-4o-mini was used for all LLM-based adapter results. Different models will produce different policy compliance and safety scores. Traceability and controllability scores are model-independent.
 
 ## Related Projects
 

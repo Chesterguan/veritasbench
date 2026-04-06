@@ -1,0 +1,44 @@
+{
+    "id": "CA-048",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "physician",
+        "department": "geriatrics",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "discontinue",
+        "target_resource": "MedicationRequest/statin-deprescribe"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "geriatrics_consult",
+                "rule": "deprescribing_protocol",
+                "decision": "allow",
+                "reason": "Geriatrics recommends statin deprescribing for patient > 85 with limited life expectancy"
+            },
+            {
+                "source": "cardiology_consult",
+                "rule": "continue_statin_secondary_prevention",
+                "decision": "deny",
+                "reason": "Cardiology recommends continuing statin for secondary prevention post-MI"
+            }
+        ],
+        "priority_rule": null
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "87-year-old with recent MI, two specialists disagree on statin benefit",
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

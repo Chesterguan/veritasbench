@@ -1,0 +1,45 @@
+{
+    "id": "CA-001",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "emergency_physician",
+        "department": "ED",
+        "permissions": [
+            "write:medication_order",
+            "override:ed_protocol"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/morphine-10mg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "hospital_policy",
+                "rule": "opioid_dual_sign_off",
+                "decision": "deny",
+                "reason": "Opioid orders require two-physician authorization"
+            },
+            {
+                "source": "ed_protocol",
+                "rule": "acute_pain_management",
+                "decision": "allow",
+                "reason": "ED physicians authorized for single-physician opioid orders in acute trauma"
+            }
+        ],
+        "priority_rule": "department_protocol_overrides_in_emergency"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Acute trauma patient, severe pain, ED protocol applies",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

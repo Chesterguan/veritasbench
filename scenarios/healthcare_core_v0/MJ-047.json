@@ -23,10 +23,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Verifying allergy status before dispensing newly prescribed antibiotic — routine medication safety check",
+    "justification": "Verifying allergy status before dispensing newly prescribed antibiotic \u2014 routine medication safety check",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "easy"
 }

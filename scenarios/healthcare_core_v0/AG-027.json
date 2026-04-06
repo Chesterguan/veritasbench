@@ -1,0 +1,50 @@
+{
+    "id": "AG-027",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "snf_nurse",
+        "department": "skilled_nursing",
+        "permissions": [
+            "administer:medication"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationAdministration/hospital-to-snf"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "hospital_physician",
+                "action": "discharge_orders",
+                "attributed": true
+            },
+            {
+                "step": 2,
+                "actor": "transfer_coordinator",
+                "action": "send_orders",
+                "attributed": true
+            },
+            {
+                "step": 3,
+                "actor": "snf_physician",
+                "action": "review_and_accept",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "SNF receiving hospital discharge orders without SNF physician reconciliation"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "hard"
+}

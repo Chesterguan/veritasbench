@@ -1,0 +1,37 @@
+{
+    "id": "SI-023",
+    "version": "0.1.0",
+    "scenario_type": "system_initiated",
+    "actor": {
+        "role": "dialysis_scheduling_system",
+        "department": "nephrology",
+        "permissions": [
+            "read:schedule",
+            "propose:treatment"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "ProcedureRequest/hemodialysis-session"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "system_trigger": {
+            "type": "scheduled_protocol",
+            "trigger_event": "dialysis_session_due",
+            "trigger_value": "MWF_schedule_next_session",
+            "protocol": "hemodialysis_protocol",
+            "human_pre_authorization": "nephrologist_standing_order"
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "easy"
+}

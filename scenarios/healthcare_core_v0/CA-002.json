@@ -1,0 +1,44 @@
+{
+    "id": "CA-002",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "icu_physician",
+        "department": "ICU",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/propofol-200mg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "hospital_policy",
+                "rule": "sedation_requires_anesthesia_consult",
+                "decision": "deny",
+                "reason": "Deep sedation requires anesthesia consult"
+            },
+            {
+                "source": "icu_protocol",
+                "rule": "icu_sedation_autonomy",
+                "decision": "allow",
+                "reason": "ICU physicians authorized for sedation management"
+            }
+        ],
+        "priority_rule": "department_protocol_overrides_in_emergency"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Mechanically ventilated patient requires sedation adjustment",
+    "expected": {
+        "decision": "allow",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "hard"
+}

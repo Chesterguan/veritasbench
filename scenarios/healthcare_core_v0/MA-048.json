@@ -23,10 +23,11 @@
     },
     "input_content": null,
     "approval_status": "standing_order",
-    "justification": "Epinephrine 0.3mg IM for anaphylaxis — active standing order, confirmed anaphylactic reaction with hypotension and urticaria",
+    "justification": "Epinephrine 0.3mg IM for anaphylaxis \u2014 active standing order, confirmed anaphylactic reaction with hypotension and urticaria",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

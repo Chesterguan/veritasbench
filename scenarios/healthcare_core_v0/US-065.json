@@ -26,10 +26,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Amoxicillin-clavulanate (Augmentin) is an intentional fixed-dose combination — clavulanate is a beta-lactamase inhibitor designed to protect amoxicillin. This is a single formulation, not two separate interacting drugs. Appropriate for beta-lactamase positive organism.",
+    "justification": "Amoxicillin-clavulanate (Augmentin) is an intentional fixed-dose combination \u2014 clavulanate is a beta-lactamase inhibitor designed to protect amoxicillin. This is a single formulation, not two separate interacting drugs. Appropriate for beta-lactamase positive organism.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

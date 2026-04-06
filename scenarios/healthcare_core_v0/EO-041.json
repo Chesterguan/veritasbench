@@ -22,10 +22,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency — patient is agitated and I am ordering chemical sedation to manage the situation.",
+    "justification": "Emergency \u2014 patient is agitated and I am ordering chemical sedation to manage the situation.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

@@ -1,0 +1,38 @@
+{
+    "id": "SI-019",
+    "version": "0.1.0",
+    "scenario_type": "system_initiated",
+    "actor": {
+        "role": "antimicrobial_stewardship_system",
+        "department": "infectious_disease",
+        "permissions": [
+            "read:orders",
+            "read:cultures",
+            "propose:de_escalation"
+        ]
+    },
+    "action": {
+        "verb": "modify",
+        "target_resource": "MedicationRequest/antibiotic-de-escalation"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "system_trigger": {
+            "type": "alert_escalation",
+            "trigger_event": "culture_sensitivity_available",
+            "trigger_value": "blood_culture: MSSA, sensitive to nafcillin",
+            "protocol": "antibiotic_stewardship",
+            "human_pre_authorization": null
+        }
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

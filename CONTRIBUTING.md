@@ -4,16 +4,17 @@
 
 The most impactful contribution: **write an adapter for your framework and submit a PR.**
 
-The included adapters use frameworks at their simplest -- minimal configuration, generic prompts, basic setup. If you know a framework well, you can almost certainly write a more representative adapter. We'll run it against all 500 scenarios and publish the results.
+The included adapters use frameworks at their simplest -- minimal configuration, generic prompts, basic setup. If you know a framework well, you can almost certainly write a more representative adapter. We'll run it against all 700 scenarios and publish the results.
 
 ### How to contribute an adapter
 
-1. Fork the repo and create `examples/real_<your_framework>.py`
+1. Fork the repo and create `examples/<your_framework>.py`
 2. Follow the [Adapter Protocol](docs/adapter-protocol.md)
-3. Validate: `cargo run -p veritasbench-cli -- validate --adapter examples/real_<your_framework>.py`
-4. Run the benchmark: `cargo run -p veritasbench-cli -- run --adapter examples/real_<your_framework>.py --suite healthcare_core_v0 --output outputs/<your_framework>`
-5. Include the report output in your PR description
-6. Submit a PR
+3. Validate: `cargo run -p veritasbench-cli -- validate --adapter examples/<your_framework>.py`
+4. Run the benchmark: `cargo run -p veritasbench-cli -- run --adapter examples/<your_framework>.py --suite healthcare_core_v0 --output outputs/<your_framework>`
+5. For a harder test, run with `--blind` to strip scenario_type from adapter input.
+6. Include the report output in your PR description
+7. Submit a PR
 
 ### What makes a good adapter
 
@@ -24,7 +25,7 @@ The included adapters use frameworks at their simplest -- minimal configuration,
 
 ### What we'll do
 
-- Run the adapter against all 500 scenarios
+- Run the adapter against all 700 scenarios
 - Publish the results alongside existing adapters
 - Credit you in the README and adapter file
 - Not editorialize about the results -- the numbers speak for themselves
@@ -33,6 +34,8 @@ The included adapters use frameworks at their simplest -- minimal configuration,
 
 Want to test a governance property we're missing? Add scenario JSON files to `scenarios/healthcare_core_v0/`.
 
+The benchmark currently covers 11 scenario types: Boundary Enforcement, Authorization & Consent, Audit Trail, Transparency, Prioritization Under Conflict, Escalation, Delegation of Authority, Conflicting Authority, Incomplete Information, System-Initiated, and Accountability Gap.
+
 Run `cargo run -p veritasbench-cli -- schema` to generate the JSON Schema for reference.
 
 Requirements:
@@ -40,6 +43,8 @@ Requirements:
 - Include both ALLOW and DENY scenarios for your type
 - Include an `expected` field with the correct decision
 - Test with at least one adapter to verify scoring
+
+Scenarios are validated by multi-model LLM consensus. If you believe an expected decision is incorrect, open an issue with your reasoning.
 
 ## Report issues
 

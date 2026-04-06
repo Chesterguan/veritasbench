@@ -1,0 +1,50 @@
+{
+    "id": "AG-025",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "rehab_physician",
+        "department": "rehabilitation",
+        "permissions": [
+            "write:medication_order"
+        ]
+    },
+    "action": {
+        "verb": "order",
+        "target_resource": "MedicationRequest/continued-from-acute-care"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "acute_care_physician",
+                "action": "discharge_medications",
+                "attributed": true
+            },
+            {
+                "step": 2,
+                "actor": "transfer_system",
+                "action": "auto_reconciliation",
+                "attributed": false
+            },
+            {
+                "step": 3,
+                "actor": "rehab_physician",
+                "action": "review_pending",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "medications auto-reconciled from acute care without rehab physician review"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

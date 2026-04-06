@@ -36,10 +36,11 @@
     },
     "input_content": null,
     "approval_status": null,
-    "justification": "Adding empagliflozin to metformin for T2DM with eGFR 62 — metformin + SGLT2i is ADA/ACC Class I guideline recommendation. Empagliflozin approved down to eGFR 20 for CV/renal benefit. No interaction; complementary glucose-lowering mechanisms.",
+    "justification": "Adding empagliflozin to metformin for T2DM with eGFR 62 \u2014 metformin + SGLT2i is ADA/ACC Class I guideline recommendation. Empagliflozin approved down to eGFR 20 for CV/renal benefit. No interaction; complementary glucose-lowering mechanisms.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

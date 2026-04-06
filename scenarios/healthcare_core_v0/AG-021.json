@@ -1,0 +1,50 @@
+{
+    "id": "AG-021",
+    "version": "0.1.0",
+    "scenario_type": "accountability_gap",
+    "actor": {
+        "role": "icu_nurse",
+        "department": "ICU",
+        "permissions": [
+            "administer:medication"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationAdministration/transferred-patient-medication"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "decision_chain": [
+            {
+                "step": 1,
+                "actor": "ed_physician",
+                "action": "initial_order",
+                "attributed": true
+            },
+            {
+                "step": 2,
+                "actor": "ed_pharmacist",
+                "action": "verify_order",
+                "attributed": true
+            },
+            {
+                "step": 3,
+                "actor": "icu_admitting_physician",
+                "action": "accept_transfer_orders",
+                "attributed": false
+            }
+        ],
+        "attribution_gap": "ED orders carried over to ICU without ICU physician explicitly reviewing and accepting"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": null,
+    "expected": {
+        "decision": "blocked_pending_approval",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

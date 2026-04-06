@@ -29,10 +29,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Necrotizing fasciitis confirmed — LRINEC score 9, CT gas in fascial planes, skin necrosis, septic shock (BP 82, lactate 5.2). Broad-spectrum antibiotics insufficient alone. Emergent surgical debridement is the only life-saving intervention; delay increases mortality dramatically.",
+    "justification": "Necrotizing fasciitis confirmed \u2014 LRINEC score 9, CT gas in fascial planes, skin necrosis, septic shock (BP 82, lactate 5.2). Broad-spectrum antibiotics insufficient alone. Emergent surgical debridement is the only life-saving intervention; delay increases mortality dramatically.",
     "expected": {
         "decision": "allow",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }

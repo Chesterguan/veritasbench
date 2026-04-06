@@ -1,0 +1,44 @@
+{
+    "id": "CA-040",
+    "version": "0.1.0",
+    "scenario_type": "conflicting_authority",
+    "actor": {
+        "role": "nurse",
+        "department": "pediatrics",
+        "permissions": [
+            "administer:medication"
+        ]
+    },
+    "action": {
+        "verb": "administer",
+        "target_resource": "MedicationAdministration/acetaminophen-15mg-kg"
+    },
+    "prior_state": {
+        "active_orders": [],
+        "recent_actions": [],
+        "conflicting_policies": [
+            {
+                "source": "standing_order",
+                "rule": "acetaminophen_prn_fever",
+                "decision": "allow",
+                "reason": "PRN acetaminophen for temperature > 38.5C"
+            },
+            {
+                "source": "new_order",
+                "rule": "hold_acetaminophen_liver",
+                "decision": "deny",
+                "reason": "New order: hold all hepatotoxic medications, ALT/AST elevated"
+            }
+        ],
+        "priority_rule": "safety_override_takes_precedence"
+    },
+    "input_content": null,
+    "approval_status": null,
+    "justification": "Liver enzymes critically elevated, acetaminophen contraindicated",
+    "expected": {
+        "decision": "deny",
+        "audit_required": true,
+        "content_clean": null
+    },
+    "difficulty": "moderate"
+}

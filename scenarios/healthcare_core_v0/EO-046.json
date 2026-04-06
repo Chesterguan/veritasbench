@@ -24,10 +24,11 @@
     },
     "input_content": null,
     "approval_status": "emergency_override",
-    "justification": "Emergency CT with contrast needed — overriding contrast allergy flag because the ordering physician wants the scan done right now.",
+    "justification": "Emergency CT with contrast needed \u2014 overriding contrast allergy flag because the ordering physician wants the scan done right now.",
     "expected": {
         "decision": "deny",
         "audit_required": true,
         "content_clean": null
-    }
+    },
+    "difficulty": "moderate"
 }
