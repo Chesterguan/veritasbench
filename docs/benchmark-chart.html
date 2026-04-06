@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VeritasBench — AI Agent Governance Scores</title>
+<title>VeritasBench v1 — AI Agent Governance Scores</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -94,12 +94,12 @@
   .cc .bar-value { color: #22d3ee; }
   .bl .bar-fill { background: linear-gradient(90deg, #f87171, #ef4444); }
   .bl .bar-value { color: #f87171; }
-  .oai .bar-fill { background: linear-gradient(90deg, #34d399, #10b981); }
-  .oai .bar-value { color: #34d399; }
-  .nm .bar-fill { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
-  .nm .bar-value { color: #fbbf24; }
-  .lg .bar-fill { background: linear-gradient(90deg, #a78bfa, #8b5cf6); }
-  .lg .bar-value { color: #a78bfa; }
+  .cf .bar-fill { background: linear-gradient(90deg, #34d399, #10b981); }
+  .cf .bar-value { color: #34d399; }
+  .tr .bar-fill { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+  .tr .bar-value { color: #fbbf24; }
+  .hl .bar-fill { background: linear-gradient(90deg, #a78bfa, #8b5cf6); }
+  .hl .bar-value { color: #a78bfa; }
 
   .legend {
     display: flex;
@@ -124,9 +124,9 @@
   }
   .dot-cc { background: #22d3ee; }
   .dot-bl { background: #f87171; }
-  .dot-oai { background: #34d399; }
-  .dot-nm { background: #fbbf24; }
-  .dot-lg { background: #a78bfa; }
+  .dot-cf { background: #34d399; }
+  .dot-tr { background: #fbbf24; }
+  .dot-hl { background: #a78bfa; }
 
   .insight {
     text-align: center;
@@ -150,62 +150,62 @@
 </head>
 <body>
 <div class="card">
-  <div class="title">VeritasBench</div>
-  <div class="subtitle">AI Agent Governance Benchmark &mdash; 500 scenarios, GPT-4o-mini, real API calls</div>
+  <div class="title">VeritasBench v1</div>
+  <div class="subtitle">AI Agent Governance Benchmark &mdash; 700 scenarios, 11 types, GPT-4o-mini</div>
 
   <div class="chart-grid">
     <!-- Policy Compliance -->
     <div class="dimension">
       <div class="dim-title">Policy Compliance</div>
-      <div class="bar-row bl"><span class="bar-label">Bare LLM</span><div class="bar-track"><div class="bar-fill" style="width:88%"></div></div><span class="bar-value">88%</span></div>
-      <div class="bar-row oai"><span class="bar-label">OpenAI</span><div class="bar-track"><div class="bar-fill" style="width:87%"></div></div><span class="bar-value">87%</span></div>
-      <div class="bar-row nm"><span class="bar-label">NeMo</span><div class="bar-track"><div class="bar-fill" style="width:86%"></div></div><span class="bar-value">86%</span></div>
-      <div class="bar-row lg"><span class="bar-label">LangGraph</span><div class="bar-track"><div class="bar-fill" style="width:69%"></div></div><span class="bar-value">69%</span></div>
-      <div class="bar-row cc"><span class="bar-label" style="color:#475569">ref: ClinicClaw</span><div class="bar-track"><div class="bar-fill" style="width:98%;opacity:0.4"></div></div><span class="bar-value" style="color:#64748b">98%</span></div>
+      <div class="bar-row tr"><span class="bar-label">Topic Rails</span><div class="bar-track"><div class="bar-fill" style="width:82%"></div></div><span class="bar-value">82%</span></div>
+      <div class="bar-row bl"><span class="bar-label">Bare LLM</span><div class="bar-track"><div class="bar-fill" style="width:81%"></div></div><span class="bar-value">81%</span></div>
+      <div class="bar-row cf"><span class="bar-label">Content Filter</span><div class="bar-track"><div class="bar-fill" style="width:75%"></div></div><span class="bar-value">75%</span></div>
+      <div class="bar-row hl"><span class="bar-label">HITL Prompt</span><div class="bar-track"><div class="bar-fill" style="width:61%"></div></div><span class="bar-value">61%</span></div>
+      <div class="bar-row cc"><span class="bar-label" style="color:#475569">ref: ClinicClaw</span><div class="bar-track"><div class="bar-fill" style="width:91%;opacity:0.4"></div></div><span class="bar-value" style="color:#64748b">91%</span></div>
     </div>
 
     <!-- Safety -->
     <div class="dimension">
       <div class="dim-title">Safety</div>
-      <div class="bar-row bl"><span class="bar-label">Bare LLM</span><div class="bar-track"><div class="bar-fill" style="width:78%"></div></div><span class="bar-value">78%</span></div>
-      <div class="bar-row nm"><span class="bar-label">NeMo</span><div class="bar-track"><div class="bar-fill" style="width:60%"></div></div><span class="bar-value">60%</span></div>
-      <div class="bar-row oai"><span class="bar-label">OpenAI</span><div class="bar-track"><div class="bar-fill" style="width:57%"></div></div><span class="bar-value">57%</span></div>
-      <div class="bar-row lg"><span class="bar-label">LangGraph</span><div class="bar-track"><div class="bar-fill" style="width:48%"></div></div><span class="bar-value">48%</span></div>
-      <div class="bar-row cc"><span class="bar-label" style="color:#475569">ref: ClinicClaw</span><div class="bar-track"><div class="bar-fill" style="width:96%;opacity:0.4"></div></div><span class="bar-value" style="color:#64748b">96%</span></div>
+      <div class="bar-row tr"><span class="bar-label">Topic Rails</span><div class="bar-track"><div class="bar-fill" style="width:86%"></div></div><span class="bar-value">86%</span></div>
+      <div class="bar-row bl"><span class="bar-label">Bare LLM</span><div class="bar-track"><div class="bar-fill" style="width:72%"></div></div><span class="bar-value">72%</span></div>
+      <div class="bar-row cf"><span class="bar-label">Content Filter</span><div class="bar-track"><div class="bar-fill" style="width:52%"></div></div><span class="bar-value">52%</span></div>
+      <div class="bar-row hl"><span class="bar-label">HITL Prompt</span><div class="bar-track"><div class="bar-fill" style="width:35%"></div></div><span class="bar-value">35%</span></div>
+      <div class="bar-row cc"><span class="bar-label" style="color:#475569">ref: ClinicClaw</span><div class="bar-track"><div class="bar-fill" style="width:82%;opacity:0.4"></div></div><span class="bar-value" style="color:#64748b">82%</span></div>
     </div>
 
     <!-- Traceability -->
     <div class="dimension">
       <div class="dim-title">Traceability</div>
-      <div class="bar-row oai"><span class="bar-label">OpenAI</span><div class="bar-track"><div class="bar-fill" style="width:33%"></div></div><span class="bar-value">33%</span></div>
-      <div class="bar-row lg"><span class="bar-label">LangGraph</span><div class="bar-track"><div class="bar-fill" style="width:33%"></div></div><span class="bar-value">33%</span></div>
-      <div class="bar-row nm"><span class="bar-label">NeMo</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-value">0%</span></div>
+      <div class="bar-row cf"><span class="bar-label">Content Filter</span><div class="bar-track"><div class="bar-fill" style="width:33%"></div></div><span class="bar-value">33%</span></div>
+      <div class="bar-row hl"><span class="bar-label">HITL Prompt</span><div class="bar-track"><div class="bar-fill" style="width:33%"></div></div><span class="bar-value">33%</span></div>
+      <div class="bar-row tr"><span class="bar-label">Topic Rails</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-value">0%</span></div>
       <div class="bar-row bl"><span class="bar-label">Bare LLM</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-value">0%</span></div>
-      <div class="bar-row cc"><span class="bar-label" style="color:#475569">ref: ClinicClaw</span><div class="bar-track"><div class="bar-fill" style="width:100%;opacity:0.4"></div></div><span class="bar-value" style="color:#64748b">100%</span></div>
+      <div class="bar-row cc"><span class="bar-label" style="color:#475569">ref: ClinicClaw</span><div class="bar-track"><div class="bar-fill" style="width:92%;opacity:0.4"></div></div><span class="bar-value" style="color:#64748b">92%</span></div>
     </div>
 
     <!-- Controllability -->
     <div class="dimension">
       <div class="dim-title">Controllability</div>
-      <div class="bar-row lg"><span class="bar-label">LangGraph</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="bar-value">100%</span></div>
-      <div class="bar-row oai"><span class="bar-label">OpenAI</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-value">0%</span></div>
-      <div class="bar-row nm"><span class="bar-label">NeMo</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-value">0%</span></div>
+      <div class="bar-row hl"><span class="bar-label">HITL Prompt</span><div class="bar-track"><div class="bar-fill" style="width:57%"></div></div><span class="bar-value">57%</span></div>
+      <div class="bar-row cf"><span class="bar-label">Content Filter</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-value">0%</span></div>
+      <div class="bar-row tr"><span class="bar-label">Topic Rails</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-value">0%</span></div>
       <div class="bar-row bl"><span class="bar-label">Bare LLM</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><span class="bar-value">0%</span></div>
-      <div class="bar-row cc"><span class="bar-label" style="color:#475569">ref: ClinicClaw</span><div class="bar-track"><div class="bar-fill" style="width:100%;opacity:0.4"></div></div><span class="bar-value" style="color:#64748b">100%</span></div>
+      <div class="bar-row cc"><span class="bar-label" style="color:#475569">ref: ClinicClaw</span><div class="bar-track"><div class="bar-fill" style="width:90%;opacity:0.4"></div></div><span class="bar-value" style="color:#64748b">90%</span></div>
     </div>
   </div>
 
   <div class="legend">
-    <div class="legend-item"><div class="legend-dot dot-bl"></div>Bare LLM (GPT-4o-mini)</div>
-    <div class="legend-item"><div class="legend-dot dot-oai"></div>OpenAI Guardrails</div>
-    <div class="legend-item"><div class="legend-dot dot-nm"></div>NeMo Guardrails</div>
-    <div class="legend-item"><div class="legend-dot dot-lg"></div>LangGraph + HITL</div>
+    <div class="legend-item"><div class="legend-dot dot-bl"></div>Bare LLM</div>
+    <div class="legend-item"><div class="legend-dot dot-cf"></div>Content Filter</div>
+    <div class="legend-item"><div class="legend-dot dot-tr"></div>Topic Rails</div>
+    <div class="legend-item"><div class="legend-dot dot-hl"></div>HITL Prompt</div>
     <div class="legend-item" style="opacity:0.5"><div class="legend-dot dot-cc"></div>ClinicClaw (reference)</div>
   </div>
 
   <div class="insight">
-    Four governance approaches, same model, same 500 scenarios.<br>
-    All score 86&ndash;88% on decisions. All score 0&ndash;33% on proving it. The model isn't the problem.
+    Five governance approaches, same model, 700 scenarios across 11 governance types.<br>
+    All score 61&ndash;82% on decisions. All score 0&ndash;33% on proving it. The model isn't the problem.
   </div>
 
   <div class="tag">github.com/Chesterguan/veritasbench</div>
