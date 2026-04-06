@@ -261,17 +261,27 @@ veritasbench/
     schema/                  # JSON Schema files (generated)
 ```
 
-## The Governance Gap Is in the AI Layer
+## Where the Governance Gap Is
 
-Your HIS is already governed. Epic, Cerner, MEDITECH -- 40 years of regulatory compliance baked in. Every access logged, every order signed, every modification timestamped. People sue hospitals constantly, and hospitals survive because the audit trail is already there.
+There are three layers in an AI-augmented healthcare system, and the gap is different in each:
 
-The governance gap isn't in the HIS. It's in the AI agent bolted on top of it. The HIS records that an order was placed. It doesn't record what the AI recommended, what data it accessed, whether a human reviewed its recommendation, or whether its reasoning was clinically sound.
+**Layer 1: The HIS (Epic, Cerner, MEDITECH).** Already governed. 40 years of regulatory compliance. Every access logged, every order signed, every modification timestamped. This is not where the problem is.
 
-VeritasBench measures that gap. It doesn't prescribe how to fill it.
+**Layer 2: The AI agent bolted on top.** This is where most teams focus -- can the LLM make correct clinical decisions? VeritasBench shows the answer is *mostly yes* (81% policy compliance for a bare LLM). But the LLM produces zero audit trail and never halts for human review. It makes decisions without proving them.
 
-## You Don't Need a Framework
+**Layer 3: Multi-agent orchestration.** This is the emerging gap. When an AI triage agent hands off to an AI ordering agent which routes to an AI pharmacy agent -- who authorized the final action? Who's accountable when the chain makes an error? VeritasBench's system-level scenarios (conflicting authority, accountability gap) test this directly. Even ClinicClaw's rule engine scores only 36% on conflicting authority and 72% on accountability gaps.
 
-For many use cases, simple solutions are enough:
+The benchmark results tell a clear story:
+
+| Layer | What's needed | What exists today |
+|---|---|---|
+| HIS | Compliance, audit, signing | Solved (40 years of work) |
+| AI agent | Policy compliance + audit trail | 81% correct decisions, 0% audit trail |
+| Multi-agent | Conflict resolution + chain accountability | Nobody scores well -- this is the frontier |
+
+## You Don't Need a Framework (For Layer 2)
+
+For single-agent governance, simple solutions work:
 
 | Need | Simple Solution | Effort |
 |---|---|---|
@@ -280,7 +290,9 @@ For many use cases, simple solutions are enough:
 | PHI detection | Microsoft Presidio (open-source) | `pip install` |
 | Policy rules | System prompt + basic if/else rules | ~100 lines |
 
-A full governance framework (VERITAS, custom, or otherwise) earns its cost when you need integration between these pieces, completeness guarantees, tamper-proofing, and regulatory certification. For internal tools, research, or non-clinical agents, start simple.
+This gets you from 0% traceability to ~90%. VeritasBench's core governance types (unauthorized access, missing approval, etc.) will confirm it works.
+
+For multi-agent governance (Layer 3), simple solutions aren't enough. Conflicting authority, accountability gaps, and system-initiated actions require architecture -- priority resolution, chain-of-custody tracking, and authority delegation models. This is where frameworks earn their cost.
 
 **VeritasBench tells you where your gaps are. How you fill them is up to you.**
 
