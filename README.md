@@ -1,6 +1,6 @@
 # VeritasBench
 
-**Your AI gets 88% of clinical governance decisions right. It can't prove any of them.**
+**Your AI gets 81% of clinical governance decisions right. It can't prove any of them.**
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19403623.svg)](https://doi.org/10.5281/zenodo.19403623)
 

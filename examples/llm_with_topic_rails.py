@@ -1,5 +1,5 @@
 """
-real_nemo_guardrails.py — Real NeMo Guardrails adapter.
+llm_with_topic_rails.py — LLM with topic/content safety rails.
 
 Uses NVIDIA NeMo Guardrails with GPT-4o-mini as the LLM backend.
 NeMo adds content safety rails on top of the LLM, but produces no

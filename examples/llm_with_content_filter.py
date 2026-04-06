@@ -1,5 +1,5 @@
 """
-real_openai_guardrails.py — Real OpenAI API with input/output guardrails.
+llm_with_content_filter.py — LLM with input/output content filtering.
 
 Uses GPT-4o-mini for decisions plus OpenAI's moderation API and regex-based
 PHI detection as input/output guardrails. Produces trace entries from guardrail

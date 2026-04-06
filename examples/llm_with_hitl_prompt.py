@@ -1,5 +1,5 @@
 """
-real_langgraph_hitl.py — Real LangGraph with Human-in-the-Loop adapter.
+llm_with_hitl_prompt.py — LLM with human-in-the-loop prompting.
 
 Uses LangGraph's StateGraph with interrupt nodes and GPT-4o-mini as the LLM
 backend. The graph routes high-risk scenarios through interrupt nodes that

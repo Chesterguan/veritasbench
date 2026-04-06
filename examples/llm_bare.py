@@ -1,5 +1,5 @@
 """
-real_bare_llm.py — Real LLM with zero governance.
+llm_bare.py — Bare LLM with zero governance.
 
 Sends each scenario to GPT-4o-mini and asks it to make a governance decision.
 No guardrails, no audit trail, no human-in-the-loop. The LLM decides based
