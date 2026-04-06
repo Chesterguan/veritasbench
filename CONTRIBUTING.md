@@ -11,7 +11,7 @@ The included adapters use frameworks at their simplest -- minimal configuration,
 1. Fork the repo and create `examples/<your_framework>.py`
 2. Follow the [Adapter Protocol](docs/adapter-protocol.md)
 3. Validate: `cargo run -p veritasbench-cli -- validate --adapter examples/<your_framework>.py`
-4. Run the benchmark: `cargo run -p veritasbench-cli -- run --adapter examples/<your_framework>.py --suite healthcare_core_v0 --output outputs/<your_framework>`
+4. Run the benchmark: `cargo run -p veritasbench-cli -- run --adapter examples/<your_framework>.py --suite healthcare_v1 --output outputs/<your_framework>`
 5. For a harder test, run with `--blind` to strip scenario_type from adapter input.
 6. Include the report output in your PR description
 7. Submit a PR
@@ -32,7 +32,7 @@ The included adapters use frameworks at their simplest -- minimal configuration,
 
 ## Add scenarios
 
-Want to test a governance property we're missing? Add scenario JSON files to `scenarios/healthcare_core_v0/`.
+Want to test a governance property we're missing? Add scenario JSON files to `scenarios/healthcare_v1/`.
 
 The benchmark covers 11 scenario types: Unauthorized Access, Missing Approval, Missing Justification, PHI Leakage, Unsafe Action Sequence, Emergency Override, Consent Management, Conflicting Authority, Incomplete Information, System-Initiated, and Accountability Gap.
 

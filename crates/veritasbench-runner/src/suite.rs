@@ -53,7 +53,7 @@ mod tests {
 
     #[test]
     fn test_load_real_suite() {
-        let suite_dir = workspace_root().join("scenarios/healthcare_core_v0");
+        let suite_dir = workspace_root().join("scenarios/healthcare_v1");
         let scenarios = load_suite(&suite_dir).expect("should load suite");
         assert!(!scenarios.is_empty(), "expected at least one scenario");
 
@@ -67,7 +67,7 @@ mod tests {
 
     #[test]
     fn test_sorted_order() {
-        let suite_dir = workspace_root().join("scenarios/healthcare_core_v0");
+        let suite_dir = workspace_root().join("scenarios/healthcare_v1");
         let scenarios = load_suite(&suite_dir).expect("should load suite");
         let ids: Vec<&str> = scenarios.iter().map(|s| s.id.as_str()).collect();
         let mut sorted = ids.clone();

@@ -34,7 +34,7 @@ import sys
 
 SCENARIO_DIR = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-    "scenarios", "healthcare_core_v0"
+    "scenarios", "healthcare_v1"
 )
 
 

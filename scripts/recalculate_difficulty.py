@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 from collections import defaultdict
 
-SCENARIO_DIR = Path(__file__).parent.parent / "scenarios" / "healthcare_core_v0"
+SCENARIO_DIR = Path(__file__).parent.parent / "scenarios" / "healthcare_v1"
 
 
 def load_report(output_dir: str) -> dict:

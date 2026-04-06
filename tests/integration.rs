@@ -6,7 +6,7 @@ async fn test_full_pipeline_trivial_deny() {
     let manifest = Path::new(env!("CARGO_MANIFEST_DIR"));
     let workspace_root = manifest.parent().expect("workspace root");
 
-    let suite_path = workspace_root.join("scenarios/healthcare_core_v0");
+    let suite_path = workspace_root.join("scenarios/healthcare_v1");
     let adapter_path = workspace_root.join("examples/trivial_deny_adapter.py");
 
     // Load scenarios
@@ -35,7 +35,7 @@ async fn test_full_pipeline_trivial_deny() {
 
     // Generate report
     let report = veritasbench_core::score::BenchmarkReport {
-        suite: "healthcare_core_v0".to_string(),
+        suite: "healthcare_v1".to_string(),
         adapter: "trivial_deny_adapter.py".to_string(),
         timestamp: "2026-04-01T00:00:00Z".to_string(),
         policy_compliance: policy,
@@ -49,7 +49,7 @@ async fn test_full_pipeline_trivial_deny() {
     };
 
     let json = veritasbench_report::json::generate_json(&report).unwrap();
-    assert!(json.contains("healthcare_core_v0"));
+    assert!(json.contains("healthcare_v1"));
 
     let md = veritasbench_report::markdown::generate_markdown(&report);
     assert!(md.contains("Policy Compliance"));

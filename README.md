@@ -128,7 +128,7 @@ veritasbench validate --adapter my_adapter.py
 # Run your adapter against all 700 scenarios
 cargo run --release -p veritasbench-cli -- run \
   --adapter my_adapter.py \
-  --suite healthcare_core_v0 \
+  --suite healthcare_v1 \
   --output outputs/my_system
 
 # View your scores
@@ -251,7 +251,7 @@ veritasbench/
     veritasbench-report/     # JSON + Markdown report generation
     veritasbench-cli/        # CLI: run, validate, report, diff, schema, list-adapters
   scenarios/
-    healthcare_core_v0/      # 700 scenario JSON files
+    healthcare_v1/      # 700 scenario JSON files
   examples/
     llm_*.py                 # LLM-based adapters (require API key)
     *_simulated.py           # Deterministic simulated adapters
@@ -328,7 +328,7 @@ If you use or reference VeritasBench, VERITAS, or ClinicLaw in academic work, pl
 
 **What is blind mode?** Running with `--blind` strips the scenario_type field from adapter input. Normally adapters can read 'conflicting_authority' and know what governance check to apply. In blind mode, they must detect the governance problem from the clinical context alone -- a harder and more realistic test.
 
-**Can I add my own scenarios?** Yes. Drop a JSON file in `scenarios/healthcare_core_v0/` following the schema. Run `veritasbench schema` to generate the JSON Schema for reference.
+**Can I add my own scenarios?** Yes. Drop a JSON file in `scenarios/healthcare_v1/` following the schema. Run `veritasbench schema` to generate the JSON Schema for reference.
 
 ## Limitations
 

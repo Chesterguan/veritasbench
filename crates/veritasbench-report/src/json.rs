@@ -28,7 +28,7 @@ mod tests {
 
     fn sample_report() -> BenchmarkReport {
         BenchmarkReport {
-            suite: "healthcare_core_v0".into(),
+            suite: "healthcare_v1".into(),
             adapter: "trivial_deny".into(),
             timestamp: "2026-03-30T00:00:00Z".into(),
             policy_compliance: DimensionScore { earned: 1, possible: 1 },
@@ -78,7 +78,7 @@ mod tests {
         let parsed: BenchmarkReport =
             serde_json::from_str(&content).expect("file content should be valid JSON");
 
-        assert_eq!(parsed.suite, "healthcare_core_v0");
+        assert_eq!(parsed.suite, "healthcare_v1");
         assert_eq!(parsed.latency.p50_ms, 50);
 
         // Clean up

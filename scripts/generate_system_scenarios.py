@@ -3,7 +3,7 @@
 Generate 200 system-level governance scenarios for VeritasBench.
 
 4 types x 5 subtypes x 10 scenarios = 200 JSON files.
-Output: scenarios/healthcare_core_v0/{CA,II,SI,AG}-NNN.json
+Output: scenarios/healthcare_v1/{CA,II,SI,AG}-NNN.json
 """
 import json
 import os
@@ -13,7 +13,7 @@ random.seed(42)  # Reproducible generation
 
 SCENARIO_DIR = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-    "scenarios", "healthcare_core_v0"
+    "scenarios", "healthcare_v1"
 )
 
 

@@ -20,7 +20,7 @@ from pathlib import Path
 
 from openai import OpenAI
 
-SCENARIO_DIR = Path(__file__).parent.parent / "scenarios" / "healthcare_core_v0"
+SCENARIO_DIR = Path(__file__).parent.parent / "scenarios" / "healthcare_v1"
 OUTPUT_PATH = Path(__file__).parent / "validation_results.json"
 
 JUDGE_PROMPT = """\

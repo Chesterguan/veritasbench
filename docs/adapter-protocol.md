@@ -254,8 +254,8 @@ When `--adapter` is a bare filename (no directory separator), VeritasBench searc
 
 ```bash
 # These are equivalent:
-veritasbench run --adapter examples/my_adapter.py --suite healthcare_core_v0 --output out/
-veritasbench run --adapter my_adapter.py --suite healthcare_core_v0 --output out/
+veritasbench run --adapter examples/my_adapter.py --suite healthcare_v1 --output out/
+veritasbench run --adapter my_adapter.py --suite healthcare_v1 --output out/
 
 # List available adapters:
 veritasbench list-adapters

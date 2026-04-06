@@ -172,7 +172,7 @@ mod tests {
 
     fn sample_report() -> BenchmarkReport {
         BenchmarkReport {
-            suite: "healthcare_core_v0".into(),
+            suite: "healthcare_v1".into(),
             adapter: "trivial_deny".into(),
             timestamp: "2026-03-30T00:00:00Z".into(),
             policy_compliance: DimensionScore { earned: 1, possible: 1 },
@@ -222,7 +222,7 @@ mod tests {
     #[test]
     fn test_markdown_contains_suite_and_adapter() {
         let md = generate_markdown(&sample_report());
-        assert!(md.contains("healthcare_core_v0"), "missing suite name");
+        assert!(md.contains("healthcare_v1"), "missing suite name");
         assert!(md.contains("trivial_deny"), "missing adapter name");
         assert!(md.contains("2026-03-30T00:00:00Z"), "missing timestamp");
     }
