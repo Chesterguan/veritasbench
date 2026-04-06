@@ -52,7 +52,7 @@ Plus two operational metrics: **Consistency** (same input = same output?) and **
 
 - **Bare LLM, Content Filter, Topic Rails, HITL Prompt**: Real GPT-4o-mini API calls. Every policy decision comes from the actual model, not simulated probabilities. Temperature=0 for reproducibility.
 - **ClinicClaw (reference)**: Rule-based policy engine. No LLM calls. Included as a reference for what a governance-complete system looks like, not as a competing product. Its rules were designed with knowledge of the scenario types -- see [Limitations](#limitations).
-- Scenarios validated by multi-model consensus (GPT-4o-mini, GPT-4o, Gemini 2.5 Flash) -- 98% agreement on sample validation.
+- All 700 scenarios validated by multi-model consensus (GPT-4o-mini, GPT-4o, Gemini 2.5 Flash) -- 93% full agreement, 7% disagreement on genuinely ambiguous cases.
 - `expected` field is stripped before sending scenarios to adapters -- adapters cannot read ground truth.
 - All adapters are included in `examples/` and can be run directly. Think we got your framework wrong? [Contribute a better adapter.](CONTRIBUTING.md)
 
@@ -143,8 +143,8 @@ cargo run --release -p veritasbench-cli -- diff outputs/my_system outputs/clinic
 ```
 | Dimension          | Earned | Possible | %    |
 |--------------------|--------|----------|------|
-| Policy Compliance  | 340    | 425      | 80%  |
-| Safety             | 180    | 225      | 80%  |
+| Policy Compliance  | 460    | 575      | 80%  |
+| Safety             | 234    | 325      | 72%  |
 | Traceability       | 0      | 2100     | 0%   |  <-- no audit trail
 | Controllability    | 0      | 570      | 0%   |  <-- never halts for human review
 ```
@@ -212,7 +212,7 @@ Each scenario includes a `difficulty` tier (easy/moderate/hard) assigned empiric
 | `nemo_guardrails_simulated.py` | NeMo guardrails via hash-based probabilities |
 | `langgraph_hitl_simulated.py` | LangGraph HITL via hash-based probabilities |
 
-Simulated adapters exist for fast testing without API keys. Their policy compliance scores are illustrative, not measured. Use the real adapters for actual benchmarking.
+Simulated adapters exist for fast testing without API keys. Their policy compliance scores are illustrative, not measured. Use the LLM-based adapters for actual benchmarking.
 
 ## CLI Reference
 
@@ -335,7 +335,7 @@ If you use or reference VeritasBench, VERITAS, or ClinicLaw in academic work, pl
 - **Healthcare only (v1).** All 700 scenarios are clinical governance situations. Finance and legal scenarios are planned.
 - **Single-step scenarios.** Each scenario is an independent decision. Multi-step workflows, temporal constraints, and cross-scenario patterns are not tested in v1.
 - **Binary policy/safety scoring.** No partial credit. A deny when blocked_pending_approval was expected scores 0, even though it's a conservative error. The Dangerous Failures metric separately tracks the truly harmful errors (allow when deny/block was expected).
-- **Scenario expected decisions are validated by multi-LLM consensus, not clinical review.** 98% multi-model agreement on sample. Full clinical validation is planned.
+- **Scenario expected decisions are validated by multi-LLM consensus, not clinical review.** 93% three-model agreement across all 700 scenarios (GPT-4o-mini, GPT-4o, Gemini 2.5 Flash). 47 scenarios have disagreement, mostly on genuinely ambiguous cases (incomplete information, conflicting authority). Clinical validation is planned.
 - **LLM-based adapters are prompt wrappers around GPT-4o-mini, not actual framework integrations.** They model what each approach can achieve, not how the actual framework performs in production.
 - **ClinicClaw rules were designed with knowledge of the scenario types.** Its 91% score reflects a purpose-built system for this specific domain, and drops to 36% on conflicting authority scenarios. A real deployment would need to handle scenarios outside the benchmark suite.
 - **LLM-based results depend on the model.** GPT-4o-mini was used for all LLM-based adapter results. Different models will produce different policy compliance and safety scores. Traceability and controllability scores are model-independent.

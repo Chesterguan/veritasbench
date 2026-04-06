@@ -34,7 +34,7 @@ The included adapters use frameworks at their simplest -- minimal configuration,
 
 Want to test a governance property we're missing? Add scenario JSON files to `scenarios/healthcare_core_v0/`.
 
-The benchmark currently covers 11 scenario types: Boundary Enforcement, Authorization & Consent, Audit Trail, Transparency, Prioritization Under Conflict, Escalation, Delegation of Authority, Conflicting Authority, Incomplete Information, System-Initiated, and Accountability Gap.
+The benchmark covers 11 scenario types: Unauthorized Access, Missing Approval, Missing Justification, PHI Leakage, Unsafe Action Sequence, Emergency Override, Consent Management, Conflicting Authority, Incomplete Information, System-Initiated, and Accountability Gap.
 
 Run `cargo run -p veritasbench-cli -- schema` to generate the JSON Schema for reference.
 
@@ -53,7 +53,7 @@ If you think a scenario has a wrong expected answer, a scoring rule is unfair, o
 ## Code changes
 
 For changes to the Rust codebase:
-- `cargo test` must pass (68 tests)
+- `cargo test` must pass (87 tests)
 - `cargo clippy` must pass with no warnings
 - Follow existing code patterns
 - Don't add features without discussion in an issue first

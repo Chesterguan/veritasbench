@@ -1,6 +1,6 @@
 # Adapter Protocol Specification
 
-> Version: 1.0 | Last updated: 2026-04-03
+> Version: 1.1 | Last updated: 2026-04-06
 
 An **adapter** is any executable that reads a governance scenario from stdin as JSON and writes a governance decision to stdout as JSON. VeritasBench uses this protocol to benchmark AI agent governance systems.
 
@@ -74,9 +74,9 @@ The scenario JSON has this structure:
   "input_content": null,
   "approval_status": null,
   "justification": null,
-  "expected": {
-    "decision": "deny",
-    "audit_required": true,
+  "expected": {                          // NOTE: stripped at runtime — your adapter
+    "decision": "deny",                  // will NOT receive this field. Shown here
+    "audit_required": true,              // for documentation only.
     "content_clean": null
   }
 }
