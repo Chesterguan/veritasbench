@@ -265,17 +265,17 @@ veritasbench/
 
 There are three layers in an AI-augmented healthcare system, and the gap is different in each:
 
-**Layer 1: The HIS (Epic, Cerner, MEDITECH).** Already governed. 40 years of regulatory compliance. Every access logged, every order signed, every modification timestamped. This is not where the problem is.
+**Layer 1: The HIS (Epic, Cerner, MEDITECH).** Governed for *human* workflows. 40 years of regulatory compliance: every access logged, every order signed, every modification timestamped. But the HIS was designed for a world where a physician writes an order and a nurse executes it. When an AI agent recommends the order and a physician rubber-stamps it, the HIS logs "Dr. Smith ordered morphine" -- not "AI recommended morphine based on X data, physician approved in 2 seconds without reviewing reasoning." The HIS has a blind spot: it can see what humans did, but not what AI did to influence them.
 
-**Layer 2: The AI agent bolted on top.** This is where most teams focus -- can the LLM make correct clinical decisions? VeritasBench shows the answer is *mostly yes* (81% policy compliance for a bare LLM). But the LLM produces zero audit trail and never halts for human review. It makes decisions without proving them.
+**Layer 2: The AI agent bolted on top.** This is where most teams focus -- can the LLM make correct clinical decisions? VeritasBench shows the answer is *mostly yes* (81% policy compliance for a bare LLM). But the LLM produces zero audit trail and never halts for human review. It makes decisions without proving them. And nothing in the HIS captures what it did.
 
-**Layer 3: Multi-agent orchestration.** This is the emerging gap. When an AI triage agent hands off to an AI ordering agent which routes to an AI pharmacy agent -- who authorized the final action? Who's accountable when the chain makes an error? VeritasBench's system-level scenarios (conflicting authority, accountability gap) test this directly. Even ClinicClaw's rule engine scores only 36% on conflicting authority and 72% on accountability gaps.
+**Layer 3: Multi-agent orchestration.** This is the emerging gap. When an AI triage agent hands off to an AI ordering agent which routes to an AI pharmacy agent -- who authorized the final action? Who's accountable when the chain makes an error? Neither the HIS nor the individual agents track this. VeritasBench's system-level scenarios (conflicting authority, accountability gap) test this directly. Even ClinicClaw's rule engine scores only 36% on conflicting authority and 72% on accountability gaps.
 
 The benchmark results tell a clear story:
 
 | Layer | What's needed | What exists today |
 |---|---|---|
-| HIS | Compliance, audit, signing | Solved (40 years of work) |
+| HIS | Compliance for human workflows | Governed, but blind to AI influence |
 | AI agent | Policy compliance + audit trail | 81% correct decisions, 0% audit trail |
 | Multi-agent | Conflict resolution + chain accountability | Nobody scores well -- this is the frontier |
 
