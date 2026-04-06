@@ -155,21 +155,34 @@ cargo run --release -p veritasbench-cli -- diff outputs/my_system outputs/clinic
 
 ## 700 Scenarios, 11 Types
 
+### Core governance (500 scenarios, 7 types)
+
+Single-decision governance checks. A simple rule engine with structured logging can score near-perfect on these.
+
 | Type | Count | Allow/Deny | What It Tests |
 |---|---|---|---|
-| Unsafe Action Sequence | 80 | 23/57 | Drug interactions, contraindications, dose errors, safe combinations |
-| Unauthorized Access | 75 | 20/55 | RBAC, delegation, credential expiry, consent withdrawal, legitimate access |
-| PHI Leakage | 75 | 20/55 | Patient identifiers sent to LLM, de-identified prompts, re-identification risk |
-| Emergency Override | 70 | 32/38 | Legitimate clinical emergencies vs abuse of override mechanisms |
-| Consent Management | 70 | 32/38 | Patient consent grants, proxy authorization, consent withdrawal, HIPAA |
-| Missing Approval | 65 | 16/49 | Human-in-the-loop gates for controlled substances, surgery, code status |
-| Missing Justification | 65 | 16/49 | Documented rationale for VIP records, psych notes, substance abuse records |
+| Unsafe Action Sequence | 80 | 23/57 | Drug interactions, contraindications, dose errors |
+| Unauthorized Access | 75 | 20/55 | RBAC, delegation, credential expiry |
+| PHI Leakage | 75 | 20/55 | Patient identifiers in LLM prompts, de-identification |
+| Emergency Override | 70 | 32/38 | Legitimate emergencies vs abuse of override |
+| Consent Management | 70 | 32/38 | Patient consent, proxy authorization, withdrawal |
+| Missing Approval | 65 | 16/49 | HITL gates for controlled substances, surgery |
+| Missing Justification | 65 | 16/49 | Documented rationale for sensitive records |
+
+### System-level governance (200 scenarios, 4 types)
+
+Governance at the boundary where simple rule engines fail. These test ambiguity, missing data, autonomous action, and multi-agent accountability.
+
+| Type | Count | Allow/Deny/Block | What It Tests |
+|---|---|---|---|
 | Conflicting Authority | 50 | 15/15/20 | Two valid policies contradict -- which takes priority? |
 | Incomplete Information | 50 | 5/20/25 | Critical clinical data missing -- proceed, refuse, or escalate? |
-| System-Initiated | 50 | 8/7/35 | Automated action with no human trigger -- who authorizes? |
-| Accountability Gap | 50 | 5/15/30 | Multi-agent chain -- who owns the decision? |
+| System-Initiated | 50 | 8/7/35 | No human triggered this action -- who authorizes it? |
+| Accountability Gap | 50 | 5/15/30 | Multi-agent decision chain -- who owns the decision? |
 
-Each type includes both ALLOW and DENY scenarios (~32% allow overall).
+System-level types skew heavily toward `blocked_pending_approval` -- they test whether systems escalate rather than guess. ClinicClaw scores 100% on core types but drops to **36% on conflicting authority** -- these are genuinely hard.
+
+Each scenario includes a `difficulty` tier (easy/moderate/hard) assigned empirically from adapter failure rates across all tested systems.
 
 ## Included Adapters
 
