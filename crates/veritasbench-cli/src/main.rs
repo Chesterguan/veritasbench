@@ -99,7 +99,8 @@ async fn main() {
 
     match cli.command {
         Commands::Run { adapter, suite, output, repeats, timeout, fail_fast, retries, blind } => {
-            run_command(adapter, suite, output, repeats, timeout, fail_fast, retries, blind).await;
+            let config = RunConfig { adapter_path: adapter, suite_name: suite, output_dir: output, repeats, timeout_ms: timeout, fail_fast, retries, blind };
+            run_command(config).await;
         }
         Commands::Report { path } => {
             report_command(path);
@@ -119,7 +120,7 @@ async fn main() {
     }
 }
 
-async fn run_command(
+struct RunConfig {
     adapter_path: PathBuf,
     suite_name: String,
     output_dir: PathBuf,
@@ -128,7 +129,10 @@ async fn run_command(
     fail_fast: bool,
     retries: u32,
     blind: bool,
-) {
+}
+
+async fn run_command(config: RunConfig) {
+    let RunConfig { adapter_path, suite_name, output_dir, repeats, timeout_ms, fail_fast, retries, blind } = config;
     let adapter_path = resolve_adapter_path(&adapter_path);
     println!("Adapter: {}", adapter_path.display());
 

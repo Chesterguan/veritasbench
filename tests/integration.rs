@@ -85,6 +85,17 @@ fn sample_ua_scenario() -> veritasbench_core::scenario::Scenario {
     }
 }
 
+/// Helper: load a real scenario file by ID from the suite
+fn load_scenario(id: &str) -> veritasbench_core::scenario::Scenario {
+    let path = workspace_root()
+        .join("scenarios/healthcare_v1")
+        .join(format!("{id}.json"));
+    let content = std::fs::read_to_string(&path)
+        .unwrap_or_else(|e| panic!("failed to load {id}: {e}"));
+    serde_json::from_str(&content)
+        .unwrap_or_else(|e| panic!("failed to parse {id}: {e}"))
+}
+
 fn workspace_root() -> std::path::PathBuf {
     let manifest = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
     manifest.parent().expect("workspace root").to_path_buf()
@@ -172,4 +183,51 @@ async fn test_adapter_nemo_guardrails_simulated() {
             | veritasbench_core::scenario::Decision::Deny
             | veritasbench_core::scenario::Decision::BlockedPendingApproval
     ));
+}
+
+// --- System-level scenario type integration tests ---
+
+#[tokio::test]
+async fn test_cliniclaw_conflicting_authority() {
+    let adapter = workspace_root().join("examples/cliniclaw_simulated.py");
+    let scenario = load_scenario("CA-001");
+    assert_eq!(scenario.scenario_type, veritasbench_core::scenario::ScenarioType::ConflictingAuthority);
+    let run = veritasbench_runner::adapter::run_adapter(&adapter, &scenario, 10_000)
+        .await
+        .expect("cliniclaw should handle conflicting_authority");
+    assert!(!run.result.audit_entries.is_empty(), "ClinicClaw should produce audit entries for CA");
+}
+
+#[tokio::test]
+async fn test_cliniclaw_accountability_gap() {
+    let adapter = workspace_root().join("examples/cliniclaw_simulated.py");
+    let scenario = load_scenario("AG-001");
+    assert_eq!(scenario.scenario_type, veritasbench_core::scenario::ScenarioType::AccountabilityGap);
+    let run = veritasbench_runner::adapter::run_adapter(&adapter, &scenario, 10_000)
+        .await
+        .expect("cliniclaw should handle accountability_gap");
+    // AG scenarios with unattributed steps should produce audit entries
+    assert!(!run.result.audit_entries.is_empty(), "ClinicClaw should produce audit entries for AG");
+}
+
+#[tokio::test]
+async fn test_cliniclaw_system_initiated() {
+    let adapter = workspace_root().join("examples/cliniclaw_simulated.py");
+    let scenario = load_scenario("SI-001");
+    assert_eq!(scenario.scenario_type, veritasbench_core::scenario::ScenarioType::SystemInitiated);
+    let run = veritasbench_runner::adapter::run_adapter(&adapter, &scenario, 10_000)
+        .await
+        .expect("cliniclaw should handle system_initiated");
+    assert!(!run.result.audit_entries.is_empty(), "ClinicClaw should produce audit entries for SI");
+}
+
+#[tokio::test]
+async fn test_cliniclaw_incomplete_information() {
+    let adapter = workspace_root().join("examples/cliniclaw_simulated.py");
+    let scenario = load_scenario("II-001");
+    assert_eq!(scenario.scenario_type, veritasbench_core::scenario::ScenarioType::IncompleteInformation);
+    let run = veritasbench_runner::adapter::run_adapter(&adapter, &scenario, 10_000)
+        .await
+        .expect("cliniclaw should handle incomplete_information");
+    assert!(!run.result.audit_entries.is_empty(), "ClinicClaw should produce audit entries for II");
 }
