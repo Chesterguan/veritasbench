@@ -1,0 +1,94 @@
+# Provider configuration for VeritasBench adapters.
+#
+# Each entry maps a short-name to:
+#   - adapter:   which adapter script to invoke
+#   - env:       env vars to set before invocation
+#   - key_env:   name of the env var that holds the API key
+#
+# Usage:
+#   python scripts/run_model.py <short-name>
+#
+# The key itself must live in your local .env file (gitignored) — never
+# commit real API keys. See .env.example for the template.
+
+gpt-4o-mini:
+  adapter: llm_openai_compat.py
+  env:
+    OPENAI_BASE_URL: https://api.openai.com/v1
+    VERITASBENCH_MODEL: gpt-4o-mini
+  key_env: OPENAI_API_KEY
+
+deepseek-v3:
+  adapter: llm_openai_compat.py
+  env:
+    OPENAI_BASE_URL: https://openrouter.ai/api/v1
+    VERITASBENCH_MODEL: deepseek/deepseek-chat-v3.2
+  key_env: OPENROUTER_API_KEY
+
+deepseek-r1:
+  adapter: llm_openai_compat.py
+  env:
+    OPENAI_BASE_URL: https://openrouter.ai/api/v1
+    VERITASBENCH_MODEL: deepseek/deepseek-r1
+  key_env: OPENROUTER_API_KEY
+
+qwen3-max:
+  adapter: llm_openai_compat.py
+  env:
+    OPENAI_BASE_URL: https://openrouter.ai/api/v1
+    VERITASBENCH_MODEL: qwen/qwen3-max
+  key_env: OPENROUTER_API_KEY
+
+glm-46:
+  adapter: llm_openai_compat.py
+  env:
+    OPENAI_BASE_URL: https://openrouter.ai/api/v1
+    VERITASBENCH_MODEL: thudm/glm-4.6
+  key_env: OPENROUTER_API_KEY
+
+kimi-k2:
+  adapter: llm_openai_compat.py
+  env:
+    OPENAI_BASE_URL: https://openrouter.ai/api/v1
+    VERITASBENCH_MODEL: moonshotai/kimi-k2
+  key_env: OPENROUTER_API_KEY
+
+claude-sonnet-46:
+  adapter: llm_openai_compat.py
+  env:
+    OPENAI_BASE_URL: https://openrouter.ai/api/v1
+    VERITASBENCH_MODEL: anthropic/claude-sonnet-4.6
+  key_env: OPENROUTER_API_KEY
+  # Alternative: examples/llm_anthropic.py with ANTHROPIC_API_KEY for prompt caching.
+
+gemini-25-pro:
+  adapter: llm_openai_compat.py
+  env:
+    OPENAI_BASE_URL: https://openrouter.ai/api/v1
+    VERITASBENCH_MODEL: google/gemini-2.5-pro
+  key_env: OPENROUTER_API_KEY
+  # Alternative: examples/llm_gemini.py with GEMINI_API_KEY for context caching.
+
+huatuogpt-ii:
+  adapter: llm_openai_compat.py
+  env:
+    OPENAI_BASE_URL: https://api.siliconflow.cn/v1
+    VERITASBENCH_MODEL: FreedomIntelligence/HuatuoGPT-II-34B
+  key_env: SILICONFLOW_API_KEY
+
+huatuogpt-o1:
+  adapter: llm_openai_compat.py
+  env:
+    OPENAI_BASE_URL: https://api.siliconflow.cn/v1
+    VERITASBENCH_MODEL: FreedomIntelligence/HuatuoGPT-o1-72B
+  key_env: SILICONFLOW_API_KEY
+
+meditron-70b:
+  adapter: llm_openai_compat.py
+  env:
+    OPENAI_BASE_URL: https://openrouter.ai/api/v1
+    VERITASBENCH_MODEL: epfl-llm/meditron-70b
+  key_env: OPENROUTER_API_KEY
+  # If not available on OpenRouter, swap to:
+  #   OPENAI_BASE_URL: https://api.together.xyz/v1
+  #   key_env: TOGETHER_API_KEY
