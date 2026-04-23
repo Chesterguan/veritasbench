@@ -60,3 +60,40 @@ def test_happy_path_allow_mirrors_content(oai_mock):
     out = json.loads(proc.stdout)
     assert out["decision"] == "allow"
     assert out["output_content"] == "patient: jane doe"
+
+
+def test_response_format_400_falls_back_to_plain(oai_mock):
+    """When provider rejects response_format, retry without it and parse JSON from plain content."""
+    oai_mock.server.expect_ordered_request(
+        "/v1/chat/completions", method="POST"
+    ).respond_with_json(
+        {"error": {"message": "response_format is not supported", "type": "invalid_request_error"}},
+        status=400,
+    )
+    oai_mock.server.expect_ordered_request(
+        "/v1/chat/completions", method="POST"
+    ).respond_with_json(
+        {
+            "id": "chatcmpl-test",
+            "object": "chat.completion",
+            "model": "test-model",
+            "choices": [
+                {
+                    "index": 0,
+                    "message": {
+                        "role": "assistant",
+                        "content": 'Here is my decision: {"decision": "deny"} hope that helps.',
+                    },
+                    "finish_reason": "stop",
+                }
+            ],
+        },
+        status=200,
+    )
+    proc = _run_adapter(
+        _scenario(),
+        {"OPENAI_BASE_URL": oai_mock.url, "VERITASBENCH_MODEL": "test-model"},
+    )
+    assert proc.returncode == 0, proc.stderr.decode()
+    out = json.loads(proc.stdout)
+    assert out["decision"] == "deny"
