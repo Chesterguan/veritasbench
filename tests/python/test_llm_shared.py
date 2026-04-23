@@ -72,3 +72,13 @@ def test_build_bare_result_allow_mirrors_input_content():
     sc["input_content"] = "patient info: John Doe"
     result = shared.build_bare_result("allow", sc)
     assert result["output_content"] == "patient info: John Doe"
+
+
+def test_llm_bare_prompt_matches_shared_builder():
+    """Protect against drift between llm_bare.py's prompt and _llm_shared.build_prompt."""
+    import importlib
+    llm_bare = importlib.import_module("llm_bare")
+    assert llm_bare.build_prompt is shared.build_prompt
+    assert llm_bare.SYSTEM_PROMPT is shared.SYSTEM_PROMPT
+    assert llm_bare.build_bare_result is shared.build_bare_result
+    assert llm_bare.normalize_decision is shared.normalize_decision
