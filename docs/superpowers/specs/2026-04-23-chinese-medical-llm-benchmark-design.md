@@ -127,12 +127,12 @@ huatuogpt-o1:
     VERITASBENCH_MODEL: FreedomIntelligence/HuatuoGPT-o1-72B
   key_env: SILICONFLOW_API_KEY
 
-baichuan-m2:
+huatuogpt-ii:
   adapter: llm_openai_compat.py
   env:
-    OPENAI_BASE_URL: https://api.baichuan-ai.com/v1
-    VERITASBENCH_MODEL: Baichuan-M2
-  key_env: BAICHUAN_API_KEY
+    OPENAI_BASE_URL: https://api.siliconflow.cn/v1
+    VERITASBENCH_MODEL: FreedomIntelligence/HuatuoGPT-II-34B
+  key_env: SILICONFLOW_API_KEY
 
 claude-sonnet-46:
   adapter: llm_openai_compat.py  # or llm_anthropic.py for direct
@@ -193,8 +193,8 @@ User-executed as API keys arrive. No strict order required; each model is indepe
 5. DeepSeek-R1 (reasoning — tests the reasoning-model response-shape handling)
 6. Gemini 2.5 Pro
 7. Claude Sonnet 4.6
-8. Baichuan-M2 (direct key, medical)
-9. HuatuoGPT-o1-72B (SiliconFlow, medical)
+8. HuatuoGPT-II-34B (SiliconFlow, medical)
+9. HuatuoGPT-o1-72B (SiliconFlow, medical, reasoning)
 10. Meditron-70B (Together.ai or OpenRouter, medical)
 
 ### 4.2 Model × provider matrix
@@ -209,11 +209,11 @@ User-executed as API keys arrive. No strict order required; each model is indepe
 | 5 | `kimi-k2` | Kimi K2 | Chinese general | `llm_openai_compat.py` | OpenRouter | `OPENROUTER_API_KEY` |
 | 6 | `claude-sonnet-46` | Claude Sonnet 4.6 | Western general | `llm_openai_compat.py` | OpenRouter | `OPENROUTER_API_KEY` |
 | 7 | `gemini-25-pro` | Gemini 2.5 Pro | Western general | `llm_openai_compat.py` | OpenRouter | `OPENROUTER_API_KEY` |
-| 8 | `baichuan-m2` | Baichuan-M2 | Chinese medical | `llm_openai_compat.py` | Baichuan Open Platform | `BAICHUAN_API_KEY` |
-| 9 | `huatuogpt-o1` | HuatuoGPT-o1-72B | Chinese medical | `llm_openai_compat.py` | SiliconFlow | `SILICONFLOW_API_KEY` |
+| 8 | `huatuogpt-ii` | HuatuoGPT-II-34B | Chinese medical | `llm_openai_compat.py` | SiliconFlow | `SILICONFLOW_API_KEY` |
+| 9 | `huatuogpt-o1` | HuatuoGPT-o1-72B | Chinese medical (reasoning) | `llm_openai_compat.py` | SiliconFlow | `SILICONFLOW_API_KEY` |
 | 10 | `meditron-70b` | Meditron-70B | Western medical | `llm_openai_compat.py` | OpenRouter or Together.ai | `OPENROUTER_API_KEY` |
 
-Minimum keys needed: **3** — OpenRouter, SiliconFlow, Baichuan. OpenAI key stays as-is for the baseline.
+Minimum keys needed: **2** — OpenRouter and SiliconFlow. OpenAI key stays as-is for the baseline.
 
 ### 4.3 Output layout
 
@@ -228,7 +228,7 @@ outputs/
   llm_kimi_k2/
   llm_claude_sonnet_46/
   llm_gemini_25_pro/
-  llm_baichuan_m2/
+  llm_huatuogpt_ii/
   llm_huatuogpt_o1/
   llm_meditron_70b/
 ```
