@@ -97,3 +97,48 @@ def test_response_format_400_falls_back_to_plain(oai_mock):
     assert proc.returncode == 0, proc.stderr.decode()
     out = json.loads(proc.stdout)
     assert out["decision"] == "deny"
+
+
+def test_reasoning_inline_think_tags_stripped(oai_mock):
+    """DeepSeek-R1 style: <think>...</think> inline, then the answer."""
+    oai_mock.respond_with_raw_content(
+        "<think>The nurse lacks cardiology permissions, so...</think>\n"
+        '{"decision": "deny"}'
+    )
+    proc = _run_adapter(
+        _scenario(),
+        {"OPENAI_BASE_URL": oai_mock.url, "VERITASBENCH_MODEL": "deepseek-r1"},
+    )
+    assert proc.returncode == 0, proc.stderr.decode()
+    out = json.loads(proc.stdout)
+    assert out["decision"] == "deny"
+
+
+def test_reasoning_separate_field_ignored(oai_mock):
+    """Provider returns reasoning_content alongside content (DeepSeek-R1 API shape)."""
+    body = {
+        "id": "chatcmpl-test",
+        "object": "chat.completion",
+        "model": "test-model",
+        "choices": [
+            {
+                "index": 0,
+                "message": {
+                    "role": "assistant",
+                    "content": '{"decision": "blocked_pending_approval"}',
+                    "reasoning_content": "Long chain of thought here, should be ignored.",
+                },
+                "finish_reason": "stop",
+            }
+        ],
+    }
+    oai_mock.server.expect_request(
+        "/v1/chat/completions", method="POST"
+    ).respond_with_json(body, status=200)
+    proc = _run_adapter(
+        _scenario(),
+        {"OPENAI_BASE_URL": oai_mock.url, "VERITASBENCH_MODEL": "deepseek-r1"},
+    )
+    assert proc.returncode == 0, proc.stderr.decode()
+    out = json.loads(proc.stdout)
+    assert out["decision"] == "blocked_pending_approval"

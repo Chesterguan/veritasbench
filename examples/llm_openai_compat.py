@@ -14,7 +14,9 @@ Handles two realities of non-OpenAI providers:
   1. Some reject `response_format={"type":"json_object"}` — fall back
      to unconstrained generation and regex-extract a decision object.
   2. Reasoning models (DeepSeek-R1, HuatuoGPT-o1) may emit <think>...
-     </think> blocks inline — strip before JSON parse.
+     </think> blocks inline. Because the regex fallback only looks for
+     {"decision": "..."}, reasoning prose in the rest of the response
+     is harmless — see tests/python/test_llm_openai_compat.py.
 
 Usage (via scripts/run_model.py or directly):
     OPENAI_BASE_URL=https://openrouter.ai/api/v1 \
