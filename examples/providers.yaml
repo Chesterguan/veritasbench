@@ -1,9 +1,13 @@
 # Provider configuration for VeritasBench adapters.
 #
 # Each entry maps a short-name to:
-#   - adapter:   which adapter script to invoke
-#   - env:       env vars to set before invocation
-#   - key_env:   name of the env var that holds the API key
+#   - adapter:      which adapter script to invoke
+#   - env:          env vars to set before invocation
+#   - key_env:      name of the env var that holds the API key
+#   - category:     one of chinese_general, chinese_medical, western_general,
+#                   western_medical. Used by scripts/aggregate_models.py to group
+#                   results in reports.
+#   - display_name: human-readable label for tables/charts
 #
 # Usage:
 #   python scripts/run_model.py <short-name>
@@ -17,6 +21,8 @@ gpt-4o-mini:
     OPENAI_BASE_URL: https://api.openai.com/v1
     VERITASBENCH_MODEL: gpt-4o-mini
   key_env: OPENAI_API_KEY
+  category: western_general
+  display_name: GPT-4o-mini
 
 deepseek-v3:
   adapter: llm_openai_compat.py
@@ -24,6 +30,8 @@ deepseek-v3:
     OPENAI_BASE_URL: https://openrouter.ai/api/v1
     VERITASBENCH_MODEL: deepseek/deepseek-v3.2
   key_env: OPENROUTER_API_KEY
+  category: chinese_general
+  display_name: DeepSeek-V3.2
 
 deepseek-r1:
   adapter: llm_openai_compat.py
@@ -31,6 +39,8 @@ deepseek-r1:
     OPENAI_BASE_URL: https://openrouter.ai/api/v1
     VERITASBENCH_MODEL: deepseek/deepseek-r1-0528
   key_env: OPENROUTER_API_KEY
+  category: chinese_general
+  display_name: DeepSeek-R1 (reasoning)
 
 qwen3-max:
   adapter: llm_openai_compat.py
@@ -38,6 +48,8 @@ qwen3-max:
     OPENAI_BASE_URL: https://openrouter.ai/api/v1
     VERITASBENCH_MODEL: qwen/qwen3-max
   key_env: OPENROUTER_API_KEY
+  category: chinese_general
+  display_name: Qwen3-Max
 
 glm-46:
   adapter: llm_openai_compat.py
@@ -45,6 +57,8 @@ glm-46:
     OPENAI_BASE_URL: https://openrouter.ai/api/v1
     VERITASBENCH_MODEL: z-ai/glm-4.6
   key_env: OPENROUTER_API_KEY
+  category: chinese_general
+  display_name: GLM-4.6
 
 kimi-k2:
   adapter: llm_openai_compat.py
@@ -52,6 +66,8 @@ kimi-k2:
     OPENAI_BASE_URL: https://openrouter.ai/api/v1
     VERITASBENCH_MODEL: moonshotai/kimi-k2
   key_env: OPENROUTER_API_KEY
+  category: chinese_general
+  display_name: Kimi K2
 
 claude-sonnet-46:
   adapter: llm_openai_compat.py
@@ -59,6 +75,8 @@ claude-sonnet-46:
     OPENAI_BASE_URL: https://openrouter.ai/api/v1
     VERITASBENCH_MODEL: anthropic/claude-sonnet-4.6
   key_env: OPENROUTER_API_KEY
+  category: western_general
+  display_name: Claude Sonnet 4.6
   # Alternative (native Anthropic SDK with prompt caching — requires ANTHROPIC_API_KEY):
   #   adapter: llm_anthropic.py
   #   env: {VERITASBENCH_MODEL: claude-sonnet-4-6}
@@ -69,10 +87,24 @@ gemini-25-pro:
   env:
     VERITASBENCH_MODEL: gemini-2.5-pro
   key_env: GEMINI_API_KEY
+  category: western_general
+  display_name: Gemini 2.5 Pro
   # Alternative (if GEMINI_API_KEY unavailable, use OpenRouter):
   #   adapter: llm_openai_compat.py
   #   env: {OPENAI_BASE_URL: https://openrouter.ai/api/v1, VERITASBENCH_MODEL: google/gemini-2.5-pro}
   #   key_env: OPENROUTER_API_KEY
+
+hunyuan-a13b:
+  adapter: llm_openai_compat.py
+  env:
+    OPENAI_BASE_URL: https://api.siliconflow.com/v1
+    VERITASBENCH_MODEL: tencent/Hunyuan-A13B-Instruct
+  key_env: SILICONFLOW_API_KEY
+  category: chinese_general
+  display_name: Hunyuan A13B
+
+# ── Chinese medical (not currently hostable on public inference) ───────────
+# See docs/future-work/medical-llm-test-plan.md for unblock paths.
 
 huatuogpt-ii:
   adapter: llm_openai_compat.py
@@ -80,6 +112,8 @@ huatuogpt-ii:
     OPENAI_BASE_URL: https://api.siliconflow.com/v1
     VERITASBENCH_MODEL: FreedomIntelligence/HuatuoGPT-II-34B
   key_env: SILICONFLOW_API_KEY
+  category: chinese_medical
+  display_name: HuatuoGPT-II-34B
 
 huatuogpt-o1:
   adapter: llm_openai_compat.py
@@ -87,6 +121,37 @@ huatuogpt-o1:
     OPENAI_BASE_URL: https://api.siliconflow.com/v1
     VERITASBENCH_MODEL: FreedomIntelligence/HuatuoGPT-o1-72B
   key_env: SILICONFLOW_API_KEY
+  category: chinese_medical
+  display_name: HuatuoGPT-o1-72B
+
+# ── Western medical (local via Ollama) ─────────────────────────────────────
+
+medgemma-4b:
+  adapter: llm_openai_compat.py
+  env:
+    OPENAI_BASE_URL: http://localhost:11434/v1
+    VERITASBENCH_MODEL: medgemma:4b
+  key_env: OPENAI_API_KEY  # Ollama ignores auth; any non-empty value works
+  category: western_medical
+  display_name: MedGemma 4B (Google)
+
+meditron-7b:
+  adapter: llm_openai_compat.py
+  env:
+    OPENAI_BASE_URL: http://localhost:11434/v1
+    VERITASBENCH_MODEL: meditron
+  key_env: OPENAI_API_KEY
+  category: western_medical
+  display_name: Meditron 7B (EPFL, Llama 2)
+
+meditron3-8b:
+  adapter: llm_openai_compat.py
+  env:
+    OPENAI_BASE_URL: http://localhost:11434/v1
+    VERITASBENCH_MODEL: hf.co/mradermacher/Meditron3-8B-GGUF:Q4_K_M
+  key_env: OPENAI_API_KEY
+  category: western_medical
+  display_name: Meditron3 8B (Llama 3)
 
 meditron-70b:
   adapter: llm_openai_compat.py
@@ -94,6 +159,8 @@ meditron-70b:
     OPENAI_BASE_URL: https://openrouter.ai/api/v1
     VERITASBENCH_MODEL: epfl-llm/meditron-70b
   key_env: OPENROUTER_API_KEY
+  category: western_medical
+  display_name: Meditron 70B (EPFL, original)
   # If not available on OpenRouter, swap to:
   #   OPENAI_BASE_URL: https://api.together.xyz/v1
   #   key_env: TOGETHER_API_KEY
