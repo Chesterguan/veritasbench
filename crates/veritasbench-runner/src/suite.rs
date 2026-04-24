@@ -2,32 +2,48 @@ use std::path::Path;
 
 use veritasbench_core::{error::VBError, scenario::Scenario};
 
+/// Max size of a single scenario JSON file. Pre-scan guard to prevent OOM from
+/// a malformed (or adversarial) multi-GB scenario committed by a contributor.
+/// 16 MB is ~100× the largest scenario in healthcare_v1.
+const MAX_SCENARIO_BYTES: u64 = 16 * 1024 * 1024;
+
 /// Load all `.json` scenario files from `path`, sorted by filename.
 ///
 /// Returns `VBError::SuiteNotFound` if the directory does not exist.
 /// Returns `VBError::Io` or `VBError::ScenarioParse` on read/parse failure.
+/// Entry-iteration errors (permission denied, broken symlink, etc.) are
+/// propagated rather than silently dropped — a 700-scenario suite must not
+/// become a 699-scenario suite without anyone noticing.
 pub fn load_suite(path: &Path) -> Result<Vec<Scenario>, VBError> {
     if !path.exists() {
         return Err(VBError::SuiteNotFound(path.display().to_string()));
     }
 
-    let mut entries: Vec<_> = std::fs::read_dir(path)?
-        .filter_map(|e| e.ok())
-        .filter(|e| {
-            e.path()
-                .extension()
-                .and_then(|ext| ext.to_str())
-                .map(|ext| ext == "json")
-                .unwrap_or(false)
-        })
-        .collect();
+    let mut entries: Vec<std::fs::DirEntry> = Vec::new();
+    for entry_result in std::fs::read_dir(path)? {
+        let entry = entry_result?;
+        let p = entry.path();
+        if p.extension().and_then(|ext| ext.to_str()) == Some("json") {
+            entries.push(entry);
+        }
+    }
 
     // Sort by filename for deterministic ordering
     entries.sort_by_key(|e| e.file_name());
 
     let mut scenarios = Vec::with_capacity(entries.len());
     for entry in entries {
-        let content = std::fs::read_to_string(entry.path())?;
+        let p = entry.path();
+        // Bound file size before reading — prevents OOM from a malformed file.
+        let metadata = std::fs::metadata(&p)?;
+        if metadata.len() > MAX_SCENARIO_BYTES {
+            return Err(VBError::ScenarioTooLarge {
+                path: p.display().to_string(),
+                size: metadata.len(),
+                max: MAX_SCENARIO_BYTES,
+            });
+        }
+        let content = std::fs::read_to_string(&p)?;
         let scenario: Scenario = serde_json::from_str(&content)?;
         scenarios.push(scenario);
     }
