@@ -135,23 +135,11 @@ medgemma-4b:
   category: western_medical
   display_name: MedGemma 4B (Google)
 
-meditron-7b:
-  adapter: llm_openai_compat.py
-  env:
-    OPENAI_BASE_URL: http://localhost:11434/v1
-    VERITASBENCH_MODEL: meditron
-  key_env: OPENAI_API_KEY
-  category: western_medical
-  display_name: Meditron 7B (EPFL, Llama 2)
-
-meditron3-8b:
-  adapter: llm_openai_compat.py
-  env:
-    OPENAI_BASE_URL: http://localhost:11434/v1
-    VERITASBENCH_MODEL: hf.co/mradermacher/Meditron3-8B-GGUF:Q4_K_M
-  key_env: OPENAI_API_KEY
-  category: western_medical
-  display_name: Meditron3 8B (Llama 3)
+# meditron-7b and meditron3-8b were tested on 2026-04-24 but removed from
+# the suite: 7b (Llama 2, Ollama) had 28% timeout rate (trained on clinical QA,
+# doesn't follow JSON-only prompts); 3-8b (Q4_K_M GGUF) scored 57% Policy,
+# likely dominated by 4-bit quantization loss rather than medical
+# specialization signal. See docs/future-work/benchmark-realism-improvements.md.
 
 meditron-70b:
   adapter: llm_openai_compat.py
