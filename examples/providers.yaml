@@ -54,20 +54,24 @@ kimi-k2:
   key_env: OPENROUTER_API_KEY
 
 claude-sonnet-46:
-  adapter: llm_openai_compat.py
+  adapter: llm_anthropic.py
   env:
-    OPENAI_BASE_URL: https://openrouter.ai/api/v1
-    VERITASBENCH_MODEL: anthropic/claude-sonnet-4.6
-  key_env: OPENROUTER_API_KEY
-  # Alternative: examples/llm_anthropic.py with ANTHROPIC_API_KEY for prompt caching.
+    VERITASBENCH_MODEL: claude-sonnet-4-6
+  key_env: ANTHROPIC_API_KEY
+  # Alternative (if ANTHROPIC_API_KEY unavailable, use OpenRouter):
+  #   adapter: llm_openai_compat.py
+  #   env: {OPENAI_BASE_URL: https://openrouter.ai/api/v1, VERITASBENCH_MODEL: anthropic/claude-sonnet-4.6}
+  #   key_env: OPENROUTER_API_KEY
 
 gemini-25-pro:
-  adapter: llm_openai_compat.py
+  adapter: llm_gemini.py
   env:
-    OPENAI_BASE_URL: https://openrouter.ai/api/v1
-    VERITASBENCH_MODEL: google/gemini-2.5-pro
-  key_env: OPENROUTER_API_KEY
-  # Alternative: examples/llm_gemini.py with GEMINI_API_KEY for context caching.
+    VERITASBENCH_MODEL: gemini-2.5-pro
+  key_env: GEMINI_API_KEY
+  # Alternative (if GEMINI_API_KEY unavailable, use OpenRouter):
+  #   adapter: llm_openai_compat.py
+  #   env: {OPENAI_BASE_URL: https://openrouter.ai/api/v1, VERITASBENCH_MODEL: google/gemini-2.5-pro}
+  #   key_env: OPENROUTER_API_KEY
 
 huatuogpt-ii:
   adapter: llm_openai_compat.py
