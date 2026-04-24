@@ -1,6 +1,6 @@
 # Adapter Protocol Specification
 
-> Version: 1.1 | Last updated: 2026-04-06
+> Version: 1.2 | Last updated: 2026-04-24
 
 An **adapter** is any executable that reads a governance scenario from stdin as JSON and writes a governance decision to stdout as JSON. VeritasBench uses this protocol to benchmark AI agent governance systems.
 
@@ -292,6 +292,54 @@ if __name__ == "__main__":
     scenario = json.loads(sys.stdin.read())
     print(json.dumps(handle(scenario)))
 ```
+
+## Multi-Provider Adapters
+
+Starting in v1.2, `examples/llm_openai_compat.py` benchmarks any provider
+that exposes an OpenAI-compatible `/v1/chat/completions` endpoint. You
+switch providers by changing three environment variables — no new
+adapter code per model.
+
+| Variable | Purpose | Example |
+|---|---|---|
+| `OPENAI_API_KEY` | Provider's API key | `sk-or-...` |
+| `OPENAI_BASE_URL` | Provider's base URL (ending in `/v1`) | `https://openrouter.ai/api/v1` |
+| `VERITASBENCH_MODEL` | Provider's model ID | `deepseek/deepseek-chat-v3.2` |
+
+The adapter handles two realities of non-OpenAI providers:
+
+- **Providers that reject `response_format={"type":"json_object"}`** — on
+  HTTP 400 mentioning `response_format`, the adapter retries without the
+  flag and regex-extracts a `{"decision": "..."}` object from the
+  free-form response text.
+- **Reasoning models that emit `<think>...</think>` blocks inline**
+  (DeepSeek-R1, HuatuoGPT-o1) — the regex fallback finds the decision
+  JSON regardless of surrounding prose.
+
+For Claude with prompt caching or Gemini with context caching, use the
+native-SDK adapters (`examples/llm_anthropic.py`, `examples/llm_gemini.py`)
+instead of routing through an OpenAI-compat aggregator.
+
+### Running a benchmark
+
+`examples/providers.yaml` maps short-names to `{adapter, env, key_env}`
+tuples for 11 models. Use `scripts/run_model.py` to resolve a short-name
+and invoke the CLI:
+
+```bash
+# Check what will run without executing:
+python scripts/run_model.py deepseek-v3 --dry-run
+
+# Run the full suite against DeepSeek-V3 via OpenRouter:
+python scripts/run_model.py deepseek-v3
+
+# Reasoning models need a longer per-scenario timeout:
+python scripts/run_model.py deepseek-r1 --timeout 60000
+```
+
+API keys must be supplied via a local `.env` file. See `.env.example`
+for the minimum-viable key set (OpenRouter + SiliconFlow covers 10 of
+the 11 built-in providers).
 
 ## Validation Checklist
 
