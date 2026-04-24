@@ -1,11 +1,21 @@
 """Tests for scripts/run_model.py — argument parsing and env-var resolution."""
+import importlib.util
 import os
 import pathlib
 import subprocess
 import sys
 
 
-SCRIPT = pathlib.Path(__file__).resolve().parents[2] / "scripts" / "run_model.py"
+REPO = pathlib.Path(__file__).resolve().parents[2]
+SCRIPT = REPO / "scripts" / "run_model.py"
+
+
+def _load_run_model_module():
+    """Import scripts/run_model.py as a module so we can test helpers directly."""
+    spec = importlib.util.spec_from_file_location("run_model", SCRIPT)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
 
 
 def _run_dry(args, env=None):
@@ -70,3 +80,93 @@ def test_dry_run_respects_timeout_override():
     )
     assert proc.returncode == 0, proc.stderr.decode()
     assert "60000" in proc.stdout.decode()
+
+
+# ── URL validation (SSRF guard) ──────────────────────────────────────────
+
+def test_validate_base_url_accepts_https():
+    mod = _load_run_model_module()
+    mod._validate_base_url("https://api.openai.com/v1", "gpt-4o-mini")
+    mod._validate_base_url("https://openrouter.ai/api/v1", "deepseek-v3")
+
+
+def test_validate_base_url_accepts_localhost_http():
+    mod = _load_run_model_module()
+    mod._validate_base_url("http://localhost:11434/v1", "medgemma-4b")
+    mod._validate_base_url("http://127.0.0.1:8000/v1", "custom-local")
+
+
+def test_validate_base_url_rejects_plain_http():
+    mod = _load_run_model_module()
+    import pytest
+    with pytest.raises(ValueError, match="scheme"):
+        mod._validate_base_url("http://evil.example.com/v1", "x")
+
+
+def test_validate_base_url_rejects_cloud_metadata():
+    mod = _load_run_model_module()
+    import pytest
+    # IMDS IP is the classic SSRF exfiltration target.
+    with pytest.raises(ValueError, match="metadata"):
+        mod._validate_base_url("http://169.254.169.254/latest/meta-data/", "x")
+    # Even dressed up as https, we still refuse it.
+    with pytest.raises(ValueError, match="metadata"):
+        mod._validate_base_url("https://metadata.google.internal/", "x")
+
+
+def test_validate_base_url_rejects_file_scheme():
+    mod = _load_run_model_module()
+    import pytest
+    with pytest.raises(ValueError):
+        mod._validate_base_url("file:///etc/passwd", "x")
+
+
+# ── Env scoping (no cross-provider key leakage) ─────────────────────────
+
+def test_build_scoped_env_drops_foreign_keys():
+    mod = _load_run_model_module()
+    cfg = {
+        "adapter": "llm_openai_compat.py",
+        "env": {"OPENAI_BASE_URL": "https://openrouter.ai/api/v1", "VERITASBENCH_MODEL": "x"},
+        "key_env": "OPENROUTER_API_KEY",
+    }
+    # Seed os.environ with a bunch of keys.
+    os.environ["OPENROUTER_API_KEY"] = "or-key"
+    os.environ["ANTHROPIC_API_KEY"] = "anthropic-key"
+    os.environ["GEMINI_API_KEY"] = "gemini-key"
+    os.environ["SILICONFLOW_API_KEY"] = "sf-key"
+    try:
+        scoped = mod._build_scoped_env(cfg, "deepseek-v3")
+    finally:
+        for k in ("ANTHROPIC_API_KEY", "GEMINI_API_KEY", "SILICONFLOW_API_KEY"):
+            os.environ.pop(k, None)
+
+    # Only OPENROUTER_API_KEY (and its OPENAI_API_KEY alias for openai-compat) is present.
+    assert scoped.get("OPENROUTER_API_KEY") == "or-key"
+    assert scoped.get("OPENAI_API_KEY") == "or-key"
+    assert "ANTHROPIC_API_KEY" not in scoped, "foreign key leaked into subprocess env"
+    assert "GEMINI_API_KEY" not in scoped, "foreign key leaked into subprocess env"
+    assert "SILICONFLOW_API_KEY" not in scoped, "foreign key leaked into subprocess env"
+
+
+def test_build_scoped_env_preserves_system_essentials():
+    mod = _load_run_model_module()
+    cfg = {
+        "adapter": "llm_gemini.py",
+        "env": {"VERITASBENCH_MODEL": "gemini-2.5-pro"},
+        "key_env": "GEMINI_API_KEY",
+    }
+    os.environ["GEMINI_API_KEY"] = "g-key"
+    os.environ["RANDOM_UNRELATED_SECRET"] = "leak-me-not"
+    try:
+        scoped = mod._build_scoped_env(cfg, "gemini-25-pro")
+    finally:
+        os.environ.pop("RANDOM_UNRELATED_SECRET", None)
+
+    # Essentials still there.
+    assert "PATH" in scoped
+    # Unrelated env vars are dropped.
+    assert "RANDOM_UNRELATED_SECRET" not in scoped
+    # Gemini adapter doesn't need OPENAI_API_KEY aliasing.
+    assert scoped.get("GEMINI_API_KEY") == "g-key"
+    assert "OPENAI_API_KEY" not in scoped or scoped.get("OPENAI_API_KEY") == os.environ.get("OPENAI_API_KEY", "")

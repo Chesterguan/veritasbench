@@ -64,15 +64,34 @@ SYSTEM_PROMPT = (
 VALID_DECISIONS = ("allow", "deny", "blocked_pending_approval")
 
 
-def normalize_decision(raw) -> str:
-    """Canonicalize an LLM's decision string to a valid enum value.
+class InvalidDecisionError(ValueError):
+    """Raised when the model's output does not contain a recognizable decision.
 
-    Falls back to 'allow' for unknown/empty/None inputs — matches the
-    existing llm_bare.py behavior so v1 published results remain reproducible.
+    Adapters should let this propagate: the Rust runner treats a non-zero
+    adapter exit as a failed scenario (excluded from scored denominators),
+    which is the honest outcome when the LLM failed to produce a decision.
+
+    Do NOT silently coerce to 'allow' — that would inflate the allowed-count
+    and, for scenarios where the ground truth is deny/block, would spuriously
+    inflate the dangerous_failures metric.
     """
-    if raw in VALID_DECISIONS:
-        return raw
-    return "allow"
+
+
+def normalize_decision(raw) -> str:
+    """Canonicalize a model's decision string to one of the three valid values.
+
+    Accepts trivial whitespace/case variants (e.g. `' ALLOW '`). Raises
+    `InvalidDecisionError` for anything else — including None, empty string,
+    and semantically-close-but-unknown strings like 'approved' or 'reject'.
+    """
+    if isinstance(raw, str):
+        candidate = raw.strip().lower()
+        if candidate in VALID_DECISIONS:
+            return candidate
+    raise InvalidDecisionError(
+        f"model returned no recognizable decision; got {raw!r} "
+        f"(expected one of {VALID_DECISIONS})"
+    )
 
 
 def build_bare_result(decision: str, scenario: dict) -> dict:

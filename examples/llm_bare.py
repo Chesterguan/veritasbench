@@ -45,7 +45,10 @@ def handle(scenario: dict) -> dict:
         temperature=0,
     )
     parsed = json.loads(response.choices[0].message.content)
-    decision = normalize_decision(parsed.get("decision", "allow"))
+    # normalize_decision raises InvalidDecisionError on unknown/missing decisions.
+    # Letting it propagate exits the adapter non-zero, which is counted as a
+    # failed scenario — the honest outcome when the model didn't produce a decision.
+    decision = normalize_decision(parsed.get("decision"))
     return build_bare_result(decision, scenario)
 
 

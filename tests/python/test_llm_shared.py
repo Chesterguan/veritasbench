@@ -50,10 +50,38 @@ def test_normalize_decision_valid_values():
     assert shared.normalize_decision("blocked_pending_approval") == "blocked_pending_approval"
 
 
-def test_normalize_decision_invalid_defaults_to_allow():
-    assert shared.normalize_decision("approved") == "allow"
-    assert shared.normalize_decision("") == "allow"
-    assert shared.normalize_decision(None) == "allow"
+def test_normalize_decision_accepts_case_and_whitespace_variants():
+    assert shared.normalize_decision(" ALLOW ") == "allow"
+    assert shared.normalize_decision("Deny") == "deny"
+    assert shared.normalize_decision("BLOCKED_PENDING_APPROVAL") == "blocked_pending_approval"
+
+
+def test_normalize_decision_raises_on_unknown_values():
+    import pytest
+    # Semantically close but not in the enum — raising is the honest signal.
+    with pytest.raises(shared.InvalidDecisionError):
+        shared.normalize_decision("approved")
+    with pytest.raises(shared.InvalidDecisionError):
+        shared.normalize_decision("reject")
+    with pytest.raises(shared.InvalidDecisionError):
+        shared.normalize_decision("permit")
+
+
+def test_normalize_decision_raises_on_empty_and_none():
+    import pytest
+    with pytest.raises(shared.InvalidDecisionError):
+        shared.normalize_decision("")
+    with pytest.raises(shared.InvalidDecisionError):
+        shared.normalize_decision(None)
+    with pytest.raises(shared.InvalidDecisionError):
+        shared.normalize_decision({})
+
+
+def test_invalid_decision_error_is_valueerror_subclass():
+    # Callers already catching ValueError (JSON decode, int parse, etc.) will
+    # still catch this, which is fine — but the explicit subclass lets downstream
+    # adapters distinguish decision-integrity from other parse errors if they want.
+    assert issubclass(shared.InvalidDecisionError, ValueError)
 
 
 def test_build_bare_result_shape():

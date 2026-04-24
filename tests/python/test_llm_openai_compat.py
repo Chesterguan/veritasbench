@@ -178,3 +178,33 @@ def test_reasoning_separate_field_ignored(oai_mock):
     assert proc.returncode == 0, proc.stderr.decode()
     out = json.loads(proc.stdout)
     assert out["decision"] == "blocked_pending_approval"
+
+
+# ── SSRF guard: adapter refuses disallowed base URLs even when invoked directly ──
+
+def test_adapter_rejects_cloud_metadata_url():
+    """Adapter must refuse to start when OPENAI_BASE_URL points at IMDS."""
+    proc = _run_adapter(
+        _scenario(),
+        {"OPENAI_BASE_URL": "http://169.254.169.254/latest/meta-data/"},
+    )
+    assert proc.returncode != 0
+    assert b"metadata" in proc.stderr.lower() or b"refus" in proc.stderr.lower()
+
+
+def test_adapter_rejects_plain_http_to_remote_host():
+    """Plain http:// is only allowed to loopback (local Ollama)."""
+    proc = _run_adapter(
+        _scenario(),
+        {"OPENAI_BASE_URL": "http://evil.example.com/v1"},
+    )
+    assert proc.returncode != 0
+    assert b"scheme" in proc.stderr.lower() or b"not allowed" in proc.stderr.lower()
+
+
+def test_adapter_rejects_file_scheme():
+    proc = _run_adapter(
+        _scenario(),
+        {"OPENAI_BASE_URL": "file:///etc/passwd"},
+    )
+    assert proc.returncode != 0

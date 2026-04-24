@@ -30,6 +30,7 @@ import random
 import re
 import sys
 import time
+from urllib.parse import urlparse
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -37,7 +38,37 @@ from openai import APIStatusError, OpenAI, RateLimitError  # noqa: E402
 
 from _llm_shared import SYSTEM_PROMPT, build_bare_result, build_prompt, normalize_decision  # noqa: E402
 
-BASE_URL = os.environ.get("OPENAI_BASE_URL") or "https://api.openai.com/v1"
+# Block cloud metadata IPs even over HTTPS — exfiltration target for misconfig/SSRF.
+_BLOCKED_HOSTS = {
+    "169.254.169.254",
+    "fd00:ec2::254",
+    "metadata.google.internal",
+    "metadata.goog",
+}
+_LOOPBACK_HOSTS = {"localhost", "127.0.0.1", "::1"}
+
+
+def _validate_base_url(url: str) -> str:
+    """Defense-in-depth: scripts/run_model.py already validates, but this
+    adapter can be invoked directly. Refuses to start on disallowed URLs."""
+    parsed = urlparse(url)
+    host = (parsed.hostname or "").lower()
+    if host in _BLOCKED_HOSTS:
+        raise SystemExit(
+            f"llm_openai_compat: OPENAI_BASE_URL points at cloud metadata "
+            f"service ({url}); refusing to start."
+        )
+    if parsed.scheme == "https":
+        return url
+    if parsed.scheme == "http" and host in _LOOPBACK_HOSTS:
+        return url
+    raise SystemExit(
+        f"llm_openai_compat: OPENAI_BASE_URL scheme '{parsed.scheme}' is "
+        f"not allowed (url={url}). Only https:// or http://localhost is permitted."
+    )
+
+
+BASE_URL = _validate_base_url(os.environ.get("OPENAI_BASE_URL") or "https://api.openai.com/v1")
 MODEL = os.environ.get("VERITASBENCH_MODEL", "gpt-4o-mini")
 
 _client = None
@@ -142,7 +173,10 @@ def handle(scenario: dict) -> dict:
         else:
             raise
 
-    decision = normalize_decision(parsed.get("decision", "allow") if parsed else "allow")
+    # normalize_decision raises InvalidDecisionError on unknown/missing
+    # decisions; propagate so the scenario counts as failed rather than
+    # silently coerced to 'allow' (see examples/_llm_shared.py).
+    decision = normalize_decision(parsed.get("decision") if parsed else None)
     return build_bare_result(decision, scenario)
 
 

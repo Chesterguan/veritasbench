@@ -54,7 +54,9 @@ def handle(scenario: dict) -> dict:
             parsed = json.loads(match.group(0))
         except json.JSONDecodeError:
             parsed = {}
-    decision = normalize_decision(parsed.get("decision", "allow") if parsed else "allow")
+    # normalize_decision raises on unknown/missing; propagate so the scenario
+    # counts as failed rather than silently coerced to 'allow'.
+    decision = normalize_decision(parsed.get("decision") if parsed else None)
     return build_bare_result(decision, scenario)
 
 

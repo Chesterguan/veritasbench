@@ -71,7 +71,10 @@ def handle(scenario: dict) -> dict:
         except json.JSONDecodeError:
             parsed = {}
 
-    decision = normalize_decision(parsed.get("decision", "allow") if parsed else "allow")
+    # normalize_decision raises InvalidDecisionError on unknown/missing decisions;
+    # we let it propagate so the scenario counts as failed rather than silently
+    # scored as 'allow' (see examples/_llm_shared.py).
+    decision = normalize_decision(parsed.get("decision") if parsed else None)
     return build_bare_result(decision, scenario)
 
 
