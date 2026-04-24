@@ -26,12 +26,14 @@ Usage (via scripts/run_model.py or directly):
 """
 import json
 import os
+import random
 import re
 import sys
+import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from openai import APIStatusError, OpenAI  # noqa: E402
+from openai import APIStatusError, OpenAI, RateLimitError  # noqa: E402
 
 from _llm_shared import SYSTEM_PROMPT, build_bare_result, build_prompt, normalize_decision  # noqa: E402
 
@@ -78,6 +80,40 @@ def _is_response_format_error(exc: APIStatusError) -> bool:
     return any(tok in msg for tok in ("response_format", "structured-outputs", "structured outputs", "json_object", "json schema"))
 
 
+_MAX_429_RETRIES = 5
+
+
+def _create_with_backoff(**kwargs):
+    """Call chat.completions.create, retrying on 429 with exponential backoff.
+
+    Many providers (OpenRouter, DashScope, SiliconFlow) enforce per-model RPM
+    limits. When we run several models concurrently against the same gateway,
+    the LLM adapter needs to wait out 429s rather than let the runner mark
+    the whole scenario failed.
+    """
+    attempt = 0
+    while True:
+        try:
+            return _get_client().chat.completions.create(**kwargs)
+        except RateLimitError as exc:
+            attempt += 1
+            if attempt > _MAX_429_RETRIES:
+                raise
+            # Honor Retry-After if the provider sent one; otherwise exponential + jitter.
+            retry_after = None
+            try:
+                retry_after = float(exc.response.headers.get("Retry-After", "") or "")
+            except (AttributeError, ValueError, TypeError):
+                retry_after = None
+            delay = retry_after if retry_after and retry_after > 0 else (2 ** attempt) + random.uniform(0, 1)
+            delay = min(delay, 60.0)
+            print(
+                f"llm_openai_compat: 429 rate-limit, sleeping {delay:.1f}s (attempt {attempt}/{_MAX_429_RETRIES})",
+                file=sys.stderr,
+            )
+            time.sleep(delay)
+
+
 def handle(scenario: dict) -> dict:
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
@@ -86,7 +122,7 @@ def handle(scenario: dict) -> dict:
     kwargs = dict(model=MODEL, messages=messages, temperature=0)
 
     try:
-        response = _get_client().chat.completions.create(
+        response = _create_with_backoff(
             **kwargs, response_format={"type": "json_object"}
         )
         content = response.choices[0].message.content or ""
@@ -100,7 +136,7 @@ def handle(scenario: dict) -> dict:
                 "llm_openai_compat: provider rejected response_format, retrying without it",
                 file=sys.stderr,
             )
-            response = _get_client().chat.completions.create(**kwargs)
+            response = _create_with_backoff(**kwargs)
             content = response.choices[0].message.content or ""
             parsed = _extract_decision_json(content)
         else:
