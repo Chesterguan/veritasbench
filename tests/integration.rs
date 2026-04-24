@@ -19,12 +19,17 @@ async fn test_full_pipeline_trivial_deny() {
         let run_result = veritasbench_runner::adapter::run_adapter(&adapter_path, scenario, 30_000)
             .await
             .unwrap();
-        let score = veritasbench_eval::aggregate::evaluate_scenario(scenario, &run_result.result, run_result.latency_ms);
+        let score = veritasbench_eval::aggregate::evaluate_scenario(
+            scenario,
+            &run_result.result,
+            run_result.latency_ms,
+        );
         scores.push(score);
     }
 
     // Aggregate
-    let (policy, safety, trace, control, dangerous_failures) = veritasbench_eval::aggregate::aggregate_scores(&scores);
+    let (policy, safety, trace, control, dangerous_failures) =
+        veritasbench_eval::aggregate::aggregate_scores(&scores);
 
     // Trivial deny should get high policy compliance (deny is correct for most scenarios)
     assert!(policy.possible > 0);
@@ -42,8 +47,15 @@ async fn test_full_pipeline_trivial_deny() {
         safety,
         traceability: trace,
         controllability: control,
-        consistency: veritasbench_core::score::ConsistencyResult { identical: 0, total: 0 },
-        latency: veritasbench_core::score::LatencyStats { p50_ms: 0, p95_ms: 0, p99_ms: 0 },
+        consistency: veritasbench_core::score::ConsistencyResult {
+            identical: 0,
+            total: 0,
+        },
+        latency: veritasbench_core::score::LatencyStats {
+            p50_ms: 0,
+            p95_ms: 0,
+            p99_ms: 0,
+        },
         dangerous_failures,
         per_scenario: scores,
     };
@@ -90,10 +102,9 @@ fn load_scenario(id: &str) -> veritasbench_core::scenario::Scenario {
     let path = workspace_root()
         .join("scenarios/healthcare_v1")
         .join(format!("{id}.json"));
-    let content = std::fs::read_to_string(&path)
-        .unwrap_or_else(|e| panic!("failed to load {id}: {e}"));
-    serde_json::from_str(&content)
-        .unwrap_or_else(|e| panic!("failed to parse {id}: {e}"))
+    let content =
+        std::fs::read_to_string(&path).unwrap_or_else(|e| panic!("failed to load {id}: {e}"));
+    serde_json::from_str(&content).unwrap_or_else(|e| panic!("failed to parse {id}: {e}"))
 }
 
 fn workspace_root() -> std::path::PathBuf {
@@ -108,7 +119,10 @@ async fn test_adapter_trivial_allow() {
     let run = veritasbench_runner::adapter::run_adapter(&adapter, &scenario, 10_000)
         .await
         .expect("trivial_allow_adapter should succeed");
-    assert_eq!(run.result.decision, veritasbench_core::scenario::Decision::Allow);
+    assert_eq!(
+        run.result.decision,
+        veritasbench_core::scenario::Decision::Allow
+    );
     assert!(run.result.audit_entries.is_empty());
 }
 
@@ -136,7 +150,10 @@ async fn test_adapter_cliniclaw_simulated() {
         .await
         .expect("cliniclaw_simulated should succeed");
     // ClinicClaw should deny unauthorized access and produce audit entries
-    assert_eq!(run.result.decision, veritasbench_core::scenario::Decision::Deny);
+    assert_eq!(
+        run.result.decision,
+        veritasbench_core::scenario::Decision::Deny
+    );
     assert!(!run.result.audit_entries.is_empty());
 }
 
@@ -191,45 +208,69 @@ async fn test_adapter_nemo_guardrails_simulated() {
 async fn test_cliniclaw_conflicting_authority() {
     let adapter = workspace_root().join("examples/cliniclaw_simulated.py");
     let scenario = load_scenario("CA-001");
-    assert_eq!(scenario.scenario_type, veritasbench_core::scenario::ScenarioType::ConflictingAuthority);
+    assert_eq!(
+        scenario.scenario_type,
+        veritasbench_core::scenario::ScenarioType::ConflictingAuthority
+    );
     let run = veritasbench_runner::adapter::run_adapter(&adapter, &scenario, 10_000)
         .await
         .expect("cliniclaw should handle conflicting_authority");
-    assert!(!run.result.audit_entries.is_empty(), "ClinicClaw should produce audit entries for CA");
+    assert!(
+        !run.result.audit_entries.is_empty(),
+        "ClinicClaw should produce audit entries for CA"
+    );
 }
 
 #[tokio::test]
 async fn test_cliniclaw_accountability_gap() {
     let adapter = workspace_root().join("examples/cliniclaw_simulated.py");
     let scenario = load_scenario("AG-001");
-    assert_eq!(scenario.scenario_type, veritasbench_core::scenario::ScenarioType::AccountabilityGap);
+    assert_eq!(
+        scenario.scenario_type,
+        veritasbench_core::scenario::ScenarioType::AccountabilityGap
+    );
     let run = veritasbench_runner::adapter::run_adapter(&adapter, &scenario, 10_000)
         .await
         .expect("cliniclaw should handle accountability_gap");
     // AG scenarios with unattributed steps should produce audit entries
-    assert!(!run.result.audit_entries.is_empty(), "ClinicClaw should produce audit entries for AG");
+    assert!(
+        !run.result.audit_entries.is_empty(),
+        "ClinicClaw should produce audit entries for AG"
+    );
 }
 
 #[tokio::test]
 async fn test_cliniclaw_system_initiated() {
     let adapter = workspace_root().join("examples/cliniclaw_simulated.py");
     let scenario = load_scenario("SI-001");
-    assert_eq!(scenario.scenario_type, veritasbench_core::scenario::ScenarioType::SystemInitiated);
+    assert_eq!(
+        scenario.scenario_type,
+        veritasbench_core::scenario::ScenarioType::SystemInitiated
+    );
     let run = veritasbench_runner::adapter::run_adapter(&adapter, &scenario, 10_000)
         .await
         .expect("cliniclaw should handle system_initiated");
-    assert!(!run.result.audit_entries.is_empty(), "ClinicClaw should produce audit entries for SI");
+    assert!(
+        !run.result.audit_entries.is_empty(),
+        "ClinicClaw should produce audit entries for SI"
+    );
 }
 
 #[tokio::test]
 async fn test_cliniclaw_incomplete_information() {
     let adapter = workspace_root().join("examples/cliniclaw_simulated.py");
     let scenario = load_scenario("II-001");
-    assert_eq!(scenario.scenario_type, veritasbench_core::scenario::ScenarioType::IncompleteInformation);
+    assert_eq!(
+        scenario.scenario_type,
+        veritasbench_core::scenario::ScenarioType::IncompleteInformation
+    );
     let run = veritasbench_runner::adapter::run_adapter(&adapter, &scenario, 10_000)
         .await
         .expect("cliniclaw should handle incomplete_information");
-    assert!(!run.result.audit_entries.is_empty(), "ClinicClaw should produce audit entries for II");
+    assert!(
+        !run.result.audit_entries.is_empty(),
+        "ClinicClaw should produce audit entries for II"
+    );
 }
 
 #[test]
@@ -257,7 +298,9 @@ fn test_adapter_llm_openai_compat_mocked() {
     let stdout = mock.stdout.take().expect("mock stdout");
     let mut reader = BufReader::new(stdout);
     let mut port_line = String::new();
-    reader.read_line(&mut port_line).expect("read port from mock");
+    reader
+        .read_line(&mut port_line)
+        .expect("read port from mock");
     let port: u16 = port_line.trim().parse().expect("parse mock port");
 
     // Give the server a moment to be ready post-print.
@@ -293,11 +336,10 @@ fn test_adapter_llm_openai_compat_mocked() {
     // Drop stdin by dropping the handle via take().
     drop(adapter_proc.stdin.take());
 
-    let output = adapter_proc
-        .wait_with_output()
-        .expect("adapter wait");
+    let output = adapter_proc.wait_with_output().expect("adapter wait");
 
     let _ = mock.kill();
+    let _ = mock.wait();
 
     assert!(
         output.status.success(),
