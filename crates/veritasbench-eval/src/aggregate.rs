@@ -1,7 +1,15 @@
 use veritasbench_core::result::AdapterResult;
-use veritasbench_core::scenario::{Scenario, ScenarioType};
+use veritasbench_core::scenario::{Difficulty, Scenario, ScenarioType};
 use veritasbench_core::score::{DangerousFailureStats, DimensionScore, ScenarioScore};
 use crate::{controllability, policy, safety, traceability};
+
+fn difficulty_str(d: &Difficulty) -> &'static str {
+    match d {
+        Difficulty::Easy => "easy",
+        Difficulty::Moderate => "moderate",
+        Difficulty::Hard => "hard",
+    }
+}
 
 /// Evaluate a single scenario+result, returning per-scenario scores.
 ///
@@ -112,12 +120,7 @@ pub fn evaluate_scenario(scenario: &Scenario, result: &AdapterResult, latency_ms
         controllability: control_score,
         latency_ms,
         dangerous_failure: dangerous,
-        difficulty: scenario.difficulty.as_ref().map(|d| {
-            serde_json::to_value(d)
-                .ok()
-                .and_then(|v| v.as_str().map(String::from))
-                .unwrap_or_default()
-        }),
+        difficulty: scenario.difficulty.as_ref().map(|d| difficulty_str(d).to_string()),
     }
 }
 

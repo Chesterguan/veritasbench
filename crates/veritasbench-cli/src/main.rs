@@ -136,7 +136,15 @@ async fn run_command(config: RunConfig) {
     let adapter_path = resolve_adapter_path(&adapter_path);
     println!("Adapter: {}", adapter_path.display());
 
-    // Resolve suite directory relative to cwd
+    // Resolve suite directory relative to cwd. Reject values that would
+    // escape the scenarios/ tree via separators or parent-dir traversal.
+    if !is_safe_suite_name(&suite_name) {
+        eprintln!(
+            "error: suite name '{suite_name}' contains path separators or '..'; \
+             only simple directory names are allowed (e.g. 'healthcare_v1')"
+        );
+        std::process::exit(1);
+    }
     let suite_dir = PathBuf::from("scenarios").join(&suite_name);
 
     let scenarios = match load_suite(&suite_dir) {
@@ -234,16 +242,17 @@ async fn run_command(config: RunConfig) {
         }
     };
 
-    // Latency stats
+    // Latency stats. Uses (len-1)*k/100 rounded to nearest — the textbook
+    // nearest-rank formula. The previous (len as f64 * 0.95) variant was
+    // off-by-one: for len=20 it picked index 19 (the max) as p95.
     let latency = if all_latencies.is_empty() {
         LatencyStats { p50_ms: 0, p95_ms: 0, p99_ms: 0 }
     } else {
         all_latencies.sort_unstable();
-        let len = all_latencies.len();
         LatencyStats {
-            p50_ms: all_latencies[len / 2],
-            p95_ms: all_latencies[len.saturating_sub(1).min((len as f64 * 0.95) as usize)],
-            p99_ms: all_latencies[len.saturating_sub(1).min((len as f64 * 0.99) as usize)],
+            p50_ms: percentile(&all_latencies, 50),
+            p95_ms: percentile(&all_latencies, 95),
+            p99_ms: percentile(&all_latencies, 99),
         }
     };
 
@@ -278,9 +287,39 @@ async fn run_command(config: RunConfig) {
     println!();
     print!("{}", generate_markdown(&report));
 
+    // Distinct exit code for partial success: reports WERE written, but some
+    // scenarios failed. Callers can tell this apart from "report write failed"
+    // (exit 1 from the write_json_report error paths above).
     if error_count > 0 {
-        std::process::exit(1);
+        std::process::exit(2);
     }
+}
+
+/// Returns the nearest-rank percentile of a sorted slice. `k` in 0..=100.
+/// For len=1 the sole element is returned regardless of `k`.
+fn percentile(sorted: &[u64], k: u64) -> u64 {
+    assert!(k <= 100);
+    if sorted.is_empty() {
+        return 0;
+    }
+    if sorted.len() == 1 {
+        return sorted[0];
+    }
+    let n = sorted.len() as u64 - 1;
+    // Round half-up: (n * k + 50) / 100 gives nearest integer without float math.
+    let idx = ((n * k) + 50) / 100;
+    sorted[idx as usize]
+}
+
+/// Whether a `--suite` value is a simple directory component, safe to join
+/// onto `scenarios/`. Rejects `..`, path separators, and absolute paths.
+fn is_safe_suite_name(name: &str) -> bool {
+    !name.is_empty()
+        && name != "."
+        && name != ".."
+        && !name.contains('/')
+        && !name.contains('\\')
+        && !name.starts_with('.')
 }
 
 fn report_command(dir: PathBuf) {
@@ -363,8 +402,20 @@ fn schema_command(output_dir: PathBuf) {
     let scenario_schema = schema_for!(Scenario);
     let result_schema = schema_for!(AdapterResult);
 
-    let scenario_json = serde_json::to_string_pretty(&scenario_schema).expect("serialize schema");
-    let result_json = serde_json::to_string_pretty(&result_schema).expect("serialize schema");
+    let scenario_json = match serde_json::to_string_pretty(&scenario_schema) {
+        Ok(s) => s,
+        Err(e) => {
+            eprintln!("error: failed to serialize scenario schema: {e}");
+            std::process::exit(1);
+        }
+    };
+    let result_json = match serde_json::to_string_pretty(&result_schema) {
+        Ok(s) => s,
+        Err(e) => {
+            eprintln!("error: failed to serialize adapter-result schema: {e}");
+            std::process::exit(1);
+        }
+    };
 
     let scenario_path = output_dir.join("scenario.schema.json");
     let result_path = output_dir.join("adapter-result.schema.json");
@@ -561,5 +612,69 @@ fn load_report_from_dir(dir: &Path) -> BenchmarkReport {
             eprintln!("error: failed to parse {}: {}", json_path.display(), e);
             std::process::exit(1);
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_percentile_single_element() {
+        assert_eq!(percentile(&[42], 50), 42);
+        assert_eq!(percentile(&[42], 95), 42);
+        assert_eq!(percentile(&[42], 99), 42);
+    }
+
+    #[test]
+    fn test_percentile_handles_small_n() {
+        // len=20: p95 should NOT collapse to the max element. The previous
+        // `(len as f64 * 0.95) as usize` bug returned index 19 (the max).
+        let v: Vec<u64> = (1..=20).collect();
+        // nearest-rank: round((20-1) * 0.95) = round(18.05) = 18 → v[18] = 19.
+        assert_eq!(percentile(&v, 95), 19);
+        // p50 on even length: (19 * 50 + 50) / 100 = 10 → v[10] = 11.
+        assert_eq!(percentile(&v, 50), 11);
+    }
+
+    #[test]
+    fn test_percentile_hundred_elements() {
+        let v: Vec<u64> = (1..=100).collect();
+        // (99 * 95 + 50) / 100 = (9405 + 50) / 100 = 94 → v[94] = 95.
+        assert_eq!(percentile(&v, 95), 95);
+        // (99 * 99 + 50) / 100 = (9801 + 50) / 100 = 98 → v[98] = 99.
+        assert_eq!(percentile(&v, 99), 99);
+    }
+
+    #[test]
+    fn test_percentile_seven_hundred_elements() {
+        let v: Vec<u64> = (1..=700).collect();
+        // (699 * 95 + 50) / 100 = (66405 + 50) / 100 = 664 → v[664] = 665.
+        assert_eq!(percentile(&v, 95), 665);
+    }
+
+    #[test]
+    fn test_percentile_empty() {
+        assert_eq!(percentile(&[], 50), 0);
+    }
+
+    #[test]
+    fn test_is_safe_suite_name_accepts_plain_names() {
+        assert!(is_safe_suite_name("healthcare_v1"));
+        assert!(is_safe_suite_name("medical-v2"));
+        assert!(is_safe_suite_name("my_suite"));
+    }
+
+    #[test]
+    fn test_is_safe_suite_name_rejects_traversal() {
+        assert!(!is_safe_suite_name(""));
+        assert!(!is_safe_suite_name("."));
+        assert!(!is_safe_suite_name(".."));
+        assert!(!is_safe_suite_name("../etc"));
+        assert!(!is_safe_suite_name("../../etc/passwd"));
+        assert!(!is_safe_suite_name("healthcare_v1/../.."));
+        assert!(!is_safe_suite_name("/absolute/path"));
+        assert!(!is_safe_suite_name("..\\windows"));
+        assert!(!is_safe_suite_name(".hidden"));
     }
 }

@@ -6,6 +6,16 @@ fn pct(earned: u32, possible: u32) -> u32 {
     if possible == 0 { 0 } else { (earned as f64 / possible as f64 * 100.0).round() as u32 }
 }
 
+/// UTF-8-safe capitalize-first-letter. The old implementation used byte-indexed
+/// `&s[1..]` which panics on any multi-byte leading char.
+fn capitalize_first(s: &str) -> String {
+    let mut chars = s.chars();
+    match chars.next() {
+        None => String::new(),
+        Some(first) => first.to_uppercase().collect::<String>() + chars.as_str(),
+    }
+}
+
 pub fn generate_markdown(report: &BenchmarkReport) -> String {
     let pol = &report.policy_compliance;
     let saf = &report.safety;
@@ -38,8 +48,7 @@ pub fn generate_markdown(report: &BenchmarkReport) -> String {
             for (tier, (earned, possible)) in &tiers {
                 lines.push(format!(
                     "| {} | {} | {} | {}% |",
-                    tier.chars().next().map(|c| c.to_uppercase().to_string()).unwrap_or_default()
-                        + &tier[1..],
+                    capitalize_first(tier),
                     earned, possible, pct(*earned, *possible)
                 ));
             }
@@ -225,6 +234,16 @@ mod tests {
         assert!(md.contains("healthcare_v1"), "missing suite name");
         assert!(md.contains("trivial_deny"), "missing adapter name");
         assert!(md.contains("2026-03-30T00:00:00Z"), "missing timestamp");
+    }
+
+    #[test]
+    fn test_capitalize_first_is_utf8_safe() {
+        assert_eq!(capitalize_first(""), "");
+        assert_eq!(capitalize_first("a"), "A");
+        assert_eq!(capitalize_first("easy"), "Easy");
+        // Multi-byte leading char: the old byte-index version panicked here.
+        assert_eq!(capitalize_first("émoji"), "Émoji");
+        assert_eq!(capitalize_first("🙂rest"), "🙂rest");
     }
 
     #[test]
