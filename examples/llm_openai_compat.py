@@ -62,11 +62,20 @@ def _extract_decision_json(text: str) -> dict:
 
 
 def _is_response_format_error(exc: APIStatusError) -> bool:
+    """Detect providers that reject response_format={"type":"json_object"}.
+
+    Different providers surface this failure differently:
+      - OpenAI / most: error message mentions "response_format"
+      - OpenRouter+Novita: "model does not support feature: structured-outputs"
+      - Some: "json_object" or "structured outputs" (with space)
+    """
     try:
         msg = str(exc).lower()
     except Exception:
         msg = ""
-    return exc.status_code == 400 and "response_format" in msg
+    if exc.status_code != 400:
+        return False
+    return any(tok in msg for tok in ("response_format", "structured-outputs", "structured outputs", "json_object", "json schema"))
 
 
 def handle(scenario: dict) -> dict:

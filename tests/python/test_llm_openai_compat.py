@@ -99,6 +99,42 @@ def test_response_format_400_falls_back_to_plain(oai_mock):
     assert out["decision"] == "deny"
 
 
+def test_structured_outputs_error_falls_back_to_plain(oai_mock):
+    """OpenRouter+Novita surface the response_format rejection as 'structured-outputs'."""
+    oai_mock.server.expect_ordered_request(
+        "/v1/chat/completions", method="POST"
+    ).respond_with_json(
+        {
+            "error": {
+                "message": "Provider returned error",
+                "code": 400,
+                "metadata": {"raw": '{"reason":"INVALID_REQUEST_BODY","message":"model: X does not support feature: structured-outputs"}'},
+            }
+        },
+        status=400,
+    )
+    oai_mock.server.expect_ordered_request(
+        "/v1/chat/completions", method="POST"
+    ).respond_with_json(
+        {
+            "id": "t",
+            "object": "chat.completion",
+            "model": "t",
+            "choices": [
+                {"index": 0, "message": {"role": "assistant", "content": '{"decision": "deny"}'}, "finish_reason": "stop"}
+            ],
+        },
+        status=200,
+    )
+    proc = _run_adapter(
+        _scenario(),
+        {"OPENAI_BASE_URL": oai_mock.url, "VERITASBENCH_MODEL": "t"},
+    )
+    assert proc.returncode == 0, proc.stderr.decode()
+    out = json.loads(proc.stdout)
+    assert out["decision"] == "deny"
+
+
 def test_reasoning_inline_think_tags_stripped(oai_mock):
     """DeepSeek-R1 style: <think>...</think> inline, then the answer."""
     oai_mock.respond_with_raw_content(
