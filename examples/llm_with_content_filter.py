@@ -152,8 +152,23 @@ def handle(scenario: dict) -> dict:
         temperature=0,
     )
 
-    result = json.loads(response.choices[0].message.content)
-    decision = result.get("decision", "allow")
+    response_text = response.choices[0].message.content or ""
+    try:
+        result = json.loads(response_text)
+        decision = result.get("decision", "allow")
+    except (json.JSONDecodeError, ValueError):
+        # Some providers (e.g., Claude via OpenRouter) ignore response_format
+        # and return prose; extract the first JSON object embedded in the text.
+        start = response_text.find("{")
+        end = response_text.rfind("}") + 1
+        if start >= 0 and end > start:
+            try:
+                result = json.loads(response_text[start:end])
+                decision = result.get("decision", "allow")
+            except (json.JSONDecodeError, ValueError):
+                decision = "allow"
+        else:
+            decision = "allow"
     if decision not in ("allow", "deny", "blocked_pending_approval"):
         decision = "allow"
 
