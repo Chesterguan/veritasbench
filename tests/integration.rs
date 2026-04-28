@@ -354,3 +354,107 @@ fn test_adapter_llm_openai_compat_mocked() {
     assert_eq!(result["execution_halted"], false);
     assert_eq!(result["human_notified"], false);
 }
+
+/// Verify the NDJSON append-log persistence and resume behavior.
+///
+/// Pre-populates `scenarios.ndjson` with one fake entry for AG-001 (a real
+/// scenario in the suite), then runs the CLI. The run should:
+///  1. Print "Resuming: 1 previously-scored scenarios"
+///  2. Skip AG-001 in the loop (the fake entry's latency_ms=42 should
+///     persist into the final report.json)
+///  3. Score the remaining 699 scenarios and append them to the NDJSON
+///  4. Produce a report.json with all 700 entries
+///
+/// This exercises the v1.3 P0 persistence fix (commit f4b393a follow-up).
+#[test]
+fn test_persistence_resume_via_ndjson() {
+    use std::process::Command;
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    let root = workspace_root();
+    let cli_binary = root.join("target/release/veritasbench");
+    assert!(
+        cli_binary.exists(),
+        "release binary {} not found — run `cargo build --release` first",
+        cli_binary.display(),
+    );
+
+    // Unique temp output dir under target/ so it's gitignored.
+    let nanos = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_nanos();
+    let output_dir = root.join(format!("target/test-output/persist_resume_{nanos}"));
+    std::fs::create_dir_all(&output_dir).expect("create temp output dir");
+    let nd_path = output_dir.join("scenarios.ndjson");
+
+    // Pre-populate NDJSON with one fake entry for AG-001.
+    let fake_entry = r#"{"scenario_id":"AG-001","policy_compliance":1,"safety":null,"traceability":3,"controllability":null,"latency_ms":42}"#;
+    std::fs::write(&nd_path, format!("{fake_entry}\n")).expect("write fake NDJSON");
+
+    let adapter = root.join("examples/trivial_deny_adapter.py");
+    let output = Command::new(&cli_binary)
+        .current_dir(&root)
+        .args([
+            "run",
+            "--adapter",
+            adapter.to_str().unwrap(),
+            "--suite",
+            "healthcare_v1",
+            "--output",
+            output_dir.to_str().unwrap(),
+            "--timeout",
+            "30000",
+        ])
+        .output()
+        .expect("run CLI");
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(
+        output.status.success() || output.status.code() == Some(2),
+        "CLI exited with unexpected status: {:?}\nstdout: {stdout}\nstderr: {stderr}",
+        output.status.code(),
+    );
+    assert!(
+        stdout.contains("Resuming: 1 previously-scored scenarios"),
+        "expected resume message in stdout, got:\n{stdout}",
+    );
+
+    // Final report.json should contain all 700 scenarios.
+    let report_path = output_dir.join("report.json");
+    let report: serde_json::Value =
+        serde_json::from_str(&std::fs::read_to_string(&report_path).expect("read report.json"))
+            .expect("parse report.json");
+    let per_scenario = report["per_scenario"].as_array().expect("per_scenario array");
+    assert_eq!(
+        per_scenario.len(),
+        700,
+        "expected 700 entries (1 resumed + 699 newly scored), got {}",
+        per_scenario.len(),
+    );
+
+    // The AG-001 entry should be the fake one (latency_ms=42 is the marker).
+    let ag001 = per_scenario
+        .iter()
+        .find(|s| s["scenario_id"] == "AG-001")
+        .expect("AG-001 should be in report");
+    assert_eq!(
+        ag001["latency_ms"].as_u64(),
+        Some(42),
+        "AG-001 should retain the resumed fake entry's latency, got: {ag001}",
+    );
+
+    // NDJSON should have 700 lines after the run (1 pre-existing + 699 appended).
+    let nd_content = std::fs::read_to_string(&nd_path).expect("read NDJSON");
+    let nd_lines: Vec<&str> = nd_content.lines().filter(|l| !l.trim().is_empty()).collect();
+    assert_eq!(
+        nd_lines.len(),
+        700,
+        "expected 700 NDJSON lines, got {}",
+        nd_lines.len(),
+    );
+
+    // Cleanup
+    let _ = std::fs::remove_dir_all(&output_dir);
+}

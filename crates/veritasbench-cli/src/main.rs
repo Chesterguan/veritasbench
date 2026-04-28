@@ -167,10 +167,78 @@ async fn run_command(config: RunConfig) {
 
     // runs[repeat_index] = vec of decisions per scenario (for consistency)
     let mut all_runs: Vec<Vec<veritasbench_core::scenario::Decision>> = Vec::new();
-    let mut all_scores = Vec::new();
+    let mut all_scores: Vec<veritasbench_core::score::ScenarioScore> = Vec::new();
     let mut all_latencies: Vec<u64> = Vec::new();
 
     let mut error_count: u32 = 0;
+
+    // Incremental persistence: append-log of per-scenario scores. If the
+    // process dies mid-run, results are recoverable from the NDJSON file
+    // even if report.json was never written. On re-run with the same
+    // --output dir (and --repeats=1), already-scored scenarios are
+    // skipped to resume from the partial state.
+    let ndjson_path = output_dir.join("scenarios.ndjson");
+    let mut already_scored: std::collections::HashSet<String> = std::collections::HashSet::new();
+    if ndjson_path.exists() {
+        if repeats != 1 {
+            eprintln!(
+                "error: cannot resume from existing {} with --repeats {} (resume only supports --repeats=1). Remove the file or use a new --output dir.",
+                ndjson_path.display(),
+                repeats,
+            );
+            std::process::exit(1);
+        }
+        match std::fs::read_to_string(&ndjson_path) {
+            Ok(content) => {
+                for (lineno, line) in content.lines().enumerate() {
+                    if line.trim().is_empty() {
+                        continue;
+                    }
+                    match serde_json::from_str::<veritasbench_core::score::ScenarioScore>(line) {
+                        Ok(score) => {
+                            already_scored.insert(score.scenario_id.clone());
+                            all_latencies.push(score.latency_ms);
+                            all_scores.push(score);
+                        }
+                        Err(e) => {
+                            eprintln!(
+                                "warning: skipping malformed NDJSON line {} in {}: {}",
+                                lineno + 1,
+                                ndjson_path.display(),
+                                e,
+                            );
+                        }
+                    }
+                }
+                if !already_scored.is_empty() {
+                    println!(
+                        "Resuming: {} previously-scored scenarios loaded from {}",
+                        already_scored.len(),
+                        ndjson_path.display(),
+                    );
+                }
+            }
+            Err(e) => {
+                eprintln!(
+                    "warning: could not read existing NDJSON log {}: {} — proceeding without resume",
+                    ndjson_path.display(),
+                    e,
+                );
+            }
+        }
+    }
+    let mut nd_writer: Option<std::io::BufWriter<std::fs::File>> =
+        match std::fs::OpenOptions::new().create(true).append(true).open(&ndjson_path) {
+            Ok(f) => Some(std::io::BufWriter::new(f)),
+            Err(e) => {
+                eprintln!(
+                    "warning: could not open NDJSON log {} for append: {} — proceeding in-memory only",
+                    ndjson_path.display(),
+                    e,
+                );
+                None
+            }
+        };
 
     for repeat in 0..repeats {
         if repeats > 1 {
@@ -180,6 +248,13 @@ async fn run_command(config: RunConfig) {
         let mut run_decisions = Vec::new();
 
         for scenario in &scenarios {
+            // Resume: skip scenarios already scored in a prior interrupted
+            // run. Only applies on the first repeat — subsequent repeats
+            // (under --repeats > 1) re-score everything for consistency.
+            if repeat == 0 && already_scored.contains(&scenario.id) {
+                continue;
+            }
+
             let run_result = match if blind {
                 run_adapter_with_retries_blind(&adapter_path, scenario, timeout_ms, retries).await
             } else {
@@ -217,6 +292,33 @@ async fn run_command(config: RunConfig) {
 
             run_decisions.push(run_result.result.decision.clone());
             all_latencies.push(run_result.latency_ms);
+
+            // Persist score to NDJSON before pushing to in-memory Vec, so
+            // a crash between push and final report.json write is recoverable.
+            // Only write on first repeat — subsequent repeats are for
+            // consistency scoring and would create duplicate entries.
+            if repeat == 0 {
+                if let Some(w) = &mut nd_writer {
+                    use std::io::Write;
+                    match serde_json::to_string(&score) {
+                        Ok(line) => {
+                            if let Err(e) = writeln!(w, "{line}").and_then(|_| w.flush()) {
+                                eprintln!(
+                                    "warning: failed to append/flush NDJSON for {}: {} — continuing",
+                                    score.scenario_id, e,
+                                );
+                            }
+                        }
+                        Err(e) => {
+                            eprintln!(
+                                "warning: failed to serialize score for {} to NDJSON: {} — continuing",
+                                score.scenario_id, e,
+                            );
+                        }
+                    }
+                }
+            }
+
             all_scores.push(score);
         }
 
