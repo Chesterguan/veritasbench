@@ -1,11 +1,11 @@
-# README.md Update Plan for v1.2
+# README.md Update Plan for v1.3
 
-> Ready to apply. Two-axis final roster:
-> - **Axis A** = 9 models, bare LLM (outputs/combined_results.csv, 2026-04-24).
-> - **Axis B** = GPT-4o-mini × 4 wrappers (outputs/real_*_v2/, 2026-04-04).
-> DeepSeek-R1 was attempted but adapter calls were lost to a runner persistence bug — no usable results; deferred to v1.3.
+> Ready to apply. Three-axis final roster:
+> - **Axis A** = 10 models incl. DeepSeek-R1 reasoning, bare LLM (outputs/combined_results.csv, 2026-04-24 + outputs/v13_r1_bare/, 2026-04-28).
+> - **Axis B** = 3 LLMs × 4 wrappers (outputs/axisB_*_{gpt4omini,claude46}/, 2026-04-27 + outputs/v13_r1_*/, 2026-04-28).
+> - **Axis C (v1.3)** = trace-ceiling experiment (outputs/v13_full_audit_*/) + audit-prompt experiment (outputs/v13_audit_prompt_gpt4omini/).
 >
-> Strategy: keep v1 structure intact (governance-patterns table stays as context), add two new layers — a "model sweep" (Axis A) and a "wrapper sweep" (Axis B). Together they make the architectural claim provable instead of assertable.
+> Strategy: keep v1 structure intact (governance-patterns table stays as context), add three layers — model sweep (Axis A), wrapper sweep (Axis B), and architectural-claim refinement (Axis C). Together they prove and then sharpen the architectural argument.
 
 ---
 
@@ -20,7 +20,7 @@
 ### New
 
 ```markdown
-**We ran a 700-scenario clinical governance benchmark two ways. Swapping the LLM among 9 frontier models moves Policy ±17pp and moves Traceability/Controllability by exactly zero. Swapping the governance wrapper at fixed LLM moves Traceability 0→33% and Controllability 0→47.5%. The model is not the bottleneck. The pipeline is.**
+**We ran a 700-scenario clinical governance benchmark across three axes. Swapping the LLM among 10 frontier models — including a reasoning model — moves Policy ±17pp and moves Traceability/Controllability by exactly zero. Swapping the governance wrapper at fixed LLM moves Traceability 0→33→100% (depending on the wrapper's audit-entry shape) and Controllability 0→47% (LangGraph interrupts). And asking the bare LLM for audit entries — no wrapper — unlocks 87.8% Trace on GPT-4o-mini. Wrappers enforce, prompts request, default-prompt bare pipes record nothing. Models choose decision quality; wrappers enforce audit/halt invariants.**
 ```
 
 Reason: the two-axis contrast is stronger than either single-axis framing. Axis A alone ("9 models all 0%") can be dismissed as prompt-dependent. Axis B alone ("wrappers move the number") lacks a null baseline. Together they demonstrate the gap is architectural.
@@ -78,14 +78,14 @@ Full reproducible numbers: [outputs/combined_results.csv](outputs/combined_resul
 **Axis A tells us:** Policy spans a 17.3pp band (Hunyuan A13B 70.1% → GLM-4.6 86.9%). Chinese frontier matches Western frontier on capability (GLM-4.6 edges Claude Sonnet 4.6 by 1.2pp; Qwen3-Max ties Claude on Safety). Medical-specialized 4B underperforms all general frontier models. **Traceability and Controllability are 0% on every single model** — no lab, no geography, no scale, no specialization moves the governance dimensions.
 ```
 
-## Change 4: Add new section "Axis B — winner + wrappers, two LLM tiers"
+## Change 4: Add new section "Axis B — winner + wrappers, three LLM tiers"
 
 Insert directly after the Axis A section.
 
 ```markdown
-### Axis B — pick the winner, vary the wrapper (2 LLMs × 4 wrappers)
+### Axis B — pick the winner, vary the wrapper (3 LLMs × 4 wrappers)
 
-Axis A picked the headline. We then re-ran the wrapper experiments with **two LLM tiers** to test whether wrapper effects transfer across model strength: Claude Sonnet 4.6 (Axis A's #2 at 85.7% Policy) and GPT-4o-mini (#5 at 81.0%).
+Axis A picked the headline. We then re-ran the wrapper experiments with **three LLM tiers** to test whether wrapper effects transfer across capability and reasoning mode: Claude Sonnet 4.6 (Axis A #2 at 85.7%), GPT-4o-mini (#5 at 81.0%), and DeepSeek-R1 reasoning (80.9%).
 
 | LLM | Wrapper | n | Policy | Safety | Trace | Ctrl | Dangerous |
 |---|---|---:|---:|---:|---:|---:|---:|
@@ -97,16 +97,59 @@ Axis A picked the headline. We then re-ran the wrapper experiments with **two LL
 | Claude Sonnet 4.6 | + NeMo Guardrails | 700 | 83.5% | 60.0% | 0.0% | 0.0% | **3/575 (0.5%)** |
 | Claude Sonnet 4.6 | + OpenAI Guardrails | 700 | 83.1% | 59.7% | **33.1%** | 0.0% | 6/575 (1.0%) |
 | Claude Sonnet 4.6 | + LangGraph HITL | 700 | 72.3% | 60.3% | **33.1%** | **47.4%** | 11/575 (1.9%) |
+| DeepSeek-R1 (reasoning) | Bare LLM | 700 | 80.9% | 64.9% | 0.0% | 0.0% | 18/575 (3.1%) |
+| DeepSeek-R1 (reasoning) | + NeMo Guardrails | 700 | 83.5% | 63.1% | 0.0% | 0.0% | 11/575 (1.9%) |
+| DeepSeek-R1 (reasoning) | + OpenAI Guardrails | 700 | 78.8% | 60.0% | **33.1%** | 0.0% | **1/575 (0.2%)** |
+| DeepSeek-R1 (reasoning) | + LangGraph HITL | 700 | 66.6% | 43.7% | **33.1%** | **47.4%** | 9/575 (1.6%) |
 
-(GLM-4.6, Axis A's Policy leader, was attempted but the NeMo+GLM combination paced at ~8 hours per run; deferred to v1.3 once the runner persistence fix lands and overnight unattended runs are safe.)
+Trace and Ctrl gains are *identical* across all three LLMs — including the reasoning model — confirming they are wrapper-architectural properties, not LLM properties.
 
 **Axis B tells us three things:**
 
-1. **Trace and Ctrl gains are LLM-invariant.** Same wrapper, two different LLMs → identical gain. OpenAI Guardrails: +33.1pp Trace on both. LangGraph HITL: +33.1pp Trace AND +47.4pp Ctrl on both. The interrupt primitive fires deterministically on `missing_approval` and `emergency_override` scenario types — the LLM's output isn't on the decision path. **Trace and Ctrl are properties of the pipeline, not the model.** Note: 33.1% is a *floor* — both wrappers we tested produce skeletal audit entries (timestamp + action only; actor/resource/reason left null), each scoring 1 of 3 grader sub-criteria = 33.3%. A wrapper populating all three audit fields would score higher.
-2. **OpenAI Guardrails' Policy hit depends on LLM tier; the other two wrappers don't.** OpenAI Guardrails costs GPT-4o-mini −6.9pp Policy but only −2.6pp on Claude (4.3pp gap). NeMo and LangGraph HITL cost roughly equal Policy on both LLMs (gaps of 2.4pp and 0.8pp respectively). The "better LLM absorbs wrapper restrictions" pattern shows up in 1 of 3 wrappers tested, on n=2 LLMs — suggestive, not yet a general claim.
-3. **NeMo + Claude is the surprise dangerous-failures standout, but n=3 limits the claim.** Claude bare DF 2.4% → NeMo+Claude DF 0.5% (suggestive 79% reduction, the lowest DF rate of any combo tested). Same wrapper on GPT-4o-mini gives 4.3% — basically equal to GPT bare. With only 3 dangerous failures observed, the 95% CI is roughly [0.1%, 1.5%]; treat as suggestive evidence of a wrapper × LLM interaction, not a settled number.
+1. **Trace and Ctrl gains are LLM-invariant across 3 LLMs.** Same wrapper, three different LLMs (instruction-tuned, mid-tier, reasoning) → identical gain. OpenAI Guardrails: +33.1pp Trace on all three. LangGraph HITL: +33.1pp Trace AND +47.4pp Ctrl on all three. The interrupt primitive fires deterministically on `missing_approval` and `emergency_override` scenario types — the LLM's output isn't on the decision path. **Trace and Ctrl are properties of the pipeline, not the model — and Axis C below confirms 33% is a wrapper-template floor, not the trace ceiling.**
+2. **OpenAI Guardrails Policy hit varies with LLM tier; LangGraph HITL doesn't.** OpenAI Guardrails costs GPT-4o-mini −6.9pp Policy but only −2.6pp on Claude and −2.1pp on R1. LangGraph HITL costs ~13–14pp on all three (LLM-invariant interrupt cost). NeMo varies: R1 actually gains +2.6pp under NeMo, GPT is neutral, Claude loses −2.2pp.
+3. **R1 + OpenAI Guardrails = 1/575 dangerous failures (0.2%) — the lowest DF rate observed across the matrix.** OpenAI Guardrails consistently halves DF on every LLM tested. NeMo + Claude is also striking at 0.5% (n=3 events; wide CI). Treat as suggestive evidence of strong wrapper × LLM interactions worth replicating in v1.4.
 
-No tested wrapper clears 50% on both Trace AND Ctrl simultaneously. None were designed around audit and halt as first-class primitives.
+No Axis B wrapper clears 50% on both Trace AND Ctrl simultaneously with skeletal audit entries. The Axis C full-audit wrapper (below) does — 100% Trace + 0% Ctrl (no interrupt primitive). The combined "100% Trace + ≥50% Ctrl" wrapper has not yet been built.
+```
+
+## Change 4b: Add new section "Axis C — refining the architectural claim"
+
+Insert directly after the Axis B section.
+
+```markdown
+### Axis C — refining the architectural claim (v1.3)
+
+v1.2 stopped at "wrappers can do governance, models can't." v1.3 added two surgical experiments that sharpen the claim. Same 700 scenarios, same grader.
+
+**Experiment 1: trace-ceiling wrapper.** A new `examples/llm_with_full_audit.py` adapter — same OpenAI moderation + regex PHI logic as `llm_with_content_filter.py`, but the audit-entry template populates `actor`, `resource`, `decision`, and `reason` (instead of leaving them null). Tested on three LLMs:
+
+| LLM | Wrapper | n | Trace | Policy | DF |
+|---|---|---:|---:|---:|---:|
+| GPT-4o-mini | + full-audit | 700 | **100.0%** | 75.7% | 6/575 (1.0%) |
+| Claude Sonnet 4.6 | + full-audit | 700 | **100.0%** | 84.2% | 5/575 (0.9%) |
+| GLM-4.6 | + full-audit | 700 | **100.0%** | 85.7% | 5/575 (0.9%) |
+
+**The 33.1% Trace in Axis B was a structural floor of the wrappers' skeletal audit-entry template, not the trace-ceiling for governance wrappers.** With a full-field template, Trace hits 100%. Same architecture pattern (input/output guardrails + LLM call), different audit-entry shape, ~67pp Trace gain at essentially zero Policy cost.
+
+**Experiment 2: audit-asking prompt.** A new `examples/llm_bare_with_audit_prompt.py` adapter — bare LLM, no wrapper — but the system prompt explicitly asks for `audit_entries` alongside `decision`.
+
+| LLM | Adapter | n | Trace | Policy | DF |
+|---|---|---:|---:|---:|---:|
+| GPT-4o-mini | bare LLM, audit-asking prompt | 700 | **87.8%** | 79.1% | 17/575 (3.0%) |
+
+A bare LLM, just *asked* for audit entries, scores 87.8% Trace. The 0% Trace on Axis A was a property of the *default deployment prompt* (which doesn't ask for audit entries), not of LLM capability. The architectural difference between wrappers and bare-LLM is **enforcement vs request**, not "wrappers enable, bare cannot."
+
+**The trace-performance ladder:**
+
+| Configuration | Trace | Mechanism |
+|---|---:|---|
+| Bare LLM, default prompt (Axis A) | 0.0% | No ask, no enforcement |
+| Bare LLM, audit-asking prompt (Axis C) | 87.8% | Ask, no enforcement — LLM-cooperation-dependent |
+| Wrapper with skeletal audit entries (Axis B) | 33.1% | Enforce, partial fields |
+| Wrapper with full-field audit entries (Axis C) | 100.0% | Enforce, full fields |
+
+**Sharpened architectural claim:** wrappers ENFORCE governance behavior, prompts REQUEST it, default-prompt bare pipes do neither — that is why they record nothing. The wrapper advantage in safety-critical settings is *reliability*: 87.8% (LLM cooperation ceiling) means 122 of 700 scenarios silently lose audit data; a wrapper that injects entries makes that count zero.
 ```
 
 ## Change 5: Replace "Capable ≠ Accountable" with the joint-axis synthesis
@@ -116,28 +159,29 @@ Insert a new top-level section between "Where the Governance Gap Is" and "You Do
 ```markdown
 ## Capable ≠ Accountable: the joint picture
 
-Across both axes, 17 data points (9 LLMs bare on Axis A + 2 LLMs × 4 wrappers on Axis B):
+Across all three axes, 22+ data points (10 LLMs bare on Axis A + 3 LLMs × 4 wrappers on Axis B + 4 audit-ceiling configurations on Axis C):
 
-| Dimension | Axis A range (model varies, bare) | Axis B range (2 LLMs × 4 wrappers) |
-|---|---|---|
-| Policy | 69.6% → 86.9% (Δ 17.3 pp) | 66.8% → 85.7% (Δ 18.9 pp) |
-| Safety | 53.8% → 83.3% (Δ 29.5 pp) | 51.7% → 79.7% (Δ 28.0 pp) |
-| **Traceability** | **0% → 0% (Δ 0 pp)** | **0% → 33.1% (identical Δ across both LLMs)** |
-| **Controllability** | **0% → 0% (Δ 0 pp)** | **0% → 47.4% (identical Δ across both LLMs)** |
+| Dimension | Axis A (10 bare LLMs) | Axis B (3 LLMs × 4 wrappers) | Axis C (architectural refinement) |
+|---|---|---|---|
+| Policy | 69.6% → 86.9% (Δ 17.3 pp) | 66.6% → 85.7% (Δ 19.1 pp) | 75.7% → 84.2% (full-audit) |
+| Safety | 53.8% → 83.3% (Δ 29.5 pp) | 43.7% → 79.7% (Δ 36.0 pp) | 57.2% → 65.2% (full-audit) |
+| **Traceability** | **0% → 0%** (Δ 0 pp, even reasoning) | **0% → 33.1%** (identical Δ across 3 LLMs) | **0% → 87.8%** (audit-prompt) → **100%** (full-audit) |
+| **Controllability** | **0% → 0%** (Δ 0 pp) | **0% → 47.4%** (identical Δ across 3 LLMs) | unchanged (interrupt is architectural-only) |
 
-Policy and Safety are capability-sensitive — a better LLM *or* a different wrapper can move them. Traceability and Controllability are capability-*insensitive* on Axis A and capability-*invariant* on Axis B (same wrapper produces identical Trace/Ctrl gain on both LLM tiers tested). **They are architectural properties, not model properties.**
+Policy and Safety are capability-sensitive — a better LLM *or* a different wrapper can move them. Traceability is **prompt-sensitive AND wrapper-sensitive**: bare-default-prompt scores 0% across all 10 LLMs, bare-with-audit-prompt scores 87.8% (LLM-cooperation ceiling), wrapper-with-skeletal-audit scores 33.1% (template floor), wrapper-with-full-audit scores 100% (full template ceiling). Controllability is **architectural-only**: 0% on every LLM in every prompt configuration we tested; only LangGraph's `interrupt` primitive (47.4%) moves it.
 
-If your governance strategy is "pick a better LLM," this benchmark shows that strategy does not close the Trace/Ctrl gap. Picking a better LLM moves Policy from 81% to 87%. It does not move Traceability one percentage point off zero. The gap is in the pipeline's ability to *record* decisions and *halt* for human review — architectural features a bare LLM pipeline cannot produce regardless of how smart the LLM is, and that wrappers produce identically across LLM tiers.
+The corrected architectural claim: **wrappers ENFORCE governance behavior, prompts REQUEST it, default-prompt bare pipes do neither.** Wrappers' edge is reliability/enforcement — guarantees every scenario gets the audit entry — not capability the LLM lacks. In safety-critical settings, the 12pp gap between LLM-cooperation (87.8%) and wrapper-injection (100%) is **84 of 700 scenarios per run** silently losing audit data when relying on the LLM, vs. zero when injecting from the wrapper.
 
-**Pick your model for decision quality. Pick your wrapper for governance. They are different knobs.**
+**Pick your model for decision quality. Pick your wrapper to enforce audit/halt invariants. Pick your prompt for the LLM-cooperation floor underneath both. Three different knobs.**
 
 Notable per-axis findings:
 
 - **Chinese frontier matches Western frontier on capability.** GLM-4.6 (87% Policy) slightly edges Claude Sonnet 4.6 (86%); Qwen3-Max ties Claude on Safety.
+- **Reasoning models don't close the governance gap.** DeepSeek-R1 (Policy 81%, Trace/Ctrl 0% bare) — same architectural pattern as instruction-tuned models. Reasoning capability is not the missing piece.
 - **Gemini 2.5 Pro is the safest bare model** — 8 dangerous failures and 83% Safety — but with a conservative decision profile that lowers Policy (79%).
 - **Medical specialization did not help.** MedGemma 4B (70% Policy) is below every non-medical frontier model; the 16pp gap vs. Claude is too large for Q4 quantization alone.
-- **LangGraph HITL is the only wrapper that moves Controllability off zero.** The `interrupt` primitive is the architectural lever — and its 47.4pp Ctrl gain is identical on Claude and on GPT-4o-mini.
-- **NeMo Guardrails + Claude is the dangerous-failures standout.** 0.5% DF — a 79% reduction from Claude bare's 2.4%. Same wrapper on GPT-4o-mini gives 4.3% (basically equal to GPT bare). Wrapper-effect on dangerous-failures is wrapper × LLM interaction, not pure-architectural.
+- **LangGraph HITL is the only wrapper that moves Controllability off zero.** The `interrupt` primitive is the architectural lever — and its 47.4pp Ctrl gain is identical on all three LLMs we tested (GPT-4o-mini, Claude, R1).
+- **R1 + OpenAI Guardrails has the lowest DF in the matrix (1/575 = 0.2%).** OpenAI Guardrails consistently halves DF on every LLM tested. Wrapper × LLM interactions on dangerous-failures are real and worth deeper study.
 ```
 
 ## Change 6: Update "How to read this" prose
@@ -155,14 +199,15 @@ Notable per-axis findings:
 Append to the existing Limitations list:
 
 ```markdown
-- **Axis A prompt is minimal by design.** Asks only for a decision. 0% Trace on Axis A is therefore a property of the deployment pattern (bare JSON pipe), not proof that LLMs cannot format audit entries. Axis B shows that adding the infrastructure — not changing the prompt — is what moves the number. v1.3 will test a prompt variant explicitly asking for audit entries as a ceiling measurement.
+- **Axis A prompt is minimal by design.** Asks only for a decision. The "0% Trace on every bare LLM" finding is a property of the deployment prompt, not LLM capability. Axis C measured this directly: with an audit-asking prompt, GPT-4o-mini scored 87.8% Trace bare. The architectural claim is therefore "wrappers enforce audit; default-prompt bare pipes don't ask for it; LLM-asked produces ~88% but not 100%."
 - **Axis B wrapper depth is representative, not exhaustive.** Each wrapper is a canonical integration — `nemoguardrails` with Colang config, LangGraph `StateGraph` with `interrupt` nodes, OpenAI moderation+regex PHI. Not adversarially-tuned configs. "NeMo Guardrails is bad" is the wrong inference; "out-of-the-box NeMo has no audit primitive" is the right one.
-- **Axis B uses 2 of the 9 Axis A LLMs.** Claude Sonnet 4.6 (Axis A's #2) and GPT-4o-mini (#5) under all 4 wrappers. GLM-4.6 (Axis A's #1) was attempted but the NeMo+GLM combination paced at ~8 hours per run; deferred to v1.3 once the runner persistence fix lands and unattended overnight runs are safe. The "wrapper effect transfers across LLM tiers" claim rests on these two LLMs.
-- **Axis B bare baselines come from 2026-04-24 Axis A runs; wrapper rows are 2026-04-27.** Same-model bare run replicates within ~0.2pp Policy across the 3-day gap, so this is acceptable.
+- **Axis B uses 3 of the 10 Axis A LLMs** (GPT-4o-mini, Claude Sonnet 4.6, DeepSeek-R1). Extending to more LLM tiers is a v1.4 item — see `docs/future-work/v1.3-scope.md`.
+- **Axis C audit-prompt experiment uses 1 LLM** (GPT-4o-mini, n=700, 87.8% Trace). Replication on Claude was started but interrupted by an OpenRouter credit-budget incident (n=119 partial); the headline 87.8% rests on GPT-4o-mini alone. The full-audit wrapper ceiling (100% Trace) is replicated on three LLMs (GPT-4o-mini, Claude, GLM-4.6) and is robust.
+- **Axis B bare baselines come from 2026-04-24 (GPT, Claude) and 2026-04-28 (R1) Axis A runs; wrapper rows are 2026-04-27/28.** Same-model bare run replicates within ~0.2pp Policy across dates, acceptable.
 - **LLM-judged ground truth has sibling bias.** `expected.decision` is GPT-4o-mini + GPT-4o + Gemini 2.5 Flash consensus. GPT-4o-mini and Gemini 2.5 Pro are benchmarked; they may carry a 2–5pp systematic advantage. Clinician audit of 100 scenarios planned for v1.3.
 - **OpenRouter routing is unobserved.** Models via OpenRouter may have been served by different backends. Latency not comparable across routes.
 - **Local models are quantized.** MedGemma 4B at Q4_K_M. Full-precision scores may be 2–5pp higher.
-- **DeepSeek-R1, Meditron-7B, Meditron3-8B attempted but excluded** — see `docs/future-work/` for detailed writeups. DeepSeek-R1 lost 324 scored scenarios to a runner persistence bug; Meditron-7B timed out 28% (JSON-following issue); Meditron3-8B scored 57% at Q4 (quantization artifact). None were fair representatives of their class.
+- **Meditron-7B and Meditron3-8B attempted but excluded** — see `docs/future-work/` for detailed writeups. Meditron-7B timed out 28% (JSON-following issue); Meditron3-8B scored 57% at Q4 (quantization artifact). Neither was a fair representative of its class. (DeepSeek-R1 was originally in this list — the 2026-04-24 attempt lost 324 scored scenarios to the runner persistence bug. The bug is fixed in v1.3 and R1 is now in the headline panel.)
 - **6 medical-specialized models could not be accessed** — HuatuoGPT-II-34B, HuatuoGPT-o1-72B, Meditron3-70B, Med42-70B, OpenBioLLM-70B, PULSE-7b/20b are open-weight but had no OpenAI-compatible hosting on any configured provider as of 2026-04-24.
 - **Model version drift.** Slugs may silently update on providers.
 ```

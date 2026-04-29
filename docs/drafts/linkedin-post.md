@@ -1,8 +1,9 @@
 # LinkedIn Post Drafts
 
-Three variants — pick one or remix. Numbers reflect the **two-axis v1.2 snapshot**:
-- Axis A (2026-04-24): 9 LLMs × 700 scenarios × bare LLM.
-- Axis B (2026-04-27): 2 LLM tiers (Claude Sonnet 4.6, GPT-4o-mini) × 700 scenarios × 4 governance wrappers (bare, NeMo Guardrails, OpenAI Guardrails, LangGraph HITL).
+Three variants — pick one or remix. Numbers reflect the **three-axis v1.3 snapshot**:
+- Axis A (2026-04-24 / 2026-04-28): **10 LLMs** × 700 scenarios × bare LLM (now incl. **DeepSeek-R1 reasoning**).
+- Axis B (2026-04-27 / 2026-04-28): **3 LLM tiers** (Claude Sonnet 4.6, GPT-4o-mini, DeepSeek-R1) × 700 scenarios × 4 governance wrappers (bare, NeMo Guardrails, OpenAI Guardrails, LangGraph HITL).
+- Axis C (2026-04-29): **trace-ceiling experiment** (full-audit wrapper, hits **100% Trace** on 3 LLMs) + **audit-prompt experiment** (bare LLM with audit-asking prompt scores **87.8% Trace** on GPT-4o-mini, no wrapper).
 
 ---
 
@@ -10,18 +11,22 @@ Three variants — pick one or remix. Numbers reflect the **two-axis v1.2 snapsh
 
 We ran a 700-scenario clinical governance benchmark along two independent axes.
 
-**Axis A — vary the LLM, keep the wrapper.** 9 frontier models (Claude Sonnet 4.6, GPT-4o-mini, Gemini 2.5 Pro, DeepSeek-V3.2, Qwen3-Max, GLM-4.6, Kimi K2, Hunyuan A13B, MedGemma 4B), identical bare-LLM prompt.
+**Axis A — vary the LLM, keep the wrapper.** 10 frontier models incl. DeepSeek-R1 reasoning (Claude Sonnet 4.6, GPT-4o-mini, Gemini 2.5 Pro, DeepSeek-V3.2, DeepSeek-R1, Qwen3-Max, GLM-4.6, Kimi K2, Hunyuan A13B, MedGemma 4B), identical bare-LLM prompt.
 — Policy compliance: 69.6% → 86.9%
-— Traceability: **0% on every single model**
-— Controllability: **0% on every single model**
+— Traceability: **0% on every single model** (incl. reasoning)
+— Controllability: **0% on every single model** (incl. reasoning)
 
-**Axis B — pick a winner, vary the wrapper.** Two LLM tiers (Claude Sonnet 4.6, GPT-4o-mini) under bare + NeMo Guardrails + OpenAI Guardrails + LangGraph HITL. Same 700 scenarios. (GLM-4.6, the actual Axis A Policy leader, has no wrapper data yet — its NeMo combo paced too slow for v1.2; coming in v1.3.)
-— Traceability: 0% → **33.1%** (identical gain on BOTH LLMs)
-— Controllability: 0% → **47.4%** (identical gain on BOTH LLMs)
+**Axis B — pick a winner, vary the wrapper.** Three LLM tiers (Claude Sonnet 4.6, GPT-4o-mini, DeepSeek-R1) under bare + NeMo Guardrails + OpenAI Guardrails + LangGraph HITL. Same 700 scenarios.
+— Traceability: 0% → **33.1%** (identical gain on ALL three LLMs)
+— Controllability: 0% → **47.4%** (identical gain on ALL three LLMs)
 
-Swapping the LLM among 9 frontier models moves Policy ±17pp and moves Trace/Ctrl by exactly zero. Swapping the wrapper at fixed LLM moves Trace 0 → 33pp and Ctrl 0 → 47pp — and the same wrapper produces identical Trace/Ctrl gains on Claude Sonnet 4.6 and GPT-4o-mini. The architectural lever is wrapper-side, not model-side.
+**Axis C — refining the architectural claim.** Two follow-up experiments that sharpened v1.2's "wrappers can do governance, models can't" framing:
+— A *full-audit wrapper variant* (populates actor/resource/decision/reason fields, not just timestamp+action) hits **100% Trace** on every LLM tested. The 33.1% in Axis B was a structural floor of the wrappers' template, not the trace-ceiling.
+— A *bare LLM with audit-asking prompt* (no wrapper, just ask for audit_entries) scores **87.8% Trace** on GPT-4o-mini. The architectural difference is **enforcement, not capability** — wrappers guarantee, prompts request, default-prompt bare pipes record nothing because nothing in the pipeline asked.
 
-**The model is not the bottleneck. The pipeline is.**
+Swapping the LLM among 10 frontier models moves Policy ±17pp and moves Trace/Ctrl by exactly zero — even with reasoning. Swapping the wrapper at fixed LLM moves Trace 0 → 33pp (skeletal) → 100% (full-audit), and Ctrl 0 → 47pp via LangGraph's interrupt primitive — *identical* across all 3 LLMs we tested. Even just *asking* the bare LLM for audit entries unlocks 87.8% Trace.
+
+**Models choose decision quality. Wrappers enforce audit/halt. Default-prompt bare pipes record nothing — that's a deployment choice, not a capability limit.**
 
 In a regulated industry, a correct decision without documentation is equivalent to no decision. "Our model is smarter" is not a defense when a lawyer asks for the chart. Model quality → decision quality. Pipeline design → audit and halt primitives. They're different knobs.
 

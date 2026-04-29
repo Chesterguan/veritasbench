@@ -1,19 +1,23 @@
-# 我们测了 9 个大模型和 4 个治理框架：只有一个轴能把审计率推离 0
+# 我们测了 10 个大模型 + 5 个治理 wrapper：架构「强制」，prompt「请求」，裸通道什么都不记
 
 > 中文版 blog 草稿。目标平台：微信公众号 / 机器之心 / 量子位 / 知乎专栏。
-> 字数：~1700 中文字。
+> 字数：~2000 中文字。VeritasBench v1.3。
 
 ---
 
 ## 一句话结论
 
-我们用同一个 700 场景的临床治理 benchmark 跑了两条轴：
+我们用同一个 700 场景的临床治理 benchmark 跑了三层调查。
 
-**轴 A ——「换模型，固定流程」**：9 个前沿大模型（Claude Sonnet 4.6、GPT-4o-mini、Gemini 2.5 Pro、DeepSeek-V3.2、Qwen3-Max、GLM-4.6、Kimi K2、Hunyuan A13B、MedGemma 4B），同一个裸 LLM prompt。**Policy 跨度 69.6% → 86.9%，Traceability 全部 0%，Controllability 全部 0%。**
+**轴 A ——「换模型，固定流程」**：**10** 个前沿大模型（Claude Sonnet 4.6、GPT-4o-mini、Gemini 2.5 Pro、DeepSeek-V3.2、Qwen3-Max、GLM-4.6、Kimi K2、Hunyuan A13B、MedGemma 4B、**DeepSeek-R1（reasoning）**），同一个裸 LLM prompt。**Policy 跨度 69.6% → 86.9%，Traceability 全部 0%，Controllability 全部 0%。** Reasoning 模式不改变这个：DeepSeek-R1 裸 LLM 也是 0% / 0%。
 
-**轴 B ——「选 winner，换流程」**：两个 LLM tier（Claude Sonnet 4.6 —— 轴 A #2；GPT-4o-mini —— #5）分别在 4 个治理框架（bare、NeMo Guardrails、OpenAI Guardrails、LangGraph HITL）下跑同样 700 场景。**Traceability 在两个 LLM 上都是 0% → 33.1%（完全相同），Controllability 都是 0% → 47.4%（完全相同）。** （GLM-4.6 是轴 A Policy 第一名，但 NeMo + GLM 组合每跑 ~8 小时——真正的 Policy winner 还没有 wrapper 数据，留给 v1.3。）
+**轴 B ——「选 winner，换流程」**：**3** 个 LLM tier（Claude Sonnet 4.6、GPT-4o-mini、DeepSeek-R1）分别在 4 个治理框架（bare、NeMo Guardrails、OpenAI Guardrails、LangGraph HITL）下跑同样 700 场景。**Traceability 在 3 个 LLM 上都是 0% → 33.1%（完全相同），Controllability 都是 0% → 47.4%（完全相同）。**
 
-两条轴合起来就是架构层面的硬证据：**换模型不能补上治理的窟窿。换 wrapper 可以——而且同一个 wrapper 在不同 LLM 底座上产生完全相同的 Trace/Ctrl 增益。** 架构杠杆在 wrapper 这一侧，不在模型这一侧。
+**轴 C ——「再校准架构论点」**：v1.3 新加的两个手术性实验：
+- **Full-audit wrapper（填齐 actor/resource/decision/reason 字段，不只 timestamp+action）**把 Trace 推到 **100%**——3 个 LLM 上都是 100%。轴 B 的 33.1% 是 wrapper 模板的「楼板」，不是治理 wrapper 的「天花板」。
+- **裸 LLM + 审计-请求 prompt**（不加 wrapper，只是 prompt 里要 `audit_entries`）拿到 **87.8% Trace**（GPT-4o-mini）。请求就能解锁 ~88%。架构差别**不**是「wrapper 能、裸不能」——是 **「wrapper 强制，prompt 请求，默认 prompt 啥也不记」**。
+
+架构论点站得住，但更精确：**模型决定 decision quality；wrapper 强制 audit/halt 不变量；默认 prompt 的裸通道什么也不记——这是部署选择，不是能力上限。**
 
 ---
 
@@ -104,20 +108,17 @@ Policy %   Traceability %
 
 ---
 
-## 轴 B：选 winner，换治理框架（2 个 LLM × 4 个框架）
+## 轴 B：选 winner，换治理框架（3 个 LLM × 4 个框架）
 
-轴 A 选出了 winner：GLM-4.6 Policy 86.9% 居首，Claude Sonnet 4.6 85.7% 第二（比 GPT-4o-mini 81.0% 高 4.7pp）。但三者（以及其余 6 个）在 Trace 和 Ctrl 上都是 0%。下一个问题：选 winner，加治理框架，看什么会动。
+我们用**三个 LLM tier** 测试 wrapper 效果是否跨模型 strength + reasoning 模式转移：
 
-我们在 2026-04-27 用**两个 LLM tier** 重跑了 wrapper 实验，测试 wrapper 效果是否跨模型 strength 转移：
-
-- **Claude Sonnet 4.6** —— 轴 A Policy #2，OpenRouter 全可复现
-- **GPT-4o-mini** —— 轴 A #5，作为跨 tier 的 controlled 对照
+- **Claude Sonnet 4.6** —— 轴 A Policy #2 (85.7%)，前沿 instruction-tuned
+- **GPT-4o-mini** —— 轴 A #5 (81.0%)，mid-tier controlled 对照
+- **DeepSeek-R1** —— 轴 A reasoning entry (80.9%)，测试 chain-of-thought 是否改变 wrapper-effect
 
 每个 LLM 走同样 700 场景，分别在 4 个 pipeline 下：bare、NeMo Guardrails、OpenAI Guardrails、LangGraph HITL。
 
-（GLM-4.6 也想测，但 NeMo + GLM 组合每跑一次需要 ~8 小时——NeMo 的 per-call init 开销 × GLM 较高的 inference 延迟。等 v1.3 修好 runner persistence 后过夜跑。）
-
-### 结果 —— 全 2 × 4 矩阵
+### 结果 —— 全 3 × 4 矩阵
 
 | LLM | 治理框架 | n | Policy | Safety | Trace | Ctrl | Dangerous |
 |---|---|---:|---:|---:|---:|---:|---:|
@@ -129,18 +130,24 @@ Policy %   Traceability %
 | Claude Sonnet 4.6 | + NeMo Guardrails | 700 | 83.5% | 60.0% | 0.0% | 0.0% | **3/575 (0.5%)** |
 | Claude Sonnet 4.6 | + OpenAI Guardrails | 700 | 83.1% | 59.7% | **33.1%** | 0.0% | 6/575 (1.0%) |
 | Claude Sonnet 4.6 | + LangGraph HITL | 700 | 72.3% | 60.3% | **33.1%** | **47.4%** | 11/575 (1.9%) |
+| DeepSeek-R1（reasoning） | Bare LLM | 700 | 80.9% | 64.9% | 0.0% | 0.0% | 18/575 (3.1%) |
+| DeepSeek-R1（reasoning） | + NeMo Guardrails | 700 | 83.5% | 63.1% | 0.0% | 0.0% | 11/575 (1.9%) |
+| DeepSeek-R1（reasoning） | + OpenAI Guardrails | 700 | 78.8% | 60.0% | **33.1%** | 0.0% | **1/575 (0.2%)** |
+| DeepSeek-R1（reasoning） | + LangGraph HITL | 700 | 66.6% | 43.7% | **33.1%** | **47.4%** | 9/575 (1.6%) |
 
-Bare 基线沿用 2026-04-24 轴 A 的 run（n=700，schema 完整含 dangerous_failures）；8 个 wrapper 行是 2026-04-27 全新跑的，每行单一 run 来源，不混合。
+Bare 基线沿用 2026-04-24（GPT, Claude）和 2026-04-28（R1）轴 A 的 run；12 个 wrapper 行是 2026-04-27 / 2026-04-28 全新跑的，每行单一 run 来源，不混合。
 
 ### 矩阵告诉我们 3 件事
 
-**1. Trace 和 Ctrl 跟 LLM 无关。** 同一个 wrapper，两个不同 LLM → 一模一样的增益：
+**1. Trace 和 Ctrl 在 3 个 LLM 上完全 LLM-invariant。** 同一个 wrapper，3 个不同 LLM（前沿 instruction-tuned、mid-tier、reasoning）→ 一模一样的增益：
 
-| | Trace 增益 | Ctrl 增益 |
+| | Trace 增益（GPT / Claude / R1） | Ctrl 增益（GPT / Claude / R1） |
 |---|---|---|
-| + NeMo Guardrails | 0pp / 0pp | 0pp / 0pp |
-| + OpenAI Guardrails | **+33.1pp / +33.1pp** | 0pp / 0pp |
-| + LangGraph HITL | **+33.1pp / +33.1pp** | **+47.4pp / +47.4pp** |
+| + NeMo Guardrails | 0pp / 0pp / 0pp | 0pp / 0pp / 0pp |
+| + OpenAI Guardrails | **+33.1pp / +33.1pp / +33.1pp** | 0pp / 0pp / 0pp |
+| + LangGraph HITL | **+33.1pp / +33.1pp / +33.1pp** | **+47.4pp / +47.4pp / +47.4pp** |
+
+加 reasoning 模型（R1）不改变这个模式。
 
 LangGraph 的 `interrupt` 是按场景类型（`missing_approval` / `emergency_override`）确定性触发，LLM 的输出不在决策路径上。审计条目同理，来自 wrapper 的评估事件而不是 LLM 的回复内容。**Trace 和 Ctrl 是 pipeline 的属性，不是模型的属性。**
 
@@ -166,20 +173,60 @@ OpenAI Guardrails 在两个 LLM 上都把 DF 降下来（GPT 4.5%→1.2%，Claud
 
 ## 合起来看：Capable ≠ Accountable
 
-两条轴 17 个数据点（9 个 LLM × bare on 轴 A；2 个 LLM × 4 wrapper on 轴 B）：
+前两条轴 22 个数据点（10 个 LLM × bare on 轴 A；3 个 LLM × 4 wrapper on 轴 B）：
 
-| 维度 | 轴 A 跨度（换模型） | 轴 B 跨度（2 LLM × 4 wrapper） |
+| 维度 | 轴 A 跨度（换模型） | 轴 B 跨度（3 LLM × 4 wrapper） |
 |---|---|---|
-| Policy | 69.6% → 86.9%（17.3pp） | 66.8% → 85.7%（18.9pp） |
-| Safety | 53.8% → 83.3%（29.5pp） | 51.7% → 79.7%（28.0pp） |
-| **Traceability** | **0% → 0%（0pp）** | **0% → 33.1%（两 LLM 上完全相同）** |
-| **Controllability** | **0% → 0%（0pp）** | **0% → 47.4%（两 LLM 上完全相同）** |
+| Policy | 69.6% → 86.9%（17.3pp） | 66.6% → 85.7%（19.1pp） |
+| Safety | 53.8% → 83.3%（29.5pp） | 43.7% → 79.7%（36.0pp） |
+| **Traceability** | **0% → 0%（0pp）** | **0% → 33.1%（3 个 LLM 上完全相同）** |
+| **Controllability** | **0% → 0%（0pp）** | **0% → 47.4%（3 个 LLM 上完全相同）** |
 
-Policy 和 Safety 两条轴上都 capability-sensitive。Trace 和 Ctrl 在轴 A 上 capability-*insensitive*，在轴 B 上 capability-*invariant*（同一 wrapper 在两个 LLM tier 上产生完全相同的 Trace/Ctrl 增益）。**它们是架构属性，不是模型属性。**
+Policy 和 Safety 两条轴上都 capability-sensitive。Trace 和 Ctrl 在轴 A 上 capability-*insensitive*，在轴 B 上 capability-*invariant*（同一 wrapper 在 3 个 LLM tier 上——包括 reasoning 模型——产生完全相同的 Trace/Ctrl 增益）。**它们是架构属性，不是模型属性。**
 
-**如果你的治理策略是「换个更好的大模型」，这个 benchmark 告诉你：没用。** 换更强的模型把 Policy 从 81% 推到 87%。但它**不会**把 Traceability 推离 0% 一个百分点。差距在 pipeline 能不能**记录**决策、能不能**为人类审查停下来**——这是裸 LLM 无论多聪明都做不出来的架构功能，而 wrapper 在 mid-tier LLM 上也照样做出来。
+**如果你的治理策略是「换个更好的大模型」，这个 benchmark 告诉你：没用。** 即便用 reasoning 模型也不行。但——这是 v1.3 把 v1.2 论点磨锋利的地方——架构上的差别**不是能力**。下面的轴 C 显示：裸 LLM **能**产生审计条目，只要你**问**。区别在 **enforcement**：wrapper 强制写记录，prompt 请求模型写，默认 prompt 啥也不要、所以啥也没记。
 
-**模型选 decision quality。Wrapper 选 governance。两个不同的旋钮。**
+---
+
+## 轴 C：架构论点的精确化——「强制」vs「请求」
+
+v1.2 在轴 B 就停了，论点是「wrapper 把 Trace 0→33%，模型做不到」。v1.3 加了两个手术性实验把这个论点收紧——一个新 wrapper 变体，一个新 prompt 变体——精确测出 **wrapper 到底凭什么有效**。
+
+### Trace 性能阶梯
+
+同样 700 场景，同样 grading rubric，4 个配置，沿「架构 vs prompt」轴探测：
+
+| # | 配置 | Trace | 测的是什么 |
+|---|---|---:|---|
+| 1 | 裸 LLM，默认 prompt（轴 A） | **0.0%** | 朴素部署——不问，不强制 |
+| 2 | 裸 LLM，审计-请求 prompt（P2.5） | **87.8%**（GPT-4o-mini，n=700） | LLM-合作天花板——问，不强制 |
+| 3 | Wrapper 带 skeletal 审计条目（轴 B） | **33.1%** | 强制，部分字段（rubric 1/3） |
+| 4 | Wrapper 带 full-field 审计条目（P2.4） | **100.0%**（GPT-4o-mini, Claude, GLM 上都是 100%） | 强制，全字段（rubric 3/3） |
+
+### 阶梯说了什么
+
+**第 2 行是惊喜的那个。** 一个裸 LLM，没 wrapper，没治理基础设施——只是 system prompt 明确要求 `audit_entries` 跟 `decision` 一起返回——拿到 **87.8% Trace**。GPT-4o-mini 被请求时会产生满足绝大部分 rubric 的审计条目。**问了就解锁了大部分 trace gap。**
+
+这是 v1.2 论点的一个重要修正。v1.2 的「0% Trace = LLM 做不到 audit」过度解读了数据。更准确的读法是：「轴 A 上的 0% Trace = 默认部署 prompt 不要审计条目，裸 LLM 只输出被请求的内容」。这是一个 *prompt-engineering* 发现，不是 *LLM-capability* 发现。
+
+**第 4 行 vs 第 3 行是真正的架构论点。** 同一个 LLM，同样的 OpenAI moderation + regex PHI 逻辑，同样的场景覆盖。唯一差别：一个 wrapper 的审计模板填齐 `actor`、`resource`、`decision`、`reason`；另一个把这些字段留空。**33% 跟 100% 的结构性差别**是**wrapper 强制的审计条目形状**，跟 LLM 无关。33.1% 是 wrapper 模板选择的产物，正好满足 rubric 的 1/3。换个更厚的模板就是 100%。**治理 wrapper 的 trace 天花板是 100%，不是 33%。**
+
+### 修正后的架构论点
+
+v1.2 的架构论点是 *「wrapper 能做治理，模型不能」*。v1.3 的更精确：
+
+> **Wrapper 强制（ENFORCE）治理行为。Prompt 请求（REQUEST）。默认 prompt 的裸通道两件事都不做——所以啥也没记。**
+
+3 种部署模式在 Trace 上：
+- **裸 LLM，默认 prompt**：0% Trace——LLM 不问就不主动写。pipeline 里压根没有 audit 原语。
+- **裸 LLM，审计-请求 prompt**：87.8% Trace——LLM 在 ~88% 场景上配合。剩下 12% 是 LLM 产出 malformed entries、漏字段、reason 没引用 scenario keyword 的那些。LLM **能做**，但**不可靠**。
+- **Wrapper 注入完整审计条目**：100% Trace——wrapper 保证每个 scenario 都有完整审计条目，跟 LLM 怎么响应无关。Audit 维度上 LLM 的合作被**绕过**了；wrapper 接管。
+
+所以 wrapper 的架构优势**不是**「能做 LLM 做不了的事」——**是「每次都强制做对的事，而不是依赖 LLM 一致地做」**。在安全敏感场景这是个强得多的属性：87.8%（LLM-合作天花板）意味着 **700 个 scenarios 里 122 个会静默丢失 audit data**，而注入 entries 的 wrapper 是 0 个丢失。
+
+Ctrl（可控性）方向画面更干净——`interrupt`-style halt 不能被「请求」给 LLM；pipeline 要么有 halt 原语要么没有。LangGraph 的 interrupt 是我们矩阵里唯一的这种原语，也是唯一产生非零 Ctrl 的。Ctrl 没有 audit-prompt 的对应物。
+
+**模型选 decision quality。Wrapper 选 audit/halt 强制。Prompt 选两者下方的 LLM-合作楼板。三个不同的旋钮。**
 
 ---
 
@@ -187,7 +234,7 @@ Policy 和 Safety 两条轴上都 capability-sensitive。Trace 和 Ctrl 在轴 A
 
 | 模型 | 结果 | 为什么没报 |
 |---|---|---|
-| DeepSeek-R1（reasoning，OpenRouter） | 324/700 打完分，全部丢失 | 运行中间 runner 在输出卷上触发 `[Errno 1] Operation not permitted`；所有分数只在「末尾一次性写入」里，报错一起丢了。v1.3 先修 persistence 再重跑。 |
+| ~~DeepSeek-R1~~ | **已进正文** | 2026-04-24 那次跑丢了（runner 末尾一次性写入碰到 EPERM）。v1.3 加了 NDJSON append-log persistence fix，2026-04-28 重跑顺利完成 700 场景 × 4 wrapper。|
 | Meditron-7B（Ollama，Llama 2 base） | 28% 场景超时 | 模型是临床 QA 文本训练的，不老实输出 JSON —— 适配器层的指令跟随问题，不是能力信号。 |
 | Meditron3-8B（Ollama，Q4_K_M GGUF） | 700/700 完成 | 57% Policy / 191 dangerous failures，被 4-bit 量化损耗主导，不是医疗专业化信号。发出去会误导读者以为「医疗专业 = 弱」，实际故事是「Q4 量化有损」。 |
 | HuatuoGPT-II-34B、HuatuoGPT-o1-72B、Meditron3-70B、Med42-70B、OpenBioLLM-70B、PULSE-7b/20b | 没跑 | 截至 2026-04-24，OpenRouter / SiliconFlow / Novita / HuggingFace Inference Providers 都没有托管。权重在 HF 都开源 —— 问题是托管，不是 license。 |
@@ -196,23 +243,27 @@ Policy 和 Safety 两条轴上都 capability-sensitive。Trace 和 Ctrl 在轴 A
 
 ## 局限性（引用前必读）
 
-- **轴 A prompt 是故意极简的**。只问决策，不问 audit 条目。这是生产环境最常见的「裸 LLM」部署方式。有人可能说「换个 prompt 让模型生成 audit 条目就不是 0% 了」—— 对，但那不是架构解决方案。轴 B 证明：加基础设施（不改 prompt）才真正改变数字。
+- **轴 A prompt 是故意极简的**。只问决策，不问 audit 条目。「0% Trace」是 *部署 prompt* 的属性，不是 LLM 能力的属性。轴 C 直接测了这点：用审计-请求 prompt，GPT-4o-mini 拿 87.8% Trace。架构论点变成：「wrapper 强制 audit；默认 prompt 的裸通道不要 audit；LLM 被请求时给 ~88% 但不是 100%」。
 
-- **轴 B 框架深度是代表性的，不是穷举的**。每个框架用的是典型集成（`nemoguardrails` + Colang、LangGraph `StateGraph` + `interrupt`、OpenAI moderation + 正则 PHI），不是对抗性调参的最优配置。读者不应该从一个配置推出「NeMo Guardrails 差」—— 应该推出「NeMo 开箱即用的 pattern 没有 audit primitive」。两句话都对。
+- **轴 B 框架深度是代表性的，不是穷举的**。每个框架用的是典型集成（`nemoguardrails` + Colang、LangGraph `StateGraph` + `interrupt`、OpenAI moderation + 正则 PHI），不是对抗性调参的最优配置。
 
-- **轴 B 用了 9 个 LLM 中的 2 个**。Claude Sonnet 4.6（轴 A #2）和 GPT-4o-mini（#5），4 个 wrapper 都测了。GLM-4.6（轴 A #1）也想测，NeMo+GLM 组合每跑 ~8 小时，等 v1.3 修好 runner persistence 之后过夜跑。「Wrapper 效果跨 LLM tier 转移」的结论目前基于这两个 LLM。
+- **轴 B 用了 10 个 LLM 中的 3 个**（GPT-4o-mini、Claude Sonnet 4.6、DeepSeek-R1），4 个 wrapper 都测了。扩展到更多 LLM tier 是直接的——见 `docs/future-work/v1.3-scope.md` v1.4 计划。
 
-- **轴 B 的 bare 基线沿用 2026-04-24 轴 A 的 run，wrapper 行是 2026-04-27 跑的**。同模型 bare run 跨日复现在 ~0.2pp Policy 之内，可接受。
+- **轴 C 的审计-请求 prompt 实验目前用 1 个 LLM**（GPT-4o-mini，n=700，87.8% Trace）。Claude 复现跑被 OpenRouter credit budget 中断（n=119 部分），headline 87.8% 目前依赖 GPT-4o-mini。Full-audit wrapper 100% trace 天花板在 3 个 LLM（GPT、Claude、GLM-4.6）上都复现到了，结论稳健。
 
-- **MedGemma 4B 是 Q4 量化版本**。满精度版本可能高 2-5pp。但跟 Claude 16pp 的差距不是量化能解释的。
+- **轴 B Bare 基线沿用 2026-04-24（GPT, Claude）和 2026-04-28（R1）轴 A 的 run；wrapper 行是 2026-04-27 / 2026-04-28**。同模型 bare 跨日复现 ~0.2pp Policy 之内，可接受。
 
-- **LLM 共识 Ground truth**（GPT-4o-mini + GPT-4o + Gemini 2.5 Flash）。GPT-4o-mini 和 Gemini 2.5 Pro 也被测，2-5pp 系统优势。未来计划找临床医生做 100 场景 audit。
+- **MedGemma 4B 是 Q4 量化版本**。满精度可能高 2-5pp。
 
-- **OpenRouter 路由不透明**。同一个 slug 可能被路由到不同 provider，quality 可能不同。延迟不可比，分数应该可比。
+- **LLM 共识 Ground truth**（GPT-4o-mini + GPT-4o + Gemini 2.5 Flash），存在 2-5pp 系统优势。未来计划临床医生做 100 场景 audit。
+
+- **OpenRouter 路由不透明**。Latency 不可比，分数应该可比。
+
+- **Wrapper × LLM dangerous-failure 交互在小 n 上观察到**。R1 + OpenAI Guardrails 0.2%（1 个 dangerous failure）和 NeMo + Claude 0.5%（3 个）置信区间宽。当成「值得复现的 striking interaction」，不要钉死具体百分比。
 
 - **所有 run slug 可能静默更新**。
 
-完整改进计划见 `docs/future-work/benchmark-realism-improvements.md`。
+完整改进计划见 `docs/future-work/v1.3-scope.md` 和 `benchmark-realism-improvements.md`。
 
 ## 自己跑
 
@@ -229,15 +280,29 @@ python scripts/run_model.py gpt-4o-mini                 # baseline
 python scripts/run_model.py glm-46                      # 本轮 top
 python scripts/aggregate_models.py --input-dir outputs --markdown docs/my-results.md
 
-# 轴 B —— 换框架扫（适配器在 examples/）
-cargo run --release -- --adapter examples/llm_with_topic_rails.py     # NeMo
-cargo run --release -- --adapter examples/llm_with_content_filter.py  # OpenAI Guardrails
-cargo run --release -- --adapter examples/llm_with_hitl_prompt.py     # LangGraph HITL
+# 轴 B —— 换框架扫（适配器在 examples/，env var 路由）
+export OPENAI_BASE_URL=https://api.openai.com/v1 OPENAI_API_KEY=$OPENAI_API_KEY VERITASBENCH_MODEL=gpt-4o-mini
+cargo run --release -- run --adapter examples/llm_with_topic_rails.py     --suite healthcare_v1 --output outputs/axisB_topic_rails_gpt4omini --timeout 120000 --retries 2
+cargo run --release -- run --adapter examples/llm_with_content_filter.py  --suite healthcare_v1 --output outputs/axisB_content_filter_gpt4omini --timeout 120000 --retries 2
+cargo run --release -- run --adapter examples/llm_with_hitl_prompt.py     --suite healthcare_v1 --output outputs/axisB_hitl_prompt_gpt4omini --timeout 120000 --retries 2
+
+# 轴 C —— v1.3 新加的两个手术性实验
+cargo run --release -- run --adapter examples/llm_with_full_audit.py        --suite healthcare_v1 --output outputs/v13_full_audit_gpt4omini  --timeout 120000 --retries 2  # 100% Trace 天花板
+cargo run --release -- run --adapter examples/llm_bare_with_audit_prompt.py --suite healthcare_v1 --output outputs/v13_audit_prompt_gpt4omini --timeout 120000 --retries 2  # 87.8% bare-LLM-合作天花板
 ```
+
+长跑被打断没关系，v1.3 的 persistence fix 让你用同样的 `--output` 路径再跑一次，会从 NDJSON 续上而不是从头开始。
 
 ## 下一步
 
-v1.3 会做：prompt 变体明确要求 audit 条目、provider pinning、量化元数据、DeepSeek-R1 reasoning 数据点、100 场景的临床医生 audit，以及一个**轴 A × 轴 B 的 9×4 cross 产品**（每个框架 × 每个模型）—— 用来测试框架增益是不是跨 LLM 普遍存在。
+v1.3 已经搞定 v1.2 backlog 里最高优先级的 4 个：DeepSeek-R1 reasoning 数据点（3 个轴都加了）、runner persistence fix（NDJSON append-log + resume）、trace-ceiling 实验（full-audit wrapper 拿 100%）、审计-请求 prompt 实验（GPT-4o-mini 87.8%）。
+
+v1.4 收尾剩下的（详见 `docs/future-work/v1.3-scope.md`）：
+- **轴 C 跨 LLM 扩展**。审计-请求 prompt 在 GPT-4o-mini 上跑通了（87.8%），Claude 部分跑（n=119，被 API budget 打断）。在 Claude、GLM-4.6、DeepSeek-R1、低 tier 模型上干净复现，画出 LLM-合作面。
+- **完整 10×4 wrapper × LLM 矩阵**。当前 3×4=12 cells，扩到 10 个 LLM 加 7×4=28 cells，包括轴 A Policy 第一名 GLM-4.6。
+- **按场景类型调 wrapper**。breakdown 脚本显示 dangerous failures 在不同 LLM 上集中在不同场景类型（Claude 在 MJ，GPT-4o-mini 在 SI）。LangGraph `HITL_TYPES` 应该按 LLM 调，或者改成 data-driven，把 Ctrl 推过 50%。
+- **Provider-pinning + 量化元数据**。两个目前都没记。
+- **临床医生 audit 100 场景**。关掉 LLM-judged-ground-truth 那个 caveat。
 
 **如果你的治理架构声称能解决 Traceability / Controllability 的 gap，我想 benchmark 你。提个 issue 给 adapter。**
 
