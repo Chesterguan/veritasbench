@@ -380,12 +380,17 @@ fn test_persistence_resume_via_ndjson() {
     );
 
     // Unique temp output dir under target/ so it's gitignored.
+    // NB: do NOT pre-create the dir — the runner must create it itself.
+    // (An earlier version of the persistence fix forgot the create_dir_all
+    // and silently fell back to in-memory-only when the dir was missing.)
     let nanos = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
         .as_nanos();
     let output_dir = root.join(format!("target/test-output/persist_resume_{nanos}"));
-    std::fs::create_dir_all(&output_dir).expect("create temp output dir");
+    // The parent must exist for the test fixture write below.
+    std::fs::create_dir_all(output_dir.parent().unwrap()).expect("create parent dir");
+    std::fs::create_dir_all(&output_dir).expect("create output dir for fixture");
     let nd_path = output_dir.join("scenarios.ndjson");
 
     // Pre-populate NDJSON with one fake entry for AG-001.
@@ -456,5 +461,87 @@ fn test_persistence_resume_via_ndjson() {
     );
 
     // Cleanup
+    let _ = std::fs::remove_dir_all(&output_dir);
+}
+
+/// Verify the runner creates a missing output dir itself, instead of silently
+/// falling back to in-memory-only when scenarios.ndjson can't be opened.
+///
+/// Regression test for a bug introduced in the persistence fix: the runner
+/// opened scenarios.ndjson with create(true).append(true) but didn't
+/// create_dir_all the parent — so a fresh --output dir caused the open to
+/// fail with ENOENT, the warning was emitted, and the run proceeded
+/// in-memory only (defeating the persistence guarantee).
+#[test]
+fn test_persistence_creates_missing_output_dir() {
+    use std::process::Command;
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    let root = workspace_root();
+    let cli_binary = root.join("target/release/veritasbench");
+    assert!(
+        cli_binary.exists(),
+        "release binary {} not found — run `cargo build --release` first",
+        cli_binary.display(),
+    );
+
+    // Use a fresh dir that does NOT exist. Test fails if the runner doesn't
+    // create it.
+    let nanos = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_nanos();
+    let parent = root.join("target/test-output");
+    std::fs::create_dir_all(&parent).expect("create test-output parent");
+    let output_dir = parent.join(format!("persist_mkdir_{nanos}"));
+    assert!(!output_dir.exists(), "test setup: output_dir must not pre-exist");
+
+    let adapter = root.join("examples/trivial_deny_adapter.py");
+    let output = Command::new(&cli_binary)
+        .current_dir(&root)
+        .args([
+            "run",
+            "--adapter",
+            adapter.to_str().unwrap(),
+            "--suite",
+            "healthcare_v1",
+            "--output",
+            output_dir.to_str().unwrap(),
+            "--timeout",
+            "30000",
+        ])
+        .output()
+        .expect("run CLI");
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(
+        output.status.success() || output.status.code() == Some(2),
+        "CLI exited unexpectedly: {:?}\nstdout: {stdout}\nstderr: {stderr}",
+        output.status.code(),
+    );
+
+    // The runner must NOT have emitted the in-memory fallback warning.
+    assert!(
+        !stderr.contains("could not open NDJSON log"),
+        "runner fell back to in-memory-only — output dir was not created.\nstderr: {stderr}",
+    );
+
+    // scenarios.ndjson must exist with 700 lines (real persistence happened).
+    let nd_path = output_dir.join("scenarios.ndjson");
+    assert!(
+        nd_path.exists(),
+        "scenarios.ndjson does not exist at {} — runner failed to create output dir",
+        nd_path.display(),
+    );
+    let nd_content = std::fs::read_to_string(&nd_path).expect("read NDJSON");
+    let nd_lines: Vec<&str> = nd_content.lines().filter(|l| !l.trim().is_empty()).collect();
+    assert_eq!(
+        nd_lines.len(),
+        700,
+        "expected 700 NDJSON lines from real persistence, got {}",
+        nd_lines.len(),
+    );
+
     let _ = std::fs::remove_dir_all(&output_dir);
 }

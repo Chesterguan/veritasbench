@@ -177,6 +177,14 @@ async fn run_command(config: RunConfig) {
     // even if report.json was never written. On re-run with the same
     // --output dir (and --repeats=1), already-scored scenarios are
     // skipped to resume from the partial state.
+    if let Err(e) = std::fs::create_dir_all(&output_dir) {
+        eprintln!(
+            "error: could not create output dir {}: {}",
+            output_dir.display(),
+            e,
+        );
+        std::process::exit(1);
+    }
     let ndjson_path = output_dir.join("scenarios.ndjson");
     let mut already_scored: std::collections::HashSet<String> = std::collections::HashSet::new();
     if ndjson_path.exists() {
