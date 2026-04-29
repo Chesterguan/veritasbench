@@ -140,11 +140,16 @@ def handle(scenario: dict) -> dict:
         {"role": "user", "content": user_prompt},
     ]
 
+    # Cap max_tokens to avoid OpenRouter credit-budget errors for models
+    # like Claude that default to 65536-token completions. 4096 is more than
+    # enough for a decision + a handful of audit entries.
+    max_tokens = int(os.environ.get("VERITASBENCH_MAX_TOKENS", "4096"))
     try:
         response = client.chat.completions.create(
             model=MODEL,
             messages=messages,
             temperature=0,
+            max_tokens=max_tokens,
             response_format={"type": "json_object"},
         )
     except Exception:
@@ -153,6 +158,7 @@ def handle(scenario: dict) -> dict:
             model=MODEL,
             messages=messages,
             temperature=0,
+            max_tokens=max_tokens,
         )
 
     text = (response.choices[0].message.content or "")

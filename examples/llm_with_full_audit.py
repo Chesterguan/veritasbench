@@ -198,6 +198,9 @@ def handle(scenario: dict) -> dict:
         reason=_llm_call_reason(scenario),
     ))
 
+    # Cap max_tokens to avoid OpenRouter credit-budget errors on Claude
+    # and similar models that default to high completion limits.
+    max_tokens = int(os.environ.get("VERITASBENCH_MAX_TOKENS", "4096"))
     response = client.chat.completions.create(
         model=MODEL,
         messages=[
@@ -215,6 +218,7 @@ def handle(scenario: dict) -> dict:
         ],
         response_format={"type": "json_object"},
         temperature=0,
+        max_tokens=max_tokens,
     )
 
     response_text = response.choices[0].message.content or ""
