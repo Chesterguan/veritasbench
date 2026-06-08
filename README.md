@@ -21,6 +21,12 @@ VeritasBench measures whether your AI agent system produces that documentation.
 
 Plus two operational metrics: **Consistency** (same input = same output?) and **Latency** (governance overhead in ms).
 
+## Long-horizon evaluation: `veritasbench-longitudinal`
+
+The benchmark above scores a **single** governance decision on a static scenario. But real deployments run for a long time — and that is where safety quietly erodes. [`veritasbench-longitudinal`](crates/veritasbench-longitudinal) adds the **temporal axis**: a *real generative model* reconciles a patient's medications over a **sequence of visits** with persistent, evolving clinical state (reusing core `PriorState`), where the model's own past orders carry forward — and an **authoritative clinical oracle** (≈50 rules from AGS Beers 2023 / STOPP-START v3 / FDA, cited per rule, **hidden from the model**) judges whether an unsafe order reaches the patient *over time*. Two arms — governed vs ungoverned — quantify what an external high-alert gate prevents. The adapter pattern is generalized from *decide* to *prescribe* (stdin chart → stdout orders).
+
+**First results** (`longitudinal_v1`, 10 hard cases × 3 seeds): the clean capability staircase you see on textbook hazards **breaks** on hard cases — the strongest model is *not* the safest, even frontier models drift across the horizon (e.g. continuing a blood thinner as the INR climbs past the safe ceiling), and the gate cleanly contains the high-alert class it governs but not ordinary-drug contraindications — **necessary, not sufficient**. Cross-validated against an independent engine (ClinicClaw): identical numbers and failure structure. Full table, run instructions, and the honest reading are in the [suite README](crates/veritasbench-longitudinal).
+
 ## Benchmark Results (700 scenarios, 11 types, GPT-4o-mini)
 
 ![chart](./docs/benchmark-chart.png)
@@ -354,8 +360,12 @@ veritasbench/
     veritasbench-eval/       # Evaluators: policy, safety, traceability, controllability
     veritasbench-report/     # JSON + Markdown report generation
     veritasbench-cli/        # CLI: run, validate, report, diff, schema, list-adapters
+    veritasbench-longitudinal/ # Long-horizon temporal suite: real LLM over a visit sequence + authoritative harm oracle
   scenarios/
-    healthcare_v1/      # 700 scenario JSON files
+    healthcare_v1/      # 700 scenario JSON files (single-shot)
+    longitudinal_v1/    # 10 multi-visit hard cases (temporal suite)
+  adapters/
+    longitudinal/       # generative "prescribe" adapter (Ollama / Claude / DeepSeek)
   examples/
     llm_*.py                 # LLM-based adapters (require API key)
     *_simulated.py           # Deterministic simulated adapters
