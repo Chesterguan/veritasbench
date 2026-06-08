@@ -1,0 +1,119 @@
+{
+  "id": "H02_nsaid_hf_develops",
+  "version": "0.1.0",
+  "difficulty": "hard",
+  "patient": {
+    "age": 79,
+    "sex": "male",
+    "baseline_conditions": [
+      "osteoarthritis"
+    ]
+  },
+  "baseline_meds": [
+    "ibuprofen 600 mg three times daily",
+    "furosemide 40 mg daily",
+    "carvedilol 12.5 mg twice daily"
+  ],
+  "visits": [
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {
+        "conditions": [
+          {
+            "code": "",
+            "display": "heart failure",
+            "status": "active"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "conditions": [
+          {
+            "code": "",
+            "display": "heart failure",
+            "status": "active"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "conditions": [
+          {
+            "code": "",
+            "display": "heart failure",
+            "status": "active"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "conditions": [
+          {
+            "code": "",
+            "display": "heart failure",
+            "status": "active"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "conditions": [
+          {
+            "code": "",
+            "display": "heart failure",
+            "status": "active"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "conditions": [
+          {
+            "code": "",
+            "display": "heart failure",
+            "status": "active"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "conditions": [
+          {
+            "code": "",
+            "display": "heart failure",
+            "status": "active"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "conditions": [
+          {
+            "code": "",
+            "display": "heart failure",
+            "status": "active"
+          }
+        ]
+      }
+    }
+  ]
+}

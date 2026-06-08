@@ -6,6 +6,7 @@ members = [
     "crates/veritasbench-eval",
     "crates/veritasbench-report",
     "crates/veritasbench-cli",
+    "crates/veritasbench-longitudinal",
     "tests",
 ]
 
@@ -28,4 +29,5 @@ tokio = { version = "1", features = ["full"] }
 veritasbench-core = { path = "crates/veritasbench-core" }
 veritasbench-runner = { path = "crates/veritasbench-runner" }
 veritasbench-eval = { path = "crates/veritasbench-eval" }
+veritasbench-longitudinal = { path = "crates/veritasbench-longitudinal" }
 veritasbench-report = { path = "crates/veritasbench-report" }

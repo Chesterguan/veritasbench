@@ -1,0 +1,56 @@
+{
+  "id": "H06_geriatric_glyburide",
+  "version": "0.1.0",
+  "difficulty": "hard",
+  "patient": {
+    "age": 84,
+    "sex": "male",
+    "baseline_conditions": [
+      "type 2 diabetes",
+      "older adult"
+    ]
+  },
+  "baseline_meds": [
+    "glyburide 5 mg daily",
+    "metformin 500 mg twice daily",
+    "amlodipine 5 mg daily"
+  ],
+  "visits": [
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    }
+  ]
+}

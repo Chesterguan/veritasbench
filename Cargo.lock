@@ -601,6 +601,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "veritasbench-longitudinal"
+version = "1.0.0"
+dependencies = [
+ "clap",
+ "schemars",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "veritasbench-core",
+]
+
+[[package]]
 name = "veritasbench-report"
 version = "1.0.0"
 dependencies = [

@@ -1,0 +1,175 @@
+{
+  "id": "H05_spironolactone_hyperk",
+  "version": "0.1.0",
+  "difficulty": "hard",
+  "patient": {
+    "age": 70,
+    "sex": "female",
+    "baseline_conditions": [
+      "heart failure"
+    ]
+  },
+  "baseline_meds": [
+    "spironolactone 25 mg daily",
+    "lisinopril 10 mg daily",
+    "furosemide 20 mg daily"
+  ],
+  "visits": [
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 4.4,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 4.6,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 4.7,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 4.9,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 5.0,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 5.2,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 5.3,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 5.5,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 5.6,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 5.8,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 5.9,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 6.1,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "id": "H03_warfarin_inr_plus_dd",
+  "version": "0.1.0",
+  "difficulty": "hard",
+  "patient": {
+    "age": 72,
+    "sex": "female",
+    "baseline_conditions": [
+      "atrial fibrillation",
+      "coronary artery disease"
+    ]
+  },
+  "baseline_meds": [
+    "warfarin 10 mg daily",
+    "aspirin 81 mg daily",
+    "metoprolol 50 mg twice daily"
+  ],
+  "visits": [
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "inr",
+            "display": "INR",
+            "value": 2.1,
+            "unit": "",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "inr",
+            "display": "INR",
+            "value": 2.3,
+            "unit": "",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "inr",
+            "display": "INR",
+            "value": 2.6,
+            "unit": "",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "inr",
+            "display": "INR",
+            "value": 2.8,
+            "unit": "",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "inr",
+            "display": "INR",
+            "value": 3.0,
+            "unit": "",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "inr",
+            "display": "INR",
+            "value": 3.3,
+            "unit": "",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "inr",
+            "display": "INR",
+            "value": 3.5,
+            "unit": "",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "inr",
+            "display": "INR",
+            "value": 3.8,
+            "unit": "",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "inr",
+            "display": "INR",
+            "value": 4.0,
+            "unit": "",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "inr",
+            "display": "INR",
+            "value": 4.2,
+            "unit": "",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "inr",
+            "display": "INR",
+            "value": 4.5,
+            "unit": "",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "inr",
+            "display": "INR",
+            "value": 4.7,
+            "unit": "",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    }
+  ]
+}

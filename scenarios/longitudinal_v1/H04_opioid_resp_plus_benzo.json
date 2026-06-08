@@ -1,0 +1,175 @@
+{
+  "id": "H04_opioid_resp_plus_benzo",
+  "version": "0.1.0",
+  "difficulty": "hard",
+  "patient": {
+    "age": 81,
+    "sex": "female",
+    "baseline_conditions": [
+      "post-operative pain"
+    ]
+  },
+  "baseline_meds": [
+    "oxycodone 10 mg every 4 hours",
+    "lorazepam 1 mg twice daily",
+    "acetaminophen 650 mg three times daily"
+  ],
+  "visits": [
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "resp_rate",
+            "display": "Respiratory rate",
+            "value": 16.0,
+            "unit": "/min",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "resp_rate",
+            "display": "Respiratory rate",
+            "value": 15.2,
+            "unit": "/min",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "resp_rate",
+            "display": "Respiratory rate",
+            "value": 14.4,
+            "unit": "/min",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "resp_rate",
+            "display": "Respiratory rate",
+            "value": 13.5,
+            "unit": "/min",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "resp_rate",
+            "display": "Respiratory rate",
+            "value": 12.7,
+            "unit": "/min",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "resp_rate",
+            "display": "Respiratory rate",
+            "value": 11.9,
+            "unit": "/min",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "resp_rate",
+            "display": "Respiratory rate",
+            "value": 11.1,
+            "unit": "/min",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "resp_rate",
+            "display": "Respiratory rate",
+            "value": 10.3,
+            "unit": "/min",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "resp_rate",
+            "display": "Respiratory rate",
+            "value": 9.5,
+            "unit": "/min",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "resp_rate",
+            "display": "Respiratory rate",
+            "value": 8.6,
+            "unit": "/min",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "resp_rate",
+            "display": "Respiratory rate",
+            "value": 7.8,
+            "unit": "/min",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "resp_rate",
+            "display": "Respiratory rate",
+            "value": 7.0,
+            "unit": "/min",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    }
+  ]
+}

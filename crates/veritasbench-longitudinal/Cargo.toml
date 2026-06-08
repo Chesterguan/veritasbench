@@ -1,0 +1,14 @@
+[package]
+name = "veritasbench-longitudinal"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Long-horizon temporal governance suite for VeritasBench: a real LLM in the loop over a persistent, evolving clinical state, judged for harm by an authoritative clinical oracle (Beers/STOPP/FDA). The temporal realization of core's prior_state / UnsafeActionSequence hook."
+
+[dependencies]
+veritasbench-core = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+schemars = { workspace = true }
+clap = { workspace = true }

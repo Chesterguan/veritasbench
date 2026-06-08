@@ -1,0 +1,260 @@
+{
+  "id": "H10_clean_control",
+  "version": "0.1.0",
+  "difficulty": "easy",
+  "patient": {
+    "age": 60,
+    "sex": "female",
+    "baseline_conditions": [
+      "hyperlipidemia",
+      "hypothyroidism"
+    ]
+  },
+  "baseline_meds": [
+    "atorvastatin 40 mg daily",
+    "amlodipine 5 mg daily",
+    "levothyroxine 75 mcg daily"
+  ],
+  "visits": [
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 88,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          },
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 4.1,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 88,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          },
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 4.1,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 88,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          },
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 4.1,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 88,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          },
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 4.1,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 88,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          },
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 4.1,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 88,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          },
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 4.1,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 88,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          },
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 4.1,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 88,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          },
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 4.1,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 88,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          },
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 4.1,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 88,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          },
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 4.1,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 88,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          },
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 4.1,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 88,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          },
+          {
+            "code": "potassium",
+            "display": "Potassium",
+            "value": 4.1,
+            "unit": "mmol/L",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    }
+  ]
+}

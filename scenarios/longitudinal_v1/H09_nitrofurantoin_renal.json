@@ -1,0 +1,175 @@
+{
+  "id": "H09_nitrofurantoin_renal",
+  "version": "0.1.0",
+  "difficulty": "hard",
+  "patient": {
+    "age": 71,
+    "sex": "female",
+    "baseline_conditions": [
+      "recurrent urinary tract infection",
+      "chronic kidney disease"
+    ]
+  },
+  "baseline_meds": [
+    "nitrofurantoin 100 mg twice daily",
+    "amlodipine 5 mg daily"
+  ],
+  "visits": [
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 48.0,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 45.8,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 43.6,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 41.5,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 39.3,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 37.1,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 34.9,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 32.7,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 30.5,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 28.4,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 26.2,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 24.0,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    }
+  ]
+}

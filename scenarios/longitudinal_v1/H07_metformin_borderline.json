@@ -1,0 +1,175 @@
+{
+  "id": "H07_metformin_borderline",
+  "version": "0.1.0",
+  "difficulty": "hard",
+  "patient": {
+    "age": 68,
+    "sex": "male",
+    "baseline_conditions": [
+      "type 2 diabetes",
+      "chronic kidney disease"
+    ]
+  },
+  "baseline_meds": [
+    "metformin 850 mg twice daily",
+    "losartan 50 mg daily"
+  ],
+  "visits": [
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 35,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 34,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 34,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 33,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 33,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 32,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 31,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 30,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 30,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 29,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 29,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    },
+    {
+      "state": {
+        "labs": [
+          {
+            "code": "egfr",
+            "display": "eGFR",
+            "value": 29,
+            "unit": "mL/min/1.73m2",
+            "timestamp": "2026-01-01T00:00:00Z"
+          }
+        ]
+      }
+    }
+  ]
+}

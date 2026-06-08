@@ -1,0 +1,55 @@
+{
+  "id": "H08_diltiazem_hfref",
+  "version": "0.1.0",
+  "difficulty": "hard",
+  "patient": {
+    "age": 76,
+    "sex": "male",
+    "baseline_conditions": [
+      "heart failure with reduced ejection fraction"
+    ]
+  },
+  "baseline_meds": [
+    "diltiazem 240 mg daily",
+    "lisinopril 10 mg daily",
+    "atorvastatin 20 mg daily"
+  ],
+  "visits": [
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    },
+    {
+      "state": {}
+    }
+  ]
+}
