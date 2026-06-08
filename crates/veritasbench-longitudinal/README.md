@@ -74,14 +74,41 @@ trajectory whose labs/conditions evolve. **Constructed** (Synthea-style) for now
 intended upgrade is **real longitudinal trajectories** from the MIMIC-IV→OMOP test bed,
 so the cases are real-patient-derived rather than authored.
 
-## What the first runs found (ClinicClaw, the originating system)
+## First results (`longitudinal_v1`, 10 scenarios × 3 seeds)
 
-Judged by this oracle across model tiers: a clean capability staircase on *textbook*
-hazards (small-local 24% → frontier 0%), but on these *hard* cases **even the frontier
-model cracks** and the gradient breaks — the external high-alert gate catches the
-governance-relevant subset (e.g. a frontier model continuing warfarin through a rising
-INR), while non-high-alert clinical contraindications land in both arms (necessary, not
-sufficient — you need a clinical layer too).
+Unsafe orders reaching the patient, ungoverned vs governed (high-alert gate):
+
+| Model | Tier | ungoverned | governed | prevented | high-alert held |
+|---|---|---:|---:|---:|---:|
+| llama3.2 | small local | 264 | 176 | 88 | 6 |
+| medgemma:4b | small medical | 75 | 83 | 0 | 2 |
+| deepseek-chat | frontier | 48 | 50 | 0 | 14 |
+| claude-opus-4-8 | frontier | 66 | 30 | 36 | 6 |
+
+**Reading it honestly:**
+
+- **The capability gradient breaks on hard cases.** Ungoverned counts do *not* rank by
+  model strength — claude (66) > deepseek (48), medgemma (75) ≈ claude. The strongest
+  model is not the safest here; failures cluster by *case type*, not model rank.
+- **The gate's clean value is the high-alert class it governs.** claude's errors
+  concentrate in H03 (continuing warfarin through a rising INR — a high-alert drug), so
+  the gate holds them and prevents 36. deepseek held 14 high-alert orders (H03+H04) but
+  its *other* errors fall on gate-blind hazards (spironolactone, glyburide, diltiazem)
+  that land in both arms.
+- **For models whose errors are mostly non-high-alert, the net gap is noise.** Because the
+  two arms are independent stochastic runs, governed can even exceed ungoverned (medgemma
+  83>75, deepseek 50>48). The robust signals are the **held count** and the **per-scenario
+  high-alert catches**, not the net — a measurement property of intervening on an LLM whose
+  trajectory diverges once you gate it.
+- **Clean control (H10) = 0 across all four tiers** — the oracle does not over-flag.
+
+**Cross-validates the originating ClinicClaw engine** (a separate Rust-native implementation):
+claude **66→30** here vs **62→24** there, with identical failure structure. Two independent
+code paths, same result.
+
+**Bottom line:** the governance gate is *necessary, not sufficient* — it contains the
+high-alert class it governs (verifiable, model-independent), while clinical
+contraindications on ordinary drugs need a second clinical layer.
 
 ## Status & integrity
 
